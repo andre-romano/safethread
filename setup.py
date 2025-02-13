@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="safethread",
-    version="1.0.0",
+    version="0.0.1",
     packages=find_packages(),
     install_requires=[],
     author="Andre Luiz Romano Madureira",

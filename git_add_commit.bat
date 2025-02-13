@@ -1,4 +1,5 @@
 @echo off
+call .\build_requirements.bat
 
 git status
 pause
