@@ -1,6 +1,11 @@
 @echo off
 call .\activate.bat
-call .\build_requirements.bat
+
+echo "Upgrading pip ..."
+python.exe -m pip install --upgrade pip setuptools wheel
+
+echo "Installing setuptools, wheel, build, twine ..."
+pip install setuptools wheel build twine
 
 echo "Installing dependencies from requirements.txt ..."
-pip3 install -r requirements.txt 
+pip install -r requirements.txt 

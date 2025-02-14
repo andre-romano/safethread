@@ -1,9 +1,20 @@
-
 @echo off
 call .\activate.bat
 
-echo Installing build system
-python3 -m pip install --upgrade build twine
+echo build.bat - Begin
 
-echo Building ...
-python3 -m build
+echo Cleaning build artifacts...
+rmdir /s /q build
+rmdir /s /q dist
+rmdir /s /q *.egg-info
+rmdir /s /q __pycache__
+rmdir /s /q .pytest_cache
+rmdir /s /q .mypy_cache
+
+echo Building the package...
+python -m build
+
+echo Testing package...
+twine check dist/*
+
+echo build.bat - End
