@@ -27,7 +27,11 @@
         "**/.mypy_cache/**", // Exclude mypy cache (optional)
         "**/.pytest_cache/**" // Exclude pytest cache (optional)
     ],
-    "docwriter.style": "Auto-detect",
+    "files.associations": {
+        "*.yml": "yaml", // for YAML files
+        "*.yaml": "yaml", // for YAML files
+        ".github/workflows/*": "yaml" // Disable linting for GitHub workflows
+    },
     "license.year": "auto",
     "license.author": "Andre Luiz Romano Madureira",
 }

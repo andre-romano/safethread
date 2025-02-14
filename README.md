@@ -9,6 +9,13 @@ Includes:
 - Thread-safe wrapper classes for most Python data structures
 - Unit test for each class provided
 
+## Installing
+
+The library is available in ``pip`. You can install it using the command:
+```batch
+pip install safethread
+```
+
 ## Usage
 
 Check [``examples``](./examples/) and [``tests``](./tests/) folders.

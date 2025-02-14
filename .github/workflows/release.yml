@@ -3,7 +3,7 @@ name: Create Release on Tag
 on:
   push:
     tags:
-      - '*'
+      - "*" # Trigger on any tag push
 
 jobs:
   release:
@@ -15,7 +15,8 @@ jobs:
 
       - name: Get tag version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -28,5 +29,4 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
