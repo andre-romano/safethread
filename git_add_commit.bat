@@ -3,6 +3,7 @@
 git status
 
 :confirm
+echo " "
 set /p "CONFIRM=Commit changes? (y/n): "
 if /i "%CONFIRM%"=="y" goto continue
 if /i "%CONFIRM%"=="n" goto cancel
@@ -13,6 +14,10 @@ goto confirm
 git add .
 git commit
 git push --all
+
+echo ---- END ----
+git status
+exit /b
 
 :cancel
 echo Program terminated ABRUPTLY.
