@@ -7,8 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class Factory:
+    """Factory class, to control subclass creation using create() method."""
 
     @classmethod
     def create(cls, *args) -> Self:
-        """Método de fábrica para criar uma instância da subclasse."""
+        """Creates an instance of Self class"""
         return cls(*args)

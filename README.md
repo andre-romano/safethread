@@ -11,7 +11,7 @@ Includes:
 
 ## Installing
 
-The library is available in ``pip`. You can install it using the command:
+The library is available in ``pip``. You can install it using the command:
 ```batch
 pip install safethread
 ```

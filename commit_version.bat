@@ -34,9 +34,10 @@ goto b_confirm
 echo 3) Generating CHANGELOG.md ...
 python ./gen_changelog.py
 
-echo 4) Commiting in Github ...
-git add .
-git commit -m "release version %VERSION%"
+echo 4) Generating DOCS/ ...
+python ./gen_docs.py
+
+echo 5) Commiting in Github ...
 git tag v%VERSION%
 git push --all
 git push --tags
