@@ -15,7 +15,11 @@ git add .
 git commit
 git push --all
 
+echo " "
+echo " "
 echo ---- END ----
+echo " "
+echo " "
 git status
 exit /b
 
