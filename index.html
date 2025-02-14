@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>safethreads</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.12/marked.min.js" defer></script>
+</head>
+
+<body>
+    <div id="content">Loading documentation...</div>
+
+    <script defer>
+        async function loadMarkdown() {
+            try {
+                const response = await fetch('README.md');
+                const markdown = await response.text();
+                document.getElementById('content').innerHTML = marked.parse(markdown);
+            } catch (error) {
+                document.getElementById('content').innerHTML = 'Failed to load documentation.';
+                console.error('Error loading README.md:', error);
+            }
+        }
+        loadMarkdown();
+    </script>
+
+</body>
+
+</html>

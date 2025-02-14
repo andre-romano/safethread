@@ -22,7 +22,7 @@ Check [``examples``](./examples/) and [``tests``](./tests/) folders.
 
 ## Documentation
 
-The full documentation is available in [``https://andre-romano.github.io/safethread/docs``](https://andre-romano.github.io/safethread/docs).
+The full documentation is available in [``https://andre-romano.github.io/safethread/docs``](https://andre-romano.github.io/safethread/docs)
 
 ## Run automated tests (unit tests)
 
