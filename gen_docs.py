@@ -2,6 +2,7 @@ import os
 import subprocess
 import ast
 import sys
+import shutil
 
 
 def install_pdoc():
@@ -14,53 +15,90 @@ def install_pdoc():
         print("pdoc installed successfully.")
 
 
+def install_html2text():
+    """Install html2text if it's not already installed."""
+    try:
+        import html2text
+    except ImportError:
+        print("html2text is not installed. Installing now...")
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "html2text"])
+        print("html2text installed successfully.")
+
+
 def get_package_name_from_setup():
     """Read package name from setup.py file."""
     setup_file = "setup.py"
 
-    # Open and parse setup.py to get the package name
     with open(setup_file, "r") as f:
         setup_code = f.read()
 
-    # Parse the setup.py code using AST to safely extract the package name
     tree = ast.parse(setup_code)
     for node in ast.walk(tree):
-        # Check if the node is a call to the setup function
         if isinstance(node, ast.Call):
-            # Check if the function is 'setup', it could be accessed as 'setuptools.setup'
             if isinstance(node.func, ast.Name) and node.func.id == "setup":
                 for keyword in node.keywords:
                     if keyword.arg == "name":
-                        return keyword.value.value  # type: ignore # Use 'value' instead of 's'
+                        return keyword.value.value  # type: ignore
             elif isinstance(node.func, ast.Attribute) and node.func.attr == "setup" and isinstance(node.func.value, ast.Name) and node.func.value.id == "setuptools":
-                # If it's accessed through 'setuptools.setup', get the package name
                 for keyword in node.keywords:
                     if keyword.arg == "name":
-                        return keyword.value.value  # type: ignore # Use 'value' instead of 's'
+                        return keyword.value.value  # type: ignore
+    return None
 
-    return None  # In case the package name is not found
+
+def clean_docs():
+    """Delete all contents of the docs/ folder recursively."""
+    docs_dir = "docs"
+    if os.path.exists(docs_dir):
+        print("Cleaning existing documentation files in 'docs/'...")
+        shutil.rmtree(docs_dir)
+        print("Existing documentation deleted.")
+    else:
+        print("No existing documentation found. Creating 'docs/' folder.")
+    os.makedirs(docs_dir)
 
 
 def generate_docs(package_name):
-    """Generate documentation for the package using pdoc."""
+    """Generate documentation for the package using pdoc (output: HTML files)."""
     if not package_name:
         raise ValueError("Package name could not be extracted from setup.py")
 
-    # Generate docs using pdoc
+    clean_docs()  # Clean the docs folder before generating new docs
+
     subprocess.run(["pdoc", "--output-dir", "docs", package_name], check=True)
     print(
         f"Documentation for '{package_name}' generated successfully in the 'docs/' folder.")
 
 
+def generate_markdown():
+    """Convert all HTML files in the docs/ folder to Markdown format."""
+    import html2text
+
+    docs_dir = "docs"
+    for root, _, files in os.walk(docs_dir):
+        for file_name in files:
+            if file_name.endswith(".html"):
+                html_path = os.path.join(root, file_name)
+                md_path = os.path.splitext(html_path)[0] + ".md"
+
+                with open(html_path, 'r', encoding='utf-8') as html_file:
+                    html_content = html_file.read()
+
+                md_content = html2text.html2text(html_content)
+
+                with open(md_path, 'w', encoding='utf-8') as md_file:
+                    md_file.write(md_content)
+
+                print(f"Converted {html_path} to {md_path}")
+
+
 if __name__ == "__main__":
-    # Ensure pdoc is installed
     install_pdoc()
-
-    # Get the package name from setup.py
+    install_html2text()
     package_name = get_package_name_from_setup()
-
-    # Generate the documentation
     try:
         generate_docs(package_name)
+        generate_markdown()
     except Exception as e:
         print(f"Error generating documentation: {e}")
