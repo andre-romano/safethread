@@ -21,7 +21,19 @@ setup(
     long_description=long_description,  # Inclui o conteúdo do README.md
     long_description_content_type="text/markdown",  # Define o tipo do conteúdo
     url="https://github.com/andre-romano/safethread",
-    classifiers=[],
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: System :: Distributed Computing",
+        "Typing :: Typed",
+    ],
     keywords="threading, threads, thread-safe, process, multiprocessing, concurrent, Python",
     license="Apache-2.0",
     license_files=["LICENSE"],
