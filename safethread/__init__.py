@@ -1,18 +1,22 @@
 # safethread/__init__.py
 
 """
-safethread
+The `safethread` package provides a collection of thread-safe utilities for managing data structures and synchronization in multi-threaded environments.
+The package is designed to ensure safe, concurrent operations on common Python data structures such as lists, dictionaries among others.
 
-This package provides utilities for handling threading and concurrency in Python.
+### **Modules:**
+- **thread**: Provides thread synchronization mechanisms (e.g., locks, semaphores) and thread-safe data structures like `SafeList` and `SafeDict`.
+- **utils**: Offers utility functions for managing thread execution, timeouts, and checking thread statuses.
 
-Modules:
-    - thread: Provides a classes for managing threads safely (using threading module primitives).
-    - process: Provides a classes for managing processes safely (using multiprocessing module primitives).
-    - utils: Includes utilities classes used throughout the code.
+### **Features:**
+- **Thread-Safe Data Structures**: Safe implementations of common data structures (list, dict) to avoid race conditions in concurrent threads.
+- **Thread Synchronization**: Use of Python's `threading.Lock` to manage concurrent access to shared resources.
+- **Utility Functions**: Tools to handle thread management and synchronization, including waiting and timeout utilities.
 
-Usage:
-    - Check official docs (below), or check tests/ folder
+### **Installation:**
+- Install via PyPI: `pip install safethread`
+- Clone the repository for local development: `git clone https://github.com/andre-romano/safethread.git`
 
-Documantation:
-    - Official full documentation is available at https://andre-romano.github.io/safethread/docs 
+### **License:**
+- Apache-2.0 License
 """

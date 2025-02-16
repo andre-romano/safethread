@@ -2,4 +2,4 @@
 
 This folder contains ``safethread.thread` package source code.
 
-This folder stores the multi-threaded classes of the project.
+For further details, check [``__init__.py``](./__init__.py)

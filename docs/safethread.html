@@ -42,14 +42,36 @@
                     <h1 class="modulename">
 safethread    </h1>
 
-                        <div class="docstring"><p>safethread</p>
+                        <div class="docstring"><p>The <code><a href="">safethread</a></code> package provides a collection of thread-safe utilities for managing data structures and synchronization in multi-threaded environments.
+The package is designed to ensure safe, concurrent operations on common Python data structures such as lists, dictionaries among others.</p>
 
-<p>This package provides utilities for handling threading and concurrency in Python.</p>
+<h3 id="modules"><strong>Modules:</strong></h3>
 
-<p>Modules:
-    - thread: Provides a classes for managing threads safely (using threading module primitives).
-    - process: Provides a classes for managing processes safely (using multiprocessing module primitives).
-    - utils: Includes utilities classes used throughout the code.</p>
+<ul>
+<li><strong>thread</strong>: Provides thread synchronization mechanisms (e.g., locks, semaphores) and thread-safe data structures like <code>SafeList</code> and <code>SafeDict</code>.</li>
+<li><strong>utils</strong>: Offers utility functions for managing thread execution, timeouts, and checking thread statuses.</li>
+</ul>
+
+<h3 id="features"><strong>Features:</strong></h3>
+
+<ul>
+<li><strong>Thread-Safe Data Structures</strong>: Safe implementations of common data structures (list, dict) to avoid race conditions in concurrent threads.</li>
+<li><strong>Thread Synchronization</strong>: Use of Python's <code>threading.Lock</code> to manage concurrent access to shared resources.</li>
+<li><strong>Utility Functions</strong>: Tools to handle thread management and synchronization, including waiting and timeout utilities.</li>
+</ul>
+
+<h3 id="installation"><strong>Installation:</strong></h3>
+
+<ul>
+<li>Install via PyPI: <code>pip install safethread</code></li>
+<li>Clone the repository for local development: <code>git clone https://github.com/andre-romano/safethread.git</code></li>
+</ul>
+
+<h3 id="license"><strong>License:</strong></h3>
+
+<ul>
+<li>Apache-2.0 License</li>
+</ul>
 </div>
 
                         <input id="mod-safethread-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -59,15 +81,25 @@ safethread    </h1>
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="c1"># safethread/__init__.py</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">safethread</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">This package provides utilities for handling threading and concurrency in Python.</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">Modules:</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    - thread: Provides a classes for managing threads safely (using threading module primitives).</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    - process: Provides a classes for managing processes safely (using multiprocessing module primitives).</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    - utils: Includes utilities classes used throughout the code.</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">The `safethread` package provides a collection of thread-safe utilities for managing data structures and synchronization in multi-threaded environments.</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="sd">The package is designed to ensure safe, concurrent operations on common Python data structures such as lists, dictionaries among others.</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">### **Modules:**</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">- **thread**: Provides thread synchronization mechanisms (e.g., locks, semaphores) and thread-safe data structures like `SafeList` and `SafeDict`.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">- **utils**: Offers utility functions for managing thread execution, timeouts, and checking thread statuses.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">### **Features:**</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">- **Thread-Safe Data Structures**: Safe implementations of common data structures (list, dict) to avoid race conditions in concurrent threads.</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">- **Thread Synchronization**: Use of Python&#39;s `threading.Lock` to manage concurrent access to shared resources.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">- **Utility Functions**: Tools to handle thread management and synchronization, including waiting and timeout utilities.</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">### **Installation:**</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">- Install via PyPI: `pip install safethread`</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">- Clone the repository for local development: `git clone https://github.com/andre-romano/safethread.git`</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">### **License:**</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">- Apache-2.0 License</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">&quot;&quot;&quot;</span>
 </span></pre></div>
 
 

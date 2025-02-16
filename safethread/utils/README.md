@@ -2,4 +2,4 @@
 
 This folder contains ``safethread.utils` package source code. 
 
-This folder stores utility classes for the project.
+For further details, check [``__init__.py``](./__init__.py)

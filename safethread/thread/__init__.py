@@ -2,13 +2,11 @@
 # safethread/thread/__init__.py
 
 """
-safetheread.thread
+This module provides classes and utilities for thread synchronization, as well as thread-safe data structures to be used in concurrent programming scenarios.
 
-This package provides utilities for handling threading and concurrency safely in Python.
-It uses threading module primitives to do so.
-
-If you intent to use Python Processes, you will need Inter-Process Communication (IPC) synchronization. 
-In that case, check safethread.process package.
+Classes:
+- **SafeList**: A thread-safe list implementation that ensures safe operations on the list by using locking mechanisms. Methods include `append`, `clear`, `pop`, and `sort`.
+- **SafeDict**: A thread-safe dictionary implementation that provides thread-safe methods like `get`, `pop`, `setdefault`, and `update` to avoid race conditions.
 """
 
 from .SafeBaseObj import SafeBaseObj
