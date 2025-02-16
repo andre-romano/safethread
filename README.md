@@ -4,16 +4,21 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/andre-romano/safethread/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/safethread)](https://pypi.org/project/safethread/)
 
-Python utilities classes for safe deployment and management of Threads, synchronization and Python data structures.
+``safethread`` is a Python package that provides utilities for managing thread-safe operations and synchronization mechanisms. It includes custom data structures designed to ensure thread safety when used in multi-threaded programming.
 
-Includes:
-- Thread-safe wrapper classes for most Python data structures
-- Unit test for each class provided
+## Features
 
-## Installing
+- **Thread-Safe Data Structures**: 
+  - `SafeList`: A thread-safe implementation of a list.
+  - `SafeDict`: A thread-safe implementation of a dictionary.
+- **Thread Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded environments.
+- **Utility Methods**: Additional helpers and utilities for threading and synchronization.
 
-The library is available in ``pip``. You can install it using the command:
-```batch
+## Installation
+
+You can install ``safethread`` from PyPI:
+
+```bash
 pip install safethread
 ```
 
@@ -45,6 +50,7 @@ call .\commit_version.bat
 
 ## Special thanks / Acknowledgments
 
+- PyPi
 - Python 3
 
 ## License and Copyright

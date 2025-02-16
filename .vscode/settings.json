@@ -5,6 +5,7 @@
         "pady",
         "pyautogui",
         "pyinstaller",
+        "safethread",
         "venv"
     ],
     "editor.formatOnSave": true,
