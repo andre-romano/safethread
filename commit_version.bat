@@ -40,6 +40,7 @@ python ./gen_docs.py
 git add docs
 
 echo 5) Commiting in Github ...
+git add VERSION
 git commit -m "release version v%VERSION%"
 git tag v%VERSION%
 git push --all
