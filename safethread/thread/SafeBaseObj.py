@@ -1,11 +1,7 @@
-import logging
 
 from threading import RLock
 
 from ..utils import Factory
-
-# Configuração do logger
-logger = logging.getLogger(__name__)
 
 
 class SafeBaseObj(Factory):
@@ -243,10 +239,6 @@ class SafeBaseObj(Factory):
     def __getitem__(self, index):
         """Retrieve an item safely from the object."""
         with self._lock:
-            if index not in self._data:
-                msg = f"Index '{index}' not found."
-                logger.error(msg)
-                raise KeyError(msg)
             return self._data[index]
 
     def __setitem__(self, index, value):
@@ -318,6 +310,11 @@ class SafeBaseObj(Factory):
         super().__init__()  # Ensure parent class initialization
         self._data = data if not isinstance(data, SafeBaseObj) else data._data
         self._lock = RLock() if not isinstance(data, SafeBaseObj) else data._lock
+
+    def execute(self, callback):
+        """Runs callback function thread-safely."""
+        with self._lock:
+            callback()
 
     def copy(self):
         """Return a thread-safe copy of the object."""

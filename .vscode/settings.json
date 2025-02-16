@@ -27,6 +27,19 @@
         "**/.mypy_cache/**", // Exclude mypy cache (optional)
         "**/.pytest_cache/**" // Exclude pytest cache (optional)
     ],
+    "files.exclude": {
+        "**/venv": true,
+        "**/__pycache__": true,
+        "**/*.egg-info": true,
+        "**/*.egg": true,
+        "node_modules/": true,
+        "dist/": true,
+    },
+    "search.exclude": {
+        "**/venv": true,
+        "**/__pycache__": true,
+        "docs/": true,
+    },
     "files.associations": {
         "*.yml": "yaml", // for YAML files
         "*.yaml": "yaml", // for YAML files

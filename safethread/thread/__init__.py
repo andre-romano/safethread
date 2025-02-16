@@ -1,8 +1,6 @@
 
 # safethread/thread/__init__.py
 
-from .SafeBaseObj import SafeBaseObj
-
 """
 safetheread.thread
 
@@ -12,3 +10,7 @@ It uses threading module primitives to do so.
 If you intent to use Python Processes, you will need Inter-Process Communication (IPC) synchronization. 
 In that case, check safethread.process package.
 """
+
+from .SafeBaseObj import SafeBaseObj
+from .SafeDict import SafeDict
+from .SafeList import SafeList

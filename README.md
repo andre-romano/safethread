@@ -1,7 +1,8 @@
 # safethread
 
 [![PyPI](https://img.shields.io/pypi/v/safethread)](https://pypi.org/project/safethread/)
-[![License](https://img.shields.io/github/license/andre-romano/safethread)](https://github.com/andre-romano/safethread/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/andre-romano/safethread/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/pypi/dm/safethread)](https://pypi.org/project/safethread/)
 
 Python utilities classes for safe deployment and management of Threads, synchronization and Python data structures.
 
@@ -18,7 +19,7 @@ pip install safethread
 
 ## Usage
 
-Check [``examples``](./examples/) and [``tests``](./tests/) folders.
+Check [``tests``](./tests/) folder and the full documentation (link below).
 
 ## Documentation
 
