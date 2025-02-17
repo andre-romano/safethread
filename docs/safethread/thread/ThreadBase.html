@@ -172,9 +172,13 @@
 </span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a><span class="sd">        Starts the thread.</span>
 </span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>
 </span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos">93</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos">94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a>
+</span><span id="L-93"><a href="#L-93"><span class="linenos">93</span></a><span class="sd">        Raises:</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos">94</span></a>
+</span><span id="L-95"><a href="#L-95"><span class="linenos">95</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos">96</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos">97</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -278,9 +282,13 @@
 </span><span id="ThreadBase-90"><a href="#ThreadBase-90"><span class="linenos">90</span></a><span class="sd">        Starts the thread.</span>
 </span><span id="ThreadBase-91"><a href="#ThreadBase-91"><span class="linenos">91</span></a>
 </span><span id="ThreadBase-92"><a href="#ThreadBase-92"><span class="linenos">92</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="ThreadBase-93"><a href="#ThreadBase-93"><span class="linenos">93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-94"><a href="#ThreadBase-94"><span class="linenos">94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase-95"><a href="#ThreadBase-95"><span class="linenos">95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase-93"><a href="#ThreadBase-93"><span class="linenos">93</span></a>
+</span><span id="ThreadBase-94"><a href="#ThreadBase-94"><span class="linenos">94</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase-95"><a href="#ThreadBase-95"><span class="linenos">95</span></a>
+</span><span id="ThreadBase-96"><a href="#ThreadBase-96"><span class="linenos">96</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase-97"><a href="#ThreadBase-97"><span class="linenos">97</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-98"><a href="#ThreadBase-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase-99"><a href="#ThreadBase-99"><span class="linenos">99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -520,15 +528,24 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 </span><span id="ThreadBase.start-90"><a href="#ThreadBase.start-90"><span class="linenos">90</span></a><span class="sd">        Starts the thread.</span>
 </span><span id="ThreadBase.start-91"><a href="#ThreadBase.start-91"><span class="linenos">91</span></a>
 </span><span id="ThreadBase.start-92"><a href="#ThreadBase.start-92"><span class="linenos">92</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="ThreadBase.start-93"><a href="#ThreadBase.start-93"><span class="linenos">93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.start-94"><a href="#ThreadBase.start-94"><span class="linenos">94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase.start-95"><a href="#ThreadBase.start-95"><span class="linenos">95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase.start-93"><a href="#ThreadBase.start-93"><span class="linenos">93</span></a>
+</span><span id="ThreadBase.start-94"><a href="#ThreadBase.start-94"><span class="linenos">94</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.start-95"><a href="#ThreadBase.start-95"><span class="linenos">95</span></a>
+</span><span id="ThreadBase.start-96"><a href="#ThreadBase.start-96"><span class="linenos">96</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase.start-97"><a href="#ThreadBase.start-97"><span class="linenos">97</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.start-98"><a href="#ThreadBase.start-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase.start-99"><a href="#ThreadBase.start-99"><span class="linenos">99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Starts the thread.</p>
 
 <p>This method begins the execution of the thread by calling the _run method in the background.</p>
+
+<p>Raises:</p>
+
+<pre><code>RuntimeError: if start() is called more than once on the same thread object.
+</code></pre>
 </div>
 
 

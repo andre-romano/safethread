@@ -1,6 +1,5 @@
 
 import subprocess
-import threading
 
 from typing import Any, Callable, Iterable
 

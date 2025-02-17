@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.1 (2025-02-17 01:29:26 -0300)
+
+- 9985cbf added ThreadBase in safethread.thread
+- 205481a improved docs
+- 214d047 added utils.Subprocess added examples/ folder fixed min req. Python version >= 3.11 improved docs/ and .md files
+
 ## v1.0.0 (2025-02-17 00:41:24 -0300)
 
 - 214d047 added utils.Subprocess added examples/ folder fixed min req. Python version >= 3.11 improved docs/ and .md files

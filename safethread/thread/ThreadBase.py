@@ -89,6 +89,10 @@ class ThreadBase:
         Starts the thread.
 
         This method begins the execution of the thread by calling the _run method in the background.
+
+        Raises:
+
+            RuntimeError: if start() is called more than once on the same thread object.
         """
         self._thread.start()
         self._thread_started = True
