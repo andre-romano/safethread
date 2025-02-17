@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.0 (2025-02-17 00:41:24 -0300)
+
+- 214d047 added utils.Subprocess added examples/ folder fixed min req. Python version >= 3.11 improved docs/ and .md files
+- 1ffef56 added SafeQueue improved data initialization method __init__() fixed already thread safe data structures inheritance (using Python MRO)
+
 ## v0.2.0 (2025-02-16 22:09:46 -0300)
 
 - 1ffef56 added SafeQueue improved data initialization method __init__() fixed already thread safe data structures inheritance (using Python MRO)

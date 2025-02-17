@@ -66,15 +66,6 @@
                         <li>
                                 <a class="function" href="#Subprocess.get_stderr">get_stderr</a>
                         </li>
-                        <li>
-                                <a class="function" href="#Subprocess.is_terminated">is_terminated</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Subprocess.join">join</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Subprocess.start">start</a>
-                        </li>
                 </ul>
 
             </li>
@@ -104,172 +95,144 @@
 </span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a>
-</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Subprocess</span><span class="p">:</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ThreadBase</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadBase</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a>
 </span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        Args:</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Subprocess</span><span class="p">(</span><span class="n">ThreadBase</span><span class="p">):</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">        Args:</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
 </span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
 </span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
 </span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>            <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>        <span class="p">)</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>             <span class="n">command</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>             <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">        Runs the command in a subprocess and captures the output.</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span><span class="p">)</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>             <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        Runs the command in a subprocess and captures the output.</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">        Args:</span>
 </span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">        Args:</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">            command (list[str]): The command to execute.</span>
 </span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">            command (list[str]): The command to execute.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">            timeout (float, optional): Timeout of the command.</span>
 </span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">            timeout (float, optional): Timeout of the command.</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">            env (float, optional): Environment for the command.</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">            env (float, optional): Environment for the command.</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">            cwd (str, optional): Current working directory for the command.</span>
 </span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">            cwd (str, optional): Current working directory for the command.</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates.</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>            <span class="k">try</span><span class="p">:</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>                    <span class="n">command</span><span class="p">,</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>                    <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>                <span class="p">)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>                    <span class="n">returncode</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>                <span class="p">)</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>                    <span class="n">returncode</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>                <span class="p">)</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>            <span class="k">finally</span><span class="p">:</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>                <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>                    <span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">)</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates.</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>            <span class="k">try</span><span class="p">:</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>                    <span class="n">command</span><span class="p">,</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>                    <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>                <span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>                    <span class="n">returncode</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>                <span class="p">)</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>                    <span class="n">returncode</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>                <span class="p">)</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>            <span class="k">finally</span><span class="p">:</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>                <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>                    <span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">)</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">        Raises:</span>
 </span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">        Raises:</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        Returns:</span>
 </span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        Returns:</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">            int: The return code of the subprocess.</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">            int: The return code of the subprocess.</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        Raises:</span>
 </span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
-</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">        Raises:</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
-</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        Returns:</span>
 </span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>
-</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        Returns:</span>
-</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>
-</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">            str: The standard output of the subprocess.</span>
-</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">            str: The standard output of the subprocess.</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        Raises:</span>
 </span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">        Raises:</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">        Returns:</span>
 </span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">        Returns:</span>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">        Checks if the subprocess has terminated.</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">        Returns:</span>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">            bool: True if the subprocess has terminated, otherwise False.</span>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="sd">        Joins the subprocess thread, waiting for it to finish.</span>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>
-</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a><span class="sd">        Args:</span>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
-</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        Starts the subprocess in a separate thread.</span>
-</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
 </span></pre></div>
 
 
@@ -279,181 +242,156 @@
 <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">Subprocess</span>:
+    <span class="name">Subprocess</span><wbr>(<span class="base"><a href="ThreadBase.html#ThreadBase">safethread.thread.ThreadBase.ThreadBase</a></span>):
 
                 <label class="view-source-button" for="Subprocess-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Subprocess"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess-9"><a href="#Subprocess-9"><span class="linenos">  9</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Subprocess</span><span class="p">:</span>
-</span><span id="Subprocess-10"><a href="#Subprocess-10"><span class="linenos"> 10</span></a>
-</span><span id="Subprocess-11"><a href="#Subprocess-11"><span class="linenos"> 11</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
-</span><span id="Subprocess-12"><a href="#Subprocess-12"><span class="linenos"> 12</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="Subprocess-13"><a href="#Subprocess-13"><span class="linenos"> 13</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
-</span><span id="Subprocess-14"><a href="#Subprocess-14"><span class="linenos"> 14</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
-</span><span id="Subprocess-15"><a href="#Subprocess-15"><span class="linenos"> 15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="Subprocess-16"><a href="#Subprocess-16"><span class="linenos"> 16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
-</span><span id="Subprocess-17"><a href="#Subprocess-17"><span class="linenos"> 17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
-</span><span id="Subprocess-18"><a href="#Subprocess-18"><span class="linenos"> 18</span></a>
-</span><span id="Subprocess-19"><a href="#Subprocess-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-</span><span id="Subprocess-20"><a href="#Subprocess-20"><span class="linenos"> 20</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Subprocess-21"><a href="#Subprocess-21"><span class="linenos"> 21</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Subprocess-22"><a href="#Subprocess-22"><span class="linenos"> 22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-23"><a href="#Subprocess-23"><span class="linenos"> 23</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
-</span><span id="Subprocess-24"><a href="#Subprocess-24"><span class="linenos"> 24</span></a>
-</span><span id="Subprocess-25"><a href="#Subprocess-25"><span class="linenos"> 25</span></a><span class="sd">        Args:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess-11"><a href="#Subprocess-11"><span class="linenos"> 11</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Subprocess</span><span class="p">(</span><span class="n">ThreadBase</span><span class="p">):</span>
+</span><span id="Subprocess-12"><a href="#Subprocess-12"><span class="linenos"> 12</span></a>
+</span><span id="Subprocess-13"><a href="#Subprocess-13"><span class="linenos"> 13</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
+</span><span id="Subprocess-14"><a href="#Subprocess-14"><span class="linenos"> 14</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="Subprocess-15"><a href="#Subprocess-15"><span class="linenos"> 15</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
+</span><span id="Subprocess-16"><a href="#Subprocess-16"><span class="linenos"> 16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
+</span><span id="Subprocess-17"><a href="#Subprocess-17"><span class="linenos"> 17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="Subprocess-18"><a href="#Subprocess-18"><span class="linenos"> 18</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
+</span><span id="Subprocess-19"><a href="#Subprocess-19"><span class="linenos"> 19</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+</span><span id="Subprocess-20"><a href="#Subprocess-20"><span class="linenos"> 20</span></a>
+</span><span id="Subprocess-21"><a href="#Subprocess-21"><span class="linenos"> 21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="Subprocess-22"><a href="#Subprocess-22"><span class="linenos"> 22</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Subprocess-23"><a href="#Subprocess-23"><span class="linenos"> 23</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Subprocess-24"><a href="#Subprocess-24"><span class="linenos"> 24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess-25"><a href="#Subprocess-25"><span class="linenos"> 25</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
 </span><span id="Subprocess-26"><a href="#Subprocess-26"><span class="linenos"> 26</span></a>
-</span><span id="Subprocess-27"><a href="#Subprocess-27"><span class="linenos"> 27</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
+</span><span id="Subprocess-27"><a href="#Subprocess-27"><span class="linenos"> 27</span></a><span class="sd">        Args:</span>
 </span><span id="Subprocess-28"><a href="#Subprocess-28"><span class="linenos"> 28</span></a>
-</span><span id="Subprocess-29"><a href="#Subprocess-29"><span class="linenos"> 29</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
+</span><span id="Subprocess-29"><a href="#Subprocess-29"><span class="linenos"> 29</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
 </span><span id="Subprocess-30"><a href="#Subprocess-30"><span class="linenos"> 30</span></a>
-</span><span id="Subprocess-31"><a href="#Subprocess-31"><span class="linenos"> 31</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
+</span><span id="Subprocess-31"><a href="#Subprocess-31"><span class="linenos"> 31</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
 </span><span id="Subprocess-32"><a href="#Subprocess-32"><span class="linenos"> 32</span></a>
-</span><span id="Subprocess-33"><a href="#Subprocess-33"><span class="linenos"> 33</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
+</span><span id="Subprocess-33"><a href="#Subprocess-33"><span class="linenos"> 33</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
 </span><span id="Subprocess-34"><a href="#Subprocess-34"><span class="linenos"> 34</span></a>
-</span><span id="Subprocess-35"><a href="#Subprocess-35"><span class="linenos"> 35</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="Subprocess-35"><a href="#Subprocess-35"><span class="linenos"> 35</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
 </span><span id="Subprocess-36"><a href="#Subprocess-36"><span class="linenos"> 36</span></a>
-</span><span id="Subprocess-37"><a href="#Subprocess-37"><span class="linenos"> 37</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
-</span><span id="Subprocess-38"><a href="#Subprocess-38"><span class="linenos"> 38</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-39"><a href="#Subprocess-39"><span class="linenos"> 39</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="Subprocess-40"><a href="#Subprocess-40"><span class="linenos"> 40</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="Subprocess-41"><a href="#Subprocess-41"><span class="linenos"> 41</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</span><span id="Subprocess-42"><a href="#Subprocess-42"><span class="linenos"> 42</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
-</span><span id="Subprocess-43"><a href="#Subprocess-43"><span class="linenos"> 43</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span id="Subprocess-44"><a href="#Subprocess-44"><span class="linenos"> 44</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="Subprocess-45"><a href="#Subprocess-45"><span class="linenos"> 45</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-</span><span id="Subprocess-46"><a href="#Subprocess-46"><span class="linenos"> 46</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
-</span><span id="Subprocess-47"><a href="#Subprocess-47"><span class="linenos"> 47</span></a>
-</span><span id="Subprocess-48"><a href="#Subprocess-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="Subprocess-49"><a href="#Subprocess-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="Subprocess-50"><a href="#Subprocess-50"><span class="linenos"> 50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="Subprocess-51"><a href="#Subprocess-51"><span class="linenos"> 51</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span>
-</span><span id="Subprocess-52"><a href="#Subprocess-52"><span class="linenos"> 52</span></a>            <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="Subprocess-53"><a href="#Subprocess-53"><span class="linenos"> 53</span></a>        <span class="p">)</span>
-</span><span id="Subprocess-54"><a href="#Subprocess-54"><span class="linenos"> 54</span></a>
-</span><span id="Subprocess-55"><a href="#Subprocess-55"><span class="linenos"> 55</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-</span><span id="Subprocess-56"><a href="#Subprocess-56"><span class="linenos"> 56</span></a>             <span class="n">command</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Subprocess-57"><a href="#Subprocess-57"><span class="linenos"> 57</span></a>             <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Subprocess-58"><a href="#Subprocess-58"><span class="linenos"> 58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-59"><a href="#Subprocess-59"><span class="linenos"> 59</span></a><span class="sd">        Runs the command in a subprocess and captures the output.</span>
+</span><span id="Subprocess-37"><a href="#Subprocess-37"><span class="linenos"> 37</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="Subprocess-38"><a href="#Subprocess-38"><span class="linenos"> 38</span></a>
+</span><span id="Subprocess-39"><a href="#Subprocess-39"><span class="linenos"> 39</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
+</span><span id="Subprocess-40"><a href="#Subprocess-40"><span class="linenos"> 40</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess-41"><a href="#Subprocess-41"><span class="linenos"> 41</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="Subprocess-42"><a href="#Subprocess-42"><span class="linenos"> 42</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="Subprocess-43"><a href="#Subprocess-43"><span class="linenos"> 43</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span id="Subprocess-44"><a href="#Subprocess-44"><span class="linenos"> 44</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+</span><span id="Subprocess-45"><a href="#Subprocess-45"><span class="linenos"> 45</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="Subprocess-46"><a href="#Subprocess-46"><span class="linenos"> 46</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="Subprocess-47"><a href="#Subprocess-47"><span class="linenos"> 47</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+</span><span id="Subprocess-48"><a href="#Subprocess-48"><span class="linenos"> 48</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
+</span><span id="Subprocess-49"><a href="#Subprocess-49"><span class="linenos"> 49</span></a>
+</span><span id="Subprocess-50"><a href="#Subprocess-50"><span class="linenos"> 50</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="Subprocess-51"><a href="#Subprocess-51"><span class="linenos"> 51</span></a>            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span><span class="p">)</span>
+</span><span id="Subprocess-52"><a href="#Subprocess-52"><span class="linenos"> 52</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="Subprocess-53"><a href="#Subprocess-53"><span class="linenos"> 53</span></a>
+</span><span id="Subprocess-54"><a href="#Subprocess-54"><span class="linenos"> 54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Subprocess-55"><a href="#Subprocess-55"><span class="linenos"> 55</span></a>             <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Subprocess-56"><a href="#Subprocess-56"><span class="linenos"> 56</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess-57"><a href="#Subprocess-57"><span class="linenos"> 57</span></a><span class="sd">        Runs the command in a subprocess and captures the output.</span>
+</span><span id="Subprocess-58"><a href="#Subprocess-58"><span class="linenos"> 58</span></a>
+</span><span id="Subprocess-59"><a href="#Subprocess-59"><span class="linenos"> 59</span></a><span class="sd">        Args:</span>
 </span><span id="Subprocess-60"><a href="#Subprocess-60"><span class="linenos"> 60</span></a>
-</span><span id="Subprocess-61"><a href="#Subprocess-61"><span class="linenos"> 61</span></a><span class="sd">        Args:</span>
+</span><span id="Subprocess-61"><a href="#Subprocess-61"><span class="linenos"> 61</span></a><span class="sd">            command (list[str]): The command to execute.</span>
 </span><span id="Subprocess-62"><a href="#Subprocess-62"><span class="linenos"> 62</span></a>
-</span><span id="Subprocess-63"><a href="#Subprocess-63"><span class="linenos"> 63</span></a><span class="sd">            command (list[str]): The command to execute.</span>
+</span><span id="Subprocess-63"><a href="#Subprocess-63"><span class="linenos"> 63</span></a><span class="sd">            timeout (float, optional): Timeout of the command.</span>
 </span><span id="Subprocess-64"><a href="#Subprocess-64"><span class="linenos"> 64</span></a>
-</span><span id="Subprocess-65"><a href="#Subprocess-65"><span class="linenos"> 65</span></a><span class="sd">            timeout (float, optional): Timeout of the command.</span>
+</span><span id="Subprocess-65"><a href="#Subprocess-65"><span class="linenos"> 65</span></a><span class="sd">            env (float, optional): Environment for the command.</span>
 </span><span id="Subprocess-66"><a href="#Subprocess-66"><span class="linenos"> 66</span></a>
-</span><span id="Subprocess-67"><a href="#Subprocess-67"><span class="linenos"> 67</span></a><span class="sd">            env (float, optional): Environment for the command.</span>
+</span><span id="Subprocess-67"><a href="#Subprocess-67"><span class="linenos"> 67</span></a><span class="sd">            cwd (str, optional): Current working directory for the command.</span>
 </span><span id="Subprocess-68"><a href="#Subprocess-68"><span class="linenos"> 68</span></a>
-</span><span id="Subprocess-69"><a href="#Subprocess-69"><span class="linenos"> 69</span></a><span class="sd">            cwd (str, optional): Current working directory for the command.</span>
-</span><span id="Subprocess-70"><a href="#Subprocess-70"><span class="linenos"> 70</span></a>
-</span><span id="Subprocess-71"><a href="#Subprocess-71"><span class="linenos"> 71</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates.</span>
-</span><span id="Subprocess-72"><a href="#Subprocess-72"><span class="linenos"> 72</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-73"><a href="#Subprocess-73"><span class="linenos"> 73</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess-74"><a href="#Subprocess-74"><span class="linenos"> 74</span></a>            <span class="k">try</span><span class="p">:</span>
-</span><span id="Subprocess-75"><a href="#Subprocess-75"><span class="linenos"> 75</span></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-</span><span id="Subprocess-76"><a href="#Subprocess-76"><span class="linenos"> 76</span></a>                    <span class="n">command</span><span class="p">,</span>
-</span><span id="Subprocess-77"><a href="#Subprocess-77"><span class="linenos"> 77</span></a>                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="Subprocess-78"><a href="#Subprocess-78"><span class="linenos"> 78</span></a>                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-</span><span id="Subprocess-79"><a href="#Subprocess-79"><span class="linenos"> 79</span></a>                    <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span>
-</span><span id="Subprocess-80"><a href="#Subprocess-80"><span class="linenos"> 80</span></a>                <span class="p">)</span>
-</span><span id="Subprocess-81"><a href="#Subprocess-81"><span class="linenos"> 81</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
-</span><span id="Subprocess-82"><a href="#Subprocess-82"><span class="linenos"> 82</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
-</span><span id="Subprocess-83"><a href="#Subprocess-83"><span class="linenos"> 83</span></a>                    <span class="n">returncode</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
-</span><span id="Subprocess-84"><a href="#Subprocess-84"><span class="linenos"> 84</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
-</span><span id="Subprocess-85"><a href="#Subprocess-85"><span class="linenos"> 85</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
-</span><span id="Subprocess-86"><a href="#Subprocess-86"><span class="linenos"> 86</span></a>                <span class="p">)</span>
-</span><span id="Subprocess-87"><a href="#Subprocess-87"><span class="linenos"> 87</span></a>            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="Subprocess-88"><a href="#Subprocess-88"><span class="linenos"> 88</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
-</span><span id="Subprocess-89"><a href="#Subprocess-89"><span class="linenos"> 89</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
-</span><span id="Subprocess-90"><a href="#Subprocess-90"><span class="linenos"> 90</span></a>                    <span class="n">returncode</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="Subprocess-91"><a href="#Subprocess-91"><span class="linenos"> 91</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-</span><span id="Subprocess-92"><a href="#Subprocess-92"><span class="linenos"> 92</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-</span><span id="Subprocess-93"><a href="#Subprocess-93"><span class="linenos"> 93</span></a>                <span class="p">)</span>
-</span><span id="Subprocess-94"><a href="#Subprocess-94"><span class="linenos"> 94</span></a>            <span class="k">finally</span><span class="p">:</span>
-</span><span id="Subprocess-95"><a href="#Subprocess-95"><span class="linenos"> 95</span></a>                <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
-</span><span id="Subprocess-96"><a href="#Subprocess-96"><span class="linenos"> 96</span></a>                    <span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">)</span>
-</span><span id="Subprocess-97"><a href="#Subprocess-97"><span class="linenos"> 97</span></a>
-</span><span id="Subprocess-98"><a href="#Subprocess-98"><span class="linenos"> 98</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="Subprocess-99"><a href="#Subprocess-99"><span class="linenos"> 99</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-100"><a href="#Subprocess-100"><span class="linenos">100</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+</span><span id="Subprocess-69"><a href="#Subprocess-69"><span class="linenos"> 69</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates.</span>
+</span><span id="Subprocess-70"><a href="#Subprocess-70"><span class="linenos"> 70</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess-71"><a href="#Subprocess-71"><span class="linenos"> 71</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess-72"><a href="#Subprocess-72"><span class="linenos"> 72</span></a>            <span class="k">try</span><span class="p">:</span>
+</span><span id="Subprocess-73"><a href="#Subprocess-73"><span class="linenos"> 73</span></a>                <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+</span><span id="Subprocess-74"><a href="#Subprocess-74"><span class="linenos"> 74</span></a>                    <span class="n">command</span><span class="p">,</span>
+</span><span id="Subprocess-75"><a href="#Subprocess-75"><span class="linenos"> 75</span></a>                    <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="Subprocess-76"><a href="#Subprocess-76"><span class="linenos"> 76</span></a>                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+</span><span id="Subprocess-77"><a href="#Subprocess-77"><span class="linenos"> 77</span></a>                    <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span>
+</span><span id="Subprocess-78"><a href="#Subprocess-78"><span class="linenos"> 78</span></a>                <span class="p">)</span>
+</span><span id="Subprocess-79"><a href="#Subprocess-79"><span class="linenos"> 79</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
+</span><span id="Subprocess-80"><a href="#Subprocess-80"><span class="linenos"> 80</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
+</span><span id="Subprocess-81"><a href="#Subprocess-81"><span class="linenos"> 81</span></a>                    <span class="n">returncode</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+</span><span id="Subprocess-82"><a href="#Subprocess-82"><span class="linenos"> 82</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+</span><span id="Subprocess-83"><a href="#Subprocess-83"><span class="linenos"> 83</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="Subprocess-84"><a href="#Subprocess-84"><span class="linenos"> 84</span></a>                <span class="p">)</span>
+</span><span id="Subprocess-85"><a href="#Subprocess-85"><span class="linenos"> 85</span></a>            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="Subprocess-86"><a href="#Subprocess-86"><span class="linenos"> 86</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span><span class="p">(</span>
+</span><span id="Subprocess-87"><a href="#Subprocess-87"><span class="linenos"> 87</span></a>                    <span class="n">args</span><span class="o">=</span><span class="n">command</span><span class="p">,</span>
+</span><span id="Subprocess-88"><a href="#Subprocess-88"><span class="linenos"> 88</span></a>                    <span class="n">returncode</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="Subprocess-89"><a href="#Subprocess-89"><span class="linenos"> 89</span></a>                    <span class="n">stderr</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+</span><span id="Subprocess-90"><a href="#Subprocess-90"><span class="linenos"> 90</span></a>                    <span class="n">stdout</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+</span><span id="Subprocess-91"><a href="#Subprocess-91"><span class="linenos"> 91</span></a>                <span class="p">)</span>
+</span><span id="Subprocess-92"><a href="#Subprocess-92"><span class="linenos"> 92</span></a>            <span class="k">finally</span><span class="p">:</span>
+</span><span id="Subprocess-93"><a href="#Subprocess-93"><span class="linenos"> 93</span></a>                <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+</span><span id="Subprocess-94"><a href="#Subprocess-94"><span class="linenos"> 94</span></a>                    <span class="n">callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">)</span>
+</span><span id="Subprocess-95"><a href="#Subprocess-95"><span class="linenos"> 95</span></a>
+</span><span id="Subprocess-96"><a href="#Subprocess-96"><span class="linenos"> 96</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Subprocess-97"><a href="#Subprocess-97"><span class="linenos"> 97</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess-98"><a href="#Subprocess-98"><span class="linenos"> 98</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+</span><span id="Subprocess-99"><a href="#Subprocess-99"><span class="linenos"> 99</span></a>
+</span><span id="Subprocess-100"><a href="#Subprocess-100"><span class="linenos">100</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess-101"><a href="#Subprocess-101"><span class="linenos">101</span></a>
-</span><span id="Subprocess-102"><a href="#Subprocess-102"><span class="linenos">102</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess-102"><a href="#Subprocess-102"><span class="linenos">102</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess-103"><a href="#Subprocess-103"><span class="linenos">103</span></a>
-</span><span id="Subprocess-104"><a href="#Subprocess-104"><span class="linenos">104</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess-104"><a href="#Subprocess-104"><span class="linenos">104</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess-105"><a href="#Subprocess-105"><span class="linenos">105</span></a>
-</span><span id="Subprocess-106"><a href="#Subprocess-106"><span class="linenos">106</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess-107"><a href="#Subprocess-107"><span class="linenos">107</span></a>
-</span><span id="Subprocess-108"><a href="#Subprocess-108"><span class="linenos">108</span></a><span class="sd">            int: The return code of the subprocess.</span>
-</span><span id="Subprocess-109"><a href="#Subprocess-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-110"><a href="#Subprocess-110"><span class="linenos">110</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess-111"><a href="#Subprocess-111"><span class="linenos">111</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess-112"><a href="#Subprocess-112"><span class="linenos">112</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess-113"><a href="#Subprocess-113"><span class="linenos">113</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
-</span><span id="Subprocess-114"><a href="#Subprocess-114"><span class="linenos">114</span></a>
-</span><span id="Subprocess-115"><a href="#Subprocess-115"><span class="linenos">115</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="Subprocess-116"><a href="#Subprocess-116"><span class="linenos">116</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-117"><a href="#Subprocess-117"><span class="linenos">117</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+</span><span id="Subprocess-106"><a href="#Subprocess-106"><span class="linenos">106</span></a><span class="sd">            int: The return code of the subprocess.</span>
+</span><span id="Subprocess-107"><a href="#Subprocess-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess-108"><a href="#Subprocess-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess-109"><a href="#Subprocess-109"><span class="linenos">109</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess-110"><a href="#Subprocess-110"><span class="linenos">110</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess-111"><a href="#Subprocess-111"><span class="linenos">111</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
+</span><span id="Subprocess-112"><a href="#Subprocess-112"><span class="linenos">112</span></a>
+</span><span id="Subprocess-113"><a href="#Subprocess-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Subprocess-114"><a href="#Subprocess-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess-115"><a href="#Subprocess-115"><span class="linenos">115</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+</span><span id="Subprocess-116"><a href="#Subprocess-116"><span class="linenos">116</span></a>
+</span><span id="Subprocess-117"><a href="#Subprocess-117"><span class="linenos">117</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess-118"><a href="#Subprocess-118"><span class="linenos">118</span></a>
-</span><span id="Subprocess-119"><a href="#Subprocess-119"><span class="linenos">119</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess-119"><a href="#Subprocess-119"><span class="linenos">119</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess-120"><a href="#Subprocess-120"><span class="linenos">120</span></a>
-</span><span id="Subprocess-121"><a href="#Subprocess-121"><span class="linenos">121</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess-121"><a href="#Subprocess-121"><span class="linenos">121</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess-122"><a href="#Subprocess-122"><span class="linenos">122</span></a>
-</span><span id="Subprocess-123"><a href="#Subprocess-123"><span class="linenos">123</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess-124"><a href="#Subprocess-124"><span class="linenos">124</span></a>
-</span><span id="Subprocess-125"><a href="#Subprocess-125"><span class="linenos">125</span></a><span class="sd">            str: The standard output of the subprocess.</span>
-</span><span id="Subprocess-126"><a href="#Subprocess-126"><span class="linenos">126</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-127"><a href="#Subprocess-127"><span class="linenos">127</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess-128"><a href="#Subprocess-128"><span class="linenos">128</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess-129"><a href="#Subprocess-129"><span class="linenos">129</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess-130"><a href="#Subprocess-130"><span class="linenos">130</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
-</span><span id="Subprocess-131"><a href="#Subprocess-131"><span class="linenos">131</span></a>
-</span><span id="Subprocess-132"><a href="#Subprocess-132"><span class="linenos">132</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="Subprocess-133"><a href="#Subprocess-133"><span class="linenos">133</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-134"><a href="#Subprocess-134"><span class="linenos">134</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+</span><span id="Subprocess-123"><a href="#Subprocess-123"><span class="linenos">123</span></a><span class="sd">            str: The standard output of the subprocess.</span>
+</span><span id="Subprocess-124"><a href="#Subprocess-124"><span class="linenos">124</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess-125"><a href="#Subprocess-125"><span class="linenos">125</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess-126"><a href="#Subprocess-126"><span class="linenos">126</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess-127"><a href="#Subprocess-127"><span class="linenos">127</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess-128"><a href="#Subprocess-128"><span class="linenos">128</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="Subprocess-129"><a href="#Subprocess-129"><span class="linenos">129</span></a>
+</span><span id="Subprocess-130"><a href="#Subprocess-130"><span class="linenos">130</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Subprocess-131"><a href="#Subprocess-131"><span class="linenos">131</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess-132"><a href="#Subprocess-132"><span class="linenos">132</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+</span><span id="Subprocess-133"><a href="#Subprocess-133"><span class="linenos">133</span></a>
+</span><span id="Subprocess-134"><a href="#Subprocess-134"><span class="linenos">134</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess-135"><a href="#Subprocess-135"><span class="linenos">135</span></a>
-</span><span id="Subprocess-136"><a href="#Subprocess-136"><span class="linenos">136</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess-136"><a href="#Subprocess-136"><span class="linenos">136</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess-137"><a href="#Subprocess-137"><span class="linenos">137</span></a>
-</span><span id="Subprocess-138"><a href="#Subprocess-138"><span class="linenos">138</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess-138"><a href="#Subprocess-138"><span class="linenos">138</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess-139"><a href="#Subprocess-139"><span class="linenos">139</span></a>
-</span><span id="Subprocess-140"><a href="#Subprocess-140"><span class="linenos">140</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess-141"><a href="#Subprocess-141"><span class="linenos">141</span></a>
-</span><span id="Subprocess-142"><a href="#Subprocess-142"><span class="linenos">142</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
-</span><span id="Subprocess-143"><a href="#Subprocess-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-144"><a href="#Subprocess-144"><span class="linenos">144</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess-145"><a href="#Subprocess-145"><span class="linenos">145</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess-146"><a href="#Subprocess-146"><span class="linenos">146</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess-147"><a href="#Subprocess-147"><span class="linenos">147</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
-</span><span id="Subprocess-148"><a href="#Subprocess-148"><span class="linenos">148</span></a>
-</span><span id="Subprocess-149"><a href="#Subprocess-149"><span class="linenos">149</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Subprocess-150"><a href="#Subprocess-150"><span class="linenos">150</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-151"><a href="#Subprocess-151"><span class="linenos">151</span></a><span class="sd">        Checks if the subprocess has terminated.</span>
-</span><span id="Subprocess-152"><a href="#Subprocess-152"><span class="linenos">152</span></a>
-</span><span id="Subprocess-153"><a href="#Subprocess-153"><span class="linenos">153</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess-154"><a href="#Subprocess-154"><span class="linenos">154</span></a>
-</span><span id="Subprocess-155"><a href="#Subprocess-155"><span class="linenos">155</span></a><span class="sd">            bool: True if the subprocess has terminated, otherwise False.</span>
-</span><span id="Subprocess-156"><a href="#Subprocess-156"><span class="linenos">156</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-157"><a href="#Subprocess-157"><span class="linenos">157</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="Subprocess-158"><a href="#Subprocess-158"><span class="linenos">158</span></a>
-</span><span id="Subprocess-159"><a href="#Subprocess-159"><span class="linenos">159</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Subprocess-160"><a href="#Subprocess-160"><span class="linenos">160</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-161"><a href="#Subprocess-161"><span class="linenos">161</span></a><span class="sd">        Joins the subprocess thread, waiting for it to finish.</span>
-</span><span id="Subprocess-162"><a href="#Subprocess-162"><span class="linenos">162</span></a>
-</span><span id="Subprocess-163"><a href="#Subprocess-163"><span class="linenos">163</span></a><span class="sd">        Args:</span>
-</span><span id="Subprocess-164"><a href="#Subprocess-164"><span class="linenos">164</span></a>
-</span><span id="Subprocess-165"><a href="#Subprocess-165"><span class="linenos">165</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="Subprocess-166"><a href="#Subprocess-166"><span class="linenos">166</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-167"><a href="#Subprocess-167"><span class="linenos">167</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="Subprocess-168"><a href="#Subprocess-168"><span class="linenos">168</span></a>
-</span><span id="Subprocess-169"><a href="#Subprocess-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Subprocess-170"><a href="#Subprocess-170"><span class="linenos">170</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess-171"><a href="#Subprocess-171"><span class="linenos">171</span></a><span class="sd">        Starts the subprocess in a separate thread.</span>
-</span><span id="Subprocess-172"><a href="#Subprocess-172"><span class="linenos">172</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess-173"><a href="#Subprocess-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="Subprocess-140"><a href="#Subprocess-140"><span class="linenos">140</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
+</span><span id="Subprocess-141"><a href="#Subprocess-141"><span class="linenos">141</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess-142"><a href="#Subprocess-142"><span class="linenos">142</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess-143"><a href="#Subprocess-143"><span class="linenos">143</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess-144"><a href="#Subprocess-144"><span class="linenos">144</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess-145"><a href="#Subprocess-145"><span class="linenos">145</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>A base class for managing threads with thread safety.</p>
+
+<p>This class provides a structure for creating and managing threads using the threading module.
+It also ensures that the thread's operations are protected by a reentrant lock (_lock) to ensure thread safety.</p>
+</div>
+
 
                             <div id="Subprocess.__init__" class="classattr">
                                         <input id="Subprocess.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -465,41 +403,38 @@
 
     </div>
     <a class="headerlink" href="#Subprocess.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.__init__-19"><a href="#Subprocess.__init__-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-</span><span id="Subprocess.__init__-20"><a href="#Subprocess.__init__-20"><span class="linenos">20</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="Subprocess.__init__-21"><a href="#Subprocess.__init__-21"><span class="linenos">21</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Subprocess.__init__-22"><a href="#Subprocess.__init__-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.__init__-23"><a href="#Subprocess.__init__-23"><span class="linenos">23</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
-</span><span id="Subprocess.__init__-24"><a href="#Subprocess.__init__-24"><span class="linenos">24</span></a>
-</span><span id="Subprocess.__init__-25"><a href="#Subprocess.__init__-25"><span class="linenos">25</span></a><span class="sd">        Args:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.__init__-21"><a href="#Subprocess.__init__-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="Subprocess.__init__-22"><a href="#Subprocess.__init__-22"><span class="linenos">22</span></a>                 <span class="n">command</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="Subprocess.__init__-23"><a href="#Subprocess.__init__-23"><span class="linenos">23</span></a>                 <span class="n">env</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cwd</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Subprocess.__init__-24"><a href="#Subprocess.__init__-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess.__init__-25"><a href="#Subprocess.__init__-25"><span class="linenos">25</span></a><span class="sd">        Initializes the thread-safe Subprocess object with the command to run.</span>
 </span><span id="Subprocess.__init__-26"><a href="#Subprocess.__init__-26"><span class="linenos">26</span></a>
-</span><span id="Subprocess.__init__-27"><a href="#Subprocess.__init__-27"><span class="linenos">27</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
+</span><span id="Subprocess.__init__-27"><a href="#Subprocess.__init__-27"><span class="linenos">27</span></a><span class="sd">        Args:</span>
 </span><span id="Subprocess.__init__-28"><a href="#Subprocess.__init__-28"><span class="linenos">28</span></a>
-</span><span id="Subprocess.__init__-29"><a href="#Subprocess.__init__-29"><span class="linenos">29</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
+</span><span id="Subprocess.__init__-29"><a href="#Subprocess.__init__-29"><span class="linenos">29</span></a><span class="sd">            command (Iterable[str] | str): The command to run as an iterable or a string.</span>
 </span><span id="Subprocess.__init__-30"><a href="#Subprocess.__init__-30"><span class="linenos">30</span></a>
-</span><span id="Subprocess.__init__-31"><a href="#Subprocess.__init__-31"><span class="linenos">31</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
+</span><span id="Subprocess.__init__-31"><a href="#Subprocess.__init__-31"><span class="linenos">31</span></a><span class="sd">            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.</span>
 </span><span id="Subprocess.__init__-32"><a href="#Subprocess.__init__-32"><span class="linenos">32</span></a>
-</span><span id="Subprocess.__init__-33"><a href="#Subprocess.__init__-33"><span class="linenos">33</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
+</span><span id="Subprocess.__init__-33"><a href="#Subprocess.__init__-33"><span class="linenos">33</span></a><span class="sd">            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).</span>
 </span><span id="Subprocess.__init__-34"><a href="#Subprocess.__init__-34"><span class="linenos">34</span></a>
-</span><span id="Subprocess.__init__-35"><a href="#Subprocess.__init__-35"><span class="linenos">35</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="Subprocess.__init__-35"><a href="#Subprocess.__init__-35"><span class="linenos">35</span></a><span class="sd">            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).</span>
 </span><span id="Subprocess.__init__-36"><a href="#Subprocess.__init__-36"><span class="linenos">36</span></a>
-</span><span id="Subprocess.__init__-37"><a href="#Subprocess.__init__-37"><span class="linenos">37</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
-</span><span id="Subprocess.__init__-38"><a href="#Subprocess.__init__-38"><span class="linenos">38</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.__init__-39"><a href="#Subprocess.__init__-39"><span class="linenos">39</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="Subprocess.__init__-40"><a href="#Subprocess.__init__-40"><span class="linenos">40</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="Subprocess.__init__-41"><a href="#Subprocess.__init__-41"><span class="linenos">41</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-</span><span id="Subprocess.__init__-42"><a href="#Subprocess.__init__-42"><span class="linenos">42</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
-</span><span id="Subprocess.__init__-43"><a href="#Subprocess.__init__-43"><span class="linenos">43</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</span><span id="Subprocess.__init__-44"><a href="#Subprocess.__init__-44"><span class="linenos">44</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="Subprocess.__init__-45"><a href="#Subprocess.__init__-45"><span class="linenos">45</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-</span><span id="Subprocess.__init__-46"><a href="#Subprocess.__init__-46"><span class="linenos">46</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
-</span><span id="Subprocess.__init__-47"><a href="#Subprocess.__init__-47"><span class="linenos">47</span></a>
-</span><span id="Subprocess.__init__-48"><a href="#Subprocess.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="Subprocess.__init__-49"><a href="#Subprocess.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="Subprocess.__init__-50"><a href="#Subprocess.__init__-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="Subprocess.__init__-51"><a href="#Subprocess.__init__-51"><span class="linenos">51</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span>
-</span><span id="Subprocess.__init__-52"><a href="#Subprocess.__init__-52"><span class="linenos">52</span></a>            <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="Subprocess.__init__-53"><a href="#Subprocess.__init__-53"><span class="linenos">53</span></a>        <span class="p">)</span>
+</span><span id="Subprocess.__init__-37"><a href="#Subprocess.__init__-37"><span class="linenos">37</span></a><span class="sd">            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).</span>
+</span><span id="Subprocess.__init__-38"><a href="#Subprocess.__init__-38"><span class="linenos">38</span></a>
+</span><span id="Subprocess.__init__-39"><a href="#Subprocess.__init__-39"><span class="linenos">39</span></a><span class="sd">            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.</span>
+</span><span id="Subprocess.__init__-40"><a href="#Subprocess.__init__-40"><span class="linenos">40</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess.__init__-41"><a href="#Subprocess.__init__-41"><span class="linenos">41</span></a>        <span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="Subprocess.__init__-42"><a href="#Subprocess.__init__-42"><span class="linenos">42</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="Subprocess.__init__-43"><a href="#Subprocess.__init__-43"><span class="linenos">43</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span><span id="Subprocess.__init__-44"><a href="#Subprocess.__init__-44"><span class="linenos">44</span></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+</span><span id="Subprocess.__init__-45"><a href="#Subprocess.__init__-45"><span class="linenos">45</span></a>            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</span><span id="Subprocess.__init__-46"><a href="#Subprocess.__init__-46"><span class="linenos">46</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="Subprocess.__init__-47"><a href="#Subprocess.__init__-47"><span class="linenos">47</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+</span><span id="Subprocess.__init__-48"><a href="#Subprocess.__init__-48"><span class="linenos">48</span></a>                <span class="s2">&quot;Command must be a string or an iterable of strings.&quot;</span><span class="p">)</span>
+</span><span id="Subprocess.__init__-49"><a href="#Subprocess.__init__-49"><span class="linenos">49</span></a>
+</span><span id="Subprocess.__init__-50"><a href="#Subprocess.__init__-50"><span class="linenos">50</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="Subprocess.__init__-51"><a href="#Subprocess.__init__-51"><span class="linenos">51</span></a>            <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">cmd</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">cwd</span><span class="p">,</span> <span class="n">callback</span><span class="p">],</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span><span class="p">)</span>
+</span><span id="Subprocess.__init__-52"><a href="#Subprocess.__init__-52"><span class="linenos">52</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span> <span class="n">Subprocess</span><span class="o">.</span><span class="n">Finished</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -534,22 +469,22 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
     </div>
     <a class="headerlink" href="#Subprocess.get_return_code"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_return_code-98"><a href="#Subprocess.get_return_code-98"><span class="linenos"> 98</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="Subprocess.get_return_code-99"><a href="#Subprocess.get_return_code-99"><span class="linenos"> 99</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_return_code-100"><a href="#Subprocess.get_return_code-100"><span class="linenos">100</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_return_code-96"><a href="#Subprocess.get_return_code-96"><span class="linenos"> 96</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_return_code</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="Subprocess.get_return_code-97"><a href="#Subprocess.get_return_code-97"><span class="linenos"> 97</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_return_code-98"><a href="#Subprocess.get_return_code-98"><span class="linenos"> 98</span></a><span class="sd">        Returns the return code of the subprocess.</span>
+</span><span id="Subprocess.get_return_code-99"><a href="#Subprocess.get_return_code-99"><span class="linenos"> 99</span></a>
+</span><span id="Subprocess.get_return_code-100"><a href="#Subprocess.get_return_code-100"><span class="linenos">100</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess.get_return_code-101"><a href="#Subprocess.get_return_code-101"><span class="linenos">101</span></a>
-</span><span id="Subprocess.get_return_code-102"><a href="#Subprocess.get_return_code-102"><span class="linenos">102</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess.get_return_code-102"><a href="#Subprocess.get_return_code-102"><span class="linenos">102</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess.get_return_code-103"><a href="#Subprocess.get_return_code-103"><span class="linenos">103</span></a>
-</span><span id="Subprocess.get_return_code-104"><a href="#Subprocess.get_return_code-104"><span class="linenos">104</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess.get_return_code-104"><a href="#Subprocess.get_return_code-104"><span class="linenos">104</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess.get_return_code-105"><a href="#Subprocess.get_return_code-105"><span class="linenos">105</span></a>
-</span><span id="Subprocess.get_return_code-106"><a href="#Subprocess.get_return_code-106"><span class="linenos">106</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess.get_return_code-107"><a href="#Subprocess.get_return_code-107"><span class="linenos">107</span></a>
-</span><span id="Subprocess.get_return_code-108"><a href="#Subprocess.get_return_code-108"><span class="linenos">108</span></a><span class="sd">            int: The return code of the subprocess.</span>
-</span><span id="Subprocess.get_return_code-109"><a href="#Subprocess.get_return_code-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_return_code-110"><a href="#Subprocess.get_return_code-110"><span class="linenos">110</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess.get_return_code-111"><a href="#Subprocess.get_return_code-111"><span class="linenos">111</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess.get_return_code-112"><a href="#Subprocess.get_return_code-112"><span class="linenos">112</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess.get_return_code-113"><a href="#Subprocess.get_return_code-113"><span class="linenos">113</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
+</span><span id="Subprocess.get_return_code-106"><a href="#Subprocess.get_return_code-106"><span class="linenos">106</span></a><span class="sd">            int: The return code of the subprocess.</span>
+</span><span id="Subprocess.get_return_code-107"><a href="#Subprocess.get_return_code-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_return_code-108"><a href="#Subprocess.get_return_code-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess.get_return_code-109"><a href="#Subprocess.get_return_code-109"><span class="linenos">109</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess.get_return_code-110"><a href="#Subprocess.get_return_code-110"><span class="linenos">110</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire return code from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess.get_return_code-111"><a href="#Subprocess.get_return_code-111"><span class="linenos">111</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">returncode</span>
 </span></pre></div>
 
 
@@ -579,22 +514,22 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
     </div>
     <a class="headerlink" href="#Subprocess.get_stdout"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_stdout-115"><a href="#Subprocess.get_stdout-115"><span class="linenos">115</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="Subprocess.get_stdout-116"><a href="#Subprocess.get_stdout-116"><span class="linenos">116</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_stdout-117"><a href="#Subprocess.get_stdout-117"><span class="linenos">117</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_stdout-113"><a href="#Subprocess.get_stdout-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stdout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Subprocess.get_stdout-114"><a href="#Subprocess.get_stdout-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_stdout-115"><a href="#Subprocess.get_stdout-115"><span class="linenos">115</span></a><span class="sd">        Returns the standard output of the subprocess.</span>
+</span><span id="Subprocess.get_stdout-116"><a href="#Subprocess.get_stdout-116"><span class="linenos">116</span></a>
+</span><span id="Subprocess.get_stdout-117"><a href="#Subprocess.get_stdout-117"><span class="linenos">117</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess.get_stdout-118"><a href="#Subprocess.get_stdout-118"><span class="linenos">118</span></a>
-</span><span id="Subprocess.get_stdout-119"><a href="#Subprocess.get_stdout-119"><span class="linenos">119</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess.get_stdout-119"><a href="#Subprocess.get_stdout-119"><span class="linenos">119</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess.get_stdout-120"><a href="#Subprocess.get_stdout-120"><span class="linenos">120</span></a>
-</span><span id="Subprocess.get_stdout-121"><a href="#Subprocess.get_stdout-121"><span class="linenos">121</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess.get_stdout-121"><a href="#Subprocess.get_stdout-121"><span class="linenos">121</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess.get_stdout-122"><a href="#Subprocess.get_stdout-122"><span class="linenos">122</span></a>
-</span><span id="Subprocess.get_stdout-123"><a href="#Subprocess.get_stdout-123"><span class="linenos">123</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess.get_stdout-124"><a href="#Subprocess.get_stdout-124"><span class="linenos">124</span></a>
-</span><span id="Subprocess.get_stdout-125"><a href="#Subprocess.get_stdout-125"><span class="linenos">125</span></a><span class="sd">            str: The standard output of the subprocess.</span>
-</span><span id="Subprocess.get_stdout-126"><a href="#Subprocess.get_stdout-126"><span class="linenos">126</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_stdout-127"><a href="#Subprocess.get_stdout-127"><span class="linenos">127</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess.get_stdout-128"><a href="#Subprocess.get_stdout-128"><span class="linenos">128</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess.get_stdout-129"><a href="#Subprocess.get_stdout-129"><span class="linenos">129</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess.get_stdout-130"><a href="#Subprocess.get_stdout-130"><span class="linenos">130</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
+</span><span id="Subprocess.get_stdout-123"><a href="#Subprocess.get_stdout-123"><span class="linenos">123</span></a><span class="sd">            str: The standard output of the subprocess.</span>
+</span><span id="Subprocess.get_stdout-124"><a href="#Subprocess.get_stdout-124"><span class="linenos">124</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_stdout-125"><a href="#Subprocess.get_stdout-125"><span class="linenos">125</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess.get_stdout-126"><a href="#Subprocess.get_stdout-126"><span class="linenos">126</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess.get_stdout-127"><a href="#Subprocess.get_stdout-127"><span class="linenos">127</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stdout from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess.get_stdout-128"><a href="#Subprocess.get_stdout-128"><span class="linenos">128</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stdout</span>
 </span></pre></div>
 
 
@@ -624,22 +559,22 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
     </div>
     <a class="headerlink" href="#Subprocess.get_stderr"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_stderr-132"><a href="#Subprocess.get_stderr-132"><span class="linenos">132</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="Subprocess.get_stderr-133"><a href="#Subprocess.get_stderr-133"><span class="linenos">133</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_stderr-134"><a href="#Subprocess.get_stderr-134"><span class="linenos">134</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.get_stderr-130"><a href="#Subprocess.get_stderr-130"><span class="linenos">130</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_stderr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="Subprocess.get_stderr-131"><a href="#Subprocess.get_stderr-131"><span class="linenos">131</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_stderr-132"><a href="#Subprocess.get_stderr-132"><span class="linenos">132</span></a><span class="sd">        Returns the standard error output of the subprocess.</span>
+</span><span id="Subprocess.get_stderr-133"><a href="#Subprocess.get_stderr-133"><span class="linenos">133</span></a>
+</span><span id="Subprocess.get_stderr-134"><a href="#Subprocess.get_stderr-134"><span class="linenos">134</span></a><span class="sd">        Raises:</span>
 </span><span id="Subprocess.get_stderr-135"><a href="#Subprocess.get_stderr-135"><span class="linenos">135</span></a>
-</span><span id="Subprocess.get_stderr-136"><a href="#Subprocess.get_stderr-136"><span class="linenos">136</span></a><span class="sd">        Raises:</span>
+</span><span id="Subprocess.get_stderr-136"><a href="#Subprocess.get_stderr-136"><span class="linenos">136</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
 </span><span id="Subprocess.get_stderr-137"><a href="#Subprocess.get_stderr-137"><span class="linenos">137</span></a>
-</span><span id="Subprocess.get_stderr-138"><a href="#Subprocess.get_stderr-138"><span class="linenos">138</span></a><span class="sd">            Exception: If the subprocess has not yet terminated.</span>
+</span><span id="Subprocess.get_stderr-138"><a href="#Subprocess.get_stderr-138"><span class="linenos">138</span></a><span class="sd">        Returns:</span>
 </span><span id="Subprocess.get_stderr-139"><a href="#Subprocess.get_stderr-139"><span class="linenos">139</span></a>
-</span><span id="Subprocess.get_stderr-140"><a href="#Subprocess.get_stderr-140"><span class="linenos">140</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess.get_stderr-141"><a href="#Subprocess.get_stderr-141"><span class="linenos">141</span></a>
-</span><span id="Subprocess.get_stderr-142"><a href="#Subprocess.get_stderr-142"><span class="linenos">142</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
-</span><span id="Subprocess.get_stderr-143"><a href="#Subprocess.get_stderr-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.get_stderr-144"><a href="#Subprocess.get_stderr-144"><span class="linenos">144</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="Subprocess.get_stderr-145"><a href="#Subprocess.get_stderr-145"><span class="linenos">145</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
-</span><span id="Subprocess.get_stderr-146"><a href="#Subprocess.get_stderr-146"><span class="linenos">146</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
-</span><span id="Subprocess.get_stderr-147"><a href="#Subprocess.get_stderr-147"><span class="linenos">147</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
+</span><span id="Subprocess.get_stderr-140"><a href="#Subprocess.get_stderr-140"><span class="linenos">140</span></a><span class="sd">            str: The standard error output of the subprocess.</span>
+</span><span id="Subprocess.get_stderr-141"><a href="#Subprocess.get_stderr-141"><span class="linenos">141</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Subprocess.get_stderr-142"><a href="#Subprocess.get_stderr-142"><span class="linenos">142</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="Subprocess.get_stderr-143"><a href="#Subprocess.get_stderr-143"><span class="linenos">143</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_terminated</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">:</span>
+</span><span id="Subprocess.get_stderr-144"><a href="#Subprocess.get_stderr-144"><span class="linenos">144</span></a>                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot acquire stderr from subprocess&quot;</span><span class="p">)</span>
+</span><span id="Subprocess.get_stderr-145"><a href="#Subprocess.get_stderr-145"><span class="linenos">145</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">stderr</span>
 </span></pre></div>
 
 
@@ -658,95 +593,20 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
 
                             </div>
-                            <div id="Subprocess.is_terminated" class="classattr">
-                                        <input id="Subprocess.is_terminated-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">is_terminated</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="ThreadBase.html#ThreadBase">safethread.thread.ThreadBase.ThreadBase</a></dt>
+                                <dd id="Subprocess.has_started" class="function"><a href="ThreadBase.html#ThreadBase.has_started">has_started</a></dd>
+                <dd id="Subprocess.is_alive" class="function"><a href="ThreadBase.html#ThreadBase.is_alive">is_alive</a></dd>
+                <dd id="Subprocess.is_terminated" class="function"><a href="ThreadBase.html#ThreadBase.is_terminated">is_terminated</a></dd>
+                <dd id="Subprocess.set_daemon" class="function"><a href="ThreadBase.html#ThreadBase.set_daemon">set_daemon</a></dd>
+                <dd id="Subprocess.is_daemon" class="function"><a href="ThreadBase.html#ThreadBase.is_daemon">is_daemon</a></dd>
+                <dd id="Subprocess.join" class="function"><a href="ThreadBase.html#ThreadBase.join">join</a></dd>
+                <dd id="Subprocess.start" class="function"><a href="ThreadBase.html#ThreadBase.start">start</a></dd>
 
-                <label class="view-source-button" for="Subprocess.is_terminated-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Subprocess.is_terminated"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.is_terminated-149"><a href="#Subprocess.is_terminated-149"><span class="linenos">149</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Subprocess.is_terminated-150"><a href="#Subprocess.is_terminated-150"><span class="linenos">150</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.is_terminated-151"><a href="#Subprocess.is_terminated-151"><span class="linenos">151</span></a><span class="sd">        Checks if the subprocess has terminated.</span>
-</span><span id="Subprocess.is_terminated-152"><a href="#Subprocess.is_terminated-152"><span class="linenos">152</span></a>
-</span><span id="Subprocess.is_terminated-153"><a href="#Subprocess.is_terminated-153"><span class="linenos">153</span></a><span class="sd">        Returns:</span>
-</span><span id="Subprocess.is_terminated-154"><a href="#Subprocess.is_terminated-154"><span class="linenos">154</span></a>
-</span><span id="Subprocess.is_terminated-155"><a href="#Subprocess.is_terminated-155"><span class="linenos">155</span></a><span class="sd">            bool: True if the subprocess has terminated, otherwise False.</span>
-</span><span id="Subprocess.is_terminated-156"><a href="#Subprocess.is_terminated-156"><span class="linenos">156</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.is_terminated-157"><a href="#Subprocess.is_terminated-157"><span class="linenos">157</span></a>        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Checks if the subprocess has terminated.</p>
-
-<p>Returns:</p>
-
-<pre><code>bool: True if the subprocess has terminated, otherwise False.
-</code></pre>
-</div>
-
-
-                            </div>
-                            <div id="Subprocess.join" class="classattr">
-                                        <input id="Subprocess.join-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">join</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">):</span></span>
-
-                <label class="view-source-button" for="Subprocess.join-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Subprocess.join"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.join-159"><a href="#Subprocess.join-159"><span class="linenos">159</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Subprocess.join-160"><a href="#Subprocess.join-160"><span class="linenos">160</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.join-161"><a href="#Subprocess.join-161"><span class="linenos">161</span></a><span class="sd">        Joins the subprocess thread, waiting for it to finish.</span>
-</span><span id="Subprocess.join-162"><a href="#Subprocess.join-162"><span class="linenos">162</span></a>
-</span><span id="Subprocess.join-163"><a href="#Subprocess.join-163"><span class="linenos">163</span></a><span class="sd">        Args:</span>
-</span><span id="Subprocess.join-164"><a href="#Subprocess.join-164"><span class="linenos">164</span></a>
-</span><span id="Subprocess.join-165"><a href="#Subprocess.join-165"><span class="linenos">165</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="Subprocess.join-166"><a href="#Subprocess.join-166"><span class="linenos">166</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.join-167"><a href="#Subprocess.join-167"><span class="linenos">167</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Joins the subprocess thread, waiting for it to finish.</p>
-
-<p>Args:</p>
-
-<pre><code>timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
-</code></pre>
-</div>
-
-
-                            </div>
-                            <div id="Subprocess.start" class="classattr">
-                                        <input id="Subprocess.start-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">start</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
-
-                <label class="view-source-button" for="Subprocess.start-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Subprocess.start"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.start-169"><a href="#Subprocess.start-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Subprocess.start-170"><a href="#Subprocess.start-170"><span class="linenos">170</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Subprocess.start-171"><a href="#Subprocess.start-171"><span class="linenos">171</span></a><span class="sd">        Starts the subprocess in a separate thread.</span>
-</span><span id="Subprocess.start-172"><a href="#Subprocess.start-172"><span class="linenos">172</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Subprocess.start-173"><a href="#Subprocess.start-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Starts the subprocess in a separate thread.</p>
-</div>
-
-
+            </div>
+                                </dl>
                             </div>
                 </section>
                 <section id="Subprocess.Finished">
@@ -760,13 +620,13 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
     </div>
     <a class="headerlink" href="#Subprocess.Finished"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.Finished-11"><a href="#Subprocess.Finished-11"><span class="linenos">11</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
-</span><span id="Subprocess.Finished-12"><a href="#Subprocess.Finished-12"><span class="linenos">12</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="Subprocess.Finished-13"><a href="#Subprocess.Finished-13"><span class="linenos">13</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
-</span><span id="Subprocess.Finished-14"><a href="#Subprocess.Finished-14"><span class="linenos">14</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
-</span><span id="Subprocess.Finished-15"><a href="#Subprocess.Finished-15"><span class="linenos">15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="Subprocess.Finished-16"><a href="#Subprocess.Finished-16"><span class="linenos">16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
-</span><span id="Subprocess.Finished-17"><a href="#Subprocess.Finished-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.Finished-13"><a href="#Subprocess.Finished-13"><span class="linenos">13</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">Finished</span><span class="p">:</span>
+</span><span id="Subprocess.Finished-14"><a href="#Subprocess.Finished-14"><span class="linenos">14</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="Subprocess.Finished-15"><a href="#Subprocess.Finished-15"><span class="linenos">15</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
+</span><span id="Subprocess.Finished-16"><a href="#Subprocess.Finished-16"><span class="linenos">16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
+</span><span id="Subprocess.Finished-17"><a href="#Subprocess.Finished-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="Subprocess.Finished-18"><a href="#Subprocess.Finished-18"><span class="linenos">18</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
+</span><span id="Subprocess.Finished-19"><a href="#Subprocess.Finished-19"><span class="linenos">19</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
 </span></pre></div>
 
 
@@ -782,12 +642,12 @@ callback (Callable, optional): Callback to execute after subprocess terminates. 
 
     </div>
     <a class="headerlink" href="#Subprocess.Finished.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.Finished.__init__-12"><a href="#Subprocess.Finished.__init__-12"><span class="linenos">12</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="Subprocess.Finished.__init__-13"><a href="#Subprocess.Finished.__init__-13"><span class="linenos">13</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
-</span><span id="Subprocess.Finished.__init__-14"><a href="#Subprocess.Finished.__init__-14"><span class="linenos">14</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
-</span><span id="Subprocess.Finished.__init__-15"><a href="#Subprocess.Finished.__init__-15"><span class="linenos">15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
-</span><span id="Subprocess.Finished.__init__-16"><a href="#Subprocess.Finished.__init__-16"><span class="linenos">16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
-</span><span id="Subprocess.Finished.__init__-17"><a href="#Subprocess.Finished.__init__-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Subprocess.Finished.__init__-14"><a href="#Subprocess.Finished.__init__-14"><span class="linenos">14</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">returncode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="Subprocess.Finished.__init__-15"><a href="#Subprocess.Finished.__init__-15"><span class="linenos">15</span></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Stores information about the finished subprocess&quot;&quot;&quot;</span>
+</span><span id="Subprocess.Finished.__init__-16"><a href="#Subprocess.Finished.__init__-16"><span class="linenos">16</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">returncode</span>
+</span><span id="Subprocess.Finished.__init__-17"><a href="#Subprocess.Finished.__init__-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+</span><span id="Subprocess.Finished.__init__-18"><a href="#Subprocess.Finished.__init__-18"><span class="linenos">18</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
+</span><span id="Subprocess.Finished.__init__-19"><a href="#Subprocess.Finished.__init__-19"><span class="linenos">19</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
 </span></pre></div>
 
 

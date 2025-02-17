@@ -4,8 +4,10 @@ import threading
 
 from typing import Any, Callable, Iterable
 
+from .ThreadBase import ThreadBase
 
-class Subprocess:
+
+class Subprocess(ThreadBase):
 
     class Finished:
         def __init__(self, args: list[str], returncode: int, stderr: str, stdout: str):
@@ -44,15 +46,11 @@ class Subprocess:
             raise TypeError(
                 "Command must be a string or an iterable of strings.")
 
-        self._lock = threading.RLock()
+        super().__init__(
+            args=[cmd, timeout, env, cwd, callback], daemon=daemon)
         self._result: Subprocess.Finished | None = None
-        self._thread = threading.Thread(
-            target=self._run, args=[cmd, timeout, env, cwd, callback],
-            daemon=daemon
-        )
 
-    def _run(self,
-             command: list[str], timeout: float | None, env: dict | None = None,
+    def _run(self, command: list[str], timeout: float | None, env: dict | None = None,
              cwd: str | None = None, callback: Callable | None = None):
         """
         Runs the command in a subprocess and captures the output.
@@ -144,29 +142,3 @@ class Subprocess:
             if not self.is_terminated() or not self._result:
                 raise Exception("Cannot acquire stderr from subprocess")
             return self._result.stderr
-
-    def is_terminated(self) -> bool:
-        """
-        Checks if the subprocess has terminated.
-
-        Returns:
-
-            bool: True if the subprocess has terminated, otherwise False.
-        """
-        return not self._thread.is_alive()
-
-    def join(self, timeout: float | None = None):
-        """
-        Joins the subprocess thread, waiting for it to finish.
-
-        Args:
-
-            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
-        """
-        self._thread.join(timeout)
-
-    def start(self):
-        """
-        Starts the subprocess in a separate thread.
-        """
-        self._thread.start()
