@@ -11,6 +11,8 @@
 - **Thread-Safe Data Structures**: 
   - `SafeList`: A thread-safe implementation of a list.
   - `SafeDict`: A thread-safe implementation of a dictionary.
+  - `SafeTuple`: A thread-safe implementation of a tuple.
+  - `SafeSet`: A thread-safe implementation of a set.
 - **Thread Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded environments.
 - **Utility Methods**: Additional helpers and utilities for threading and synchronization.
 
@@ -35,7 +37,11 @@ print(safe_list[0])  # Output: 1
 # Using SafeDict
 safe_dict = SafeDict()
 safe_dict['key'] = 'value'
-print(safe_dict['key'])  # Output: value
+print(safe_dict['key'])  # Output: 'value'
+
+# Using SafeTuple
+safe_tuple = SafeTuple(('a','b'))
+print(safe_tuple[0])  # Output: 'a'
 ```
 
 For further details, check [``tests``](./tests/) folder and the full documentation (link below).

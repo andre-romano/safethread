@@ -1,9 +1,5 @@
-import logging
 
 from typing import Self
-
-# Configuração do logger
-logger = logging.getLogger(__name__)
 
 
 class Factory:

@@ -18,12 +18,12 @@ logger = logging.getLogger(__name__)
 
 
 def run_git_command(command):
-    logger.debug(f'Running command {command}')
+    # logger.debug(f'Running command {command}')
     result = subprocess.run(command, capture_output=True, text=True)
-    logger.debug(f'Return code {result.returncode}')
-    logger.debug(f'\nStdout: \n{result.stdout}\nStderr: {result.stderr}')
+    # logger.debug(f'Return code {result.returncode}')
+    # logger.debug(f'\nStdout: \n{result.stdout}\nStderr: {result.stderr}')
     if result.returncode != 0:
-        msg = f"Erro ao executar comando: {command}\n{result.stderr}"
+        msg = f"Command '{command}'\nStderr: {result.stderr}"
         logger.error(msg)
         raise Exception(msg)
     return result.stdout.strip()

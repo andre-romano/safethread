@@ -2,7 +2,7 @@
 # safethread/utils/__init__.py
 
 """
-This module provides utility functions and classes, not directly associated with multi-threaded programming.
+This module provides utility functions and classes.
 
 Classes:
 - **Singleton**: A class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.
