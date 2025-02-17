@@ -4,7 +4,7 @@ import unittest
 import threading
 
 # Adjust the import path as needed
-from safethread.thread import SafeBaseObj
+from safethread.datatype import SafeBaseObj
 
 
 class TestSafeBaseObj(unittest.TestCase):

@@ -55,7 +55,8 @@ def generate_docs(package_name):
 
     clean_docs()  # Clean the docs folder before generating new docs
 
-    subprocess.run(["pdoc", "--output-dir", "docs", package_name], check=True)
+    subprocess.run(["pdoc", "--output-dir", "./docs",
+                   f"./{package_name}"], check=True)
     print(
         f"Documentation for '{package_name}' generated successfully in the 'docs/' folder.")
 

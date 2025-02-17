@@ -23,7 +23,7 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread.thread import SafeList, SafeDict, SafeTuple, SafeSet, SafeQueue
+from safethread.datatype import SafeList, SafeDict, SafeSet
 
 # Using SafeList
 safe_list = SafeList()
@@ -35,22 +35,13 @@ safe_dict = SafeDict()
 safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 
-# Using SafeTuple
-safe_tuple = SafeTuple(('a','b'))
-print(safe_tuple[0])  # Output: 'a'
-
 # Using SafeSet
 safe_set = SafeSet(['x','y'])
 safe_set.add('z')
 print('z' in safe_set)  # Output: True
-
-# Using SafeQueue
-safe_queue = SafeQueue()
-safe_queue.put(55)
-print(safe_queue.get())  # Output: 55
 ```
 
-For further details, check the full documentation (link below) and [``tests/``](./tests/) folder.
+For further details, check the [``examples/``](./examples/) folder and the full documentation (link below).
 
 ## Documentation
 

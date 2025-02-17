@@ -1,7 +1,7 @@
 import unittest
 import threading
 
-from safethread.thread import SafeTuple
+from safethread.datatype import SafeTuple
 
 
 class TestSafeTuple(unittest.TestCase):

@@ -4,7 +4,7 @@ import threading
 from queue import Queue
 
 # Ensure SafeQueue is imported from the correct module
-from safethread.thread import SafeQueue
+from safethread.datatype import SafeQueue
 
 
 class TestSafeQueue(unittest.TestCase):

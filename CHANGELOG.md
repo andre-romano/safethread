@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0 (2025-02-16 22:09:46 -0300)
+
+- 1ffef56 added SafeQueue improved data initialization method __init__() fixed already thread safe data structures inheritance (using Python MRO)
+- 270e55e release version v0.1.1
+
 ## v0.1.1 (2025-02-16 21:13:03 -0300)
 
 - 270e55e release version v0.1.1

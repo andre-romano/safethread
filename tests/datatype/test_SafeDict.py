@@ -1,7 +1,7 @@
 import unittest
 import threading
 
-from safethread.thread import SafeDict
+from safethread.datatype import SafeDict
 
 
 class TestSafeDict(unittest.TestCase):

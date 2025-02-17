@@ -1,7 +1,7 @@
 import unittest
 import threading
 
-from safethread.thread import SafeSet
+from safethread.datatype import SafeSet
 
 
 class TestSafeSet(unittest.TestCase):

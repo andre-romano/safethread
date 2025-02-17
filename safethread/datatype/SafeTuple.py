@@ -1,6 +1,4 @@
 
-import sys
-
 from typing import Iterable
 
 from .SafeBaseObj import SafeBaseObj

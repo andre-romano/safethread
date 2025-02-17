@@ -13,7 +13,7 @@ setup(
     name="safethread",
     version=version,
     packages=find_packages(exclude=["tests", "docs", "examples"]),
-    python_requires=">=3.7",
+    python_requires=">=3.11",
     install_requires=requirements.splitlines(),
     include_package_data=True,
     author="Andre Luiz Romano Madureira",
@@ -22,13 +22,15 @@ setup(
     long_description_content_type="text/markdown",  # Define o tipo do conteúdo
     url="https://github.com/andre-romano/safethread",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",  # Updated to Stable
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3 :: Only",  # Ensures Python 3 only
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries",
         "Topic :: System :: Distributed Computing",
