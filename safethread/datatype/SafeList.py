@@ -5,57 +5,57 @@ from .SafeBaseObj import SafeBaseObj
 
 class SafeList(SafeBaseObj):
     def __init__(self, data: list | Iterable | None = None):
-        """Inicializa uma lista compartilhada com bloqueio para segurança em threads."""
+        """Initializes a shared list with a lock for thread safety."""
         data = data if isinstance(data, list) else list(data or [])
         super().__init__(data)
         self._data: list
 
     def append(self, value):
-        """Adiciona um item à lista de maneira segura."""
+        """Adds an item to the list safely."""
         with self._lock:
             self._data.append(value)
 
     def clear(self):
-        """Esvazia a lista de maneira segura."""
+        """Clears the list safely."""
         with self._lock:
             self._data.clear()
 
     def count(self, value):
-        """Conta o número de ocorrências de um item na lista."""
+        """Counts the occurrences of an item in the list."""
         with self._lock:
             return self._data.count(value)
 
     def extend(self, values):
-        """Adiciona múltiplos itens à lista de maneira segura."""
+        """Adds multiple items to the list safely."""
         with self._lock:
             self._data.extend(values)
 
     def index(self, value, start=0, end=None):
-        """Retorna o índice do primeiro item correspondente de maneira segura."""
+        """Returns the index of the first matching item safely."""
         with self._lock:
             return self._data.index(value, start, end if end is not None else len(self._data))
 
     def insert(self, index, value):
-        """Insere um item na posição especificada de maneira segura."""
+        """Inserts an item at the specified position safely."""
         with self._lock:
             self._data.insert(index, value)
 
     def pop(self, index=-1):
-        """Remove e retorna um item da lista de maneira segura."""
+        """Removes and returns an item from the list safely."""
         with self._lock:
             return self._data.pop(index)
 
     def remove(self, value):
-        """Remove um item da lista de maneira segura."""
+        """Removes an item from the list safely."""
         with self._lock:
             self._data.remove(value)
 
     def reverse(self):
-        """Inverte a ordem da lista de maneira segura."""
+        """Reverses the order of the list safely."""
         with self._lock:
             self._data.reverse()
 
     def sort(self, **kwargs):
-        """Ordena a lista de maneira segura."""
+        """Sorts the list safely."""
         with self._lock:
             self._data.sort(**kwargs)

@@ -48,10 +48,13 @@ class SafeDict(SafeBaseObj):
     def popitem(self):
         """
         Removes and returns the last key-value pair from the dictionary in a thread-safe manner.
+
         Returns:
+
             tuple: The last key-value pair removed from the dictionary.
 
         Raises:
+
             KeyError: If the dictionary is empty.
         """
         with self._lock:
@@ -63,10 +66,13 @@ class SafeDict(SafeBaseObj):
         in a thread-safe manner.
 
         Args:
+
             key: The key to look up in the dictionary.
+
             default (optional): The value to set if the key is not found. Defaults to None.
 
         Returns:
+
             The value associated with the key if it exists; otherwise, the default value that was set.
         """
         with self._lock:
@@ -78,10 +84,13 @@ class SafeDict(SafeBaseObj):
         in a thread-safe manner.
 
         Args:
+
             m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.
+
             **kwargs: Additional key-value pairs to update the dictionary.
 
         Example:
+
             ```python
             safe_dict.update({'a': 1, 'b': 2})
             safe_dict.update(a=3, c=4)

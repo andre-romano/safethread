@@ -12,7 +12,6 @@ class Singleton:
     @classmethod
     def getInstance(cls: Type[Self], *args, **kwargs) -> Self:
         """Main method to get the instance of the class."""
-        # This ensures the singleton logic is respected
         with cls._lock:
             if cls not in cls._instances:
                 cls._instances[cls] = cls(*args, **kwargs)

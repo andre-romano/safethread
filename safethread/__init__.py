@@ -2,11 +2,13 @@
 
 """
 The `safethread` package provides a collection of thread-safe utilities for managing data structures and synchronization in multi-threaded environments.
+
 The package is designed to ensure safe, concurrent operations on common Python data structures such as lists, dictionaries among others.
 
 ### **Modules:**
-- **thread**: Provides thread synchronization mechanisms (e.g., locks, semaphores) and thread-safe data structures like `SafeList` and `SafeDict`.
-- **utils**: Offers utility functions for managing thread execution, timeouts, and checking thread statuses.
+- **datatype**: Provides thread-safe data structures like `SafeList` and `SafeDict`.
+- **thread**: Provides thread-safe classes for multi-threaded programming like `Subprocess`.
+- **utils**: Offers utility functions and classes.
 
 ### **Features:**
 - **Thread-Safe Data Structures**: Safe implementations of common data structures (list, dict) to avoid race conditions in concurrent threads.
