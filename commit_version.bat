@@ -42,7 +42,7 @@ pause
 
 echo 5) Commiting in Github ...
 git add .
-git commit -m "release version v%VERSION%"
+git commit
 git tag v%VERSION%
 git push --all
 git push --tags

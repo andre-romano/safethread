@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.1 (2025-02-16 21:13:03 -0300)
+
+- 270e55e release version v0.1.1
+- ccff69e bug fix
+- 32e8b35 improved docs and .md files
+- 332dd1c improved .md github docs
+- 723d4db added classifiers
+- 41695ac bug fix
+- 5d8402c release version v0.1.0
+
 ## v0.1.0 (2025-02-16 19:30:59 -0300)
 
 - 5d8402c release version v0.1.0

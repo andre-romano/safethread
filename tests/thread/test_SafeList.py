@@ -10,6 +10,17 @@ class TestSafeList(unittest.TestCase):
         """Set up a new SafeList instance for each test."""
         self.safe_list = SafeList()
 
+    def test_initialization(self):
+        safe_list = SafeList([])
+        self.assertEqual(safe_list._data, [])
+
+        safe_list = SafeList([1, 2])
+        self.assertEqual(safe_list, [1, 2])
+
+        safe_list = SafeList((5, 7))
+        self.assertEqual(safe_list[0], 5)
+        self.assertEqual(safe_list[1], 7)
+
     def test_empty(self):
         self.assertEqual(self.safe_list._data, [])
         self.assertEqual(self.safe_list, SafeList([]))

@@ -1,11 +1,13 @@
 
+from typing import Iterable
 from .SafeBaseObj import SafeBaseObj
 
 
 class SafeList(SafeBaseObj):
-    def __init__(self, listObj: list | None = None):
+    def __init__(self, data: list | Iterable | None = None):
         """Inicializa uma lista compartilhada com bloqueio para segurança em threads."""
-        super().__init__(listObj or [])
+        data = data if isinstance(data, list) else list(data or [])
+        super().__init__(data)
         self._data: list
 
     def append(self, value):

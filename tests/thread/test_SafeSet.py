@@ -10,6 +10,14 @@ class TestSafeSet(unittest.TestCase):
         """Create a SafeSet instance for testing."""
         self.safe_set = SafeSet([1, 2, 3])
 
+    def test_initialization(self):
+        safe_set = SafeSet([5, 6])
+        self.assertIn(5, safe_set)
+
+        set_custom = set([7, 8])
+        safe_set = SafeSet(set_custom)
+        self.assertIn(8, safe_set)
+
     def test_add(self):
         """Test adding elements to the set."""
         self.safe_set.add(4)

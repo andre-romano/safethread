@@ -8,11 +8,7 @@
 
 ## Features
 
-- **Thread-Safe Data Structures**: 
-  - `SafeList`: A thread-safe implementation of a list.
-  - `SafeDict`: A thread-safe implementation of a dictionary.
-  - `SafeTuple`: A thread-safe implementation of a tuple.
-  - `SafeSet`: A thread-safe implementation of a set.
+- **Thread-Safe Data Structures**: `SafeList`, `SafeDict`, `SafeTuple`, `SafeSet`, among others.
 - **Thread Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded environments.
 - **Utility Methods**: Additional helpers and utilities for threading and synchronization.
 
@@ -27,7 +23,7 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread import SafeList, SafeDict
+from safethread.thread import SafeList, SafeDict, SafeTuple, SafeSet, SafeQueue
 
 # Using SafeList
 safe_list = SafeList()
@@ -42,9 +38,19 @@ print(safe_dict['key'])  # Output: 'value'
 # Using SafeTuple
 safe_tuple = SafeTuple(('a','b'))
 print(safe_tuple[0])  # Output: 'a'
+
+# Using SafeSet
+safe_set = SafeSet(['x','y'])
+safe_set.add('z')
+print('z' in safe_set)  # Output: True
+
+# Using SafeQueue
+safe_queue = SafeQueue()
+safe_queue.put(55)
+print(safe_queue.get())  # Output: 55
 ```
 
-For further details, check [``tests``](./tests/) folder and the full documentation (link below).
+For further details, check the full documentation (link below) and [``tests/``](./tests/) folder.
 
 ## Documentation
 

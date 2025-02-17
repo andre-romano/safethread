@@ -10,6 +10,14 @@ class TestSafeDict(unittest.TestCase):
         """Initialize a SafeDict instance before each test."""
         self.safe_dict = SafeDict({'a': 1, 'b': 2, 'c': 3})
 
+    def test_initialize(self):
+        safe_dict = SafeDict()
+        self.assertEqual(len(safe_dict), 0)
+
+        safe_dict = SafeDict([('a', 1), ('b', 2)])
+        self.assertEqual(safe_dict['a'], 1)
+        self.assertEqual(safe_dict['b'], 2)
+
     def test_clear(self):
         """Test if clear() empties the dictionary."""
         self.safe_dict.clear()

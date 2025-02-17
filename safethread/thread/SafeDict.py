@@ -4,9 +4,10 @@ from .SafeBaseObj import SafeBaseObj
 
 
 class SafeDict(SafeBaseObj):
-    def __init__(self, dictObj: dict | None = None):
+    def __init__(self, data: dict | Iterable | None = None):
         """Initialize a shared dictionary with a Lock for thread safety."""
-        super().__init__(dictObj or {})
+        data = data if isinstance(data, dict) else dict(data or {})
+        super().__init__(data)
         self._data: dict
 
     def clear(self):

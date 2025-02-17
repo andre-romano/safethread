@@ -10,6 +10,15 @@ class TestSafeTuple(unittest.TestCase):
         """Set up a thread-safe tuple for testing."""
         self.safe_tuple = SafeTuple((1, 2, 3, 2, 4, 2))
 
+    def test_initialization(self):
+        safe_tuple = SafeTuple([5, 5, 6, 7])
+        self.assertEqual(safe_tuple.count(2), 0)
+        self.assertEqual(safe_tuple.count(5), 2)
+
+        safe_tuple = SafeTuple()
+        self.assertEqual(safe_tuple.count(1), 0)
+        self.assertEqual(len(safe_tuple), 0)
+
     def test_count(self):
         """Test the count method for correct results."""
         # Count occurrences of 2 in the tuple (should be 3)
