@@ -1,3 +1,4 @@
+import queue
 import unittest
 
 from queue import Queue
@@ -107,20 +108,32 @@ class TestPipeline(unittest.TestCase):
             return input_data * 2
 
         # Start pipeline with the 'multiply_by_two' function as the callback
-        pipeline = Pipeline(multiply_by_two)
-        pipeline.start()
+        self.pipeline = Pipeline(multiply_by_two)
+        self.pipeline.start()
 
-        # Put some values into the pipeline for processing
-        pipeline.put(5)
-        pipeline.put(10)
-        pipeline.put(15)
+        # Put some values into the self.pipeline for processing
+        self.pipeline.put(5)
+        self.pipeline.put(10)
+        self.pipeline.put(15)
+
+        # Expected outputs
+        expected_outputs = [10, 20, 30]
 
         # Join the thread to ensure it finishes execution before the program ends
-        pipeline.stop()
-        pipeline.join()
+        self.pipeline.stop()
 
-        self.assertEqual(pipeline.is_alive(), False)
-        self.assertEqual(pipeline.is_terminated(), True)
+        with self.assertRaises(queue.ShutDown) as context:
+            self.pipeline.put(20)
+
+        self.pipeline.join()
+
+        #  check results
+        for expected in expected_outputs:
+            result = self.pipeline.get()
+            self.assertEqual(result, expected)
+
+        self.assertEqual(self.pipeline.is_alive(), False)
+        self.assertEqual(self.pipeline.is_terminated(), True)
 
 
 if __name__ == '__main__':

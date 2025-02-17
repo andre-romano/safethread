@@ -1,4 +1,5 @@
 
+import queue
 from safethread.thread import Pipeline
 
 # A simple callback function that doubles the input number
@@ -22,6 +23,14 @@ print(f"Processed result 1: {pipeline.get()}")  # Output: 10 (5 * 2)
 print(f"Processed result 2: {pipeline.get()}")  # Output: 20 (10 * 2)
 print(f"Processed result 3: {pipeline.get()}")  # Output: 30 (15 * 2)
 
-# Join the thread to ensure it finishes execution before the program ends
+# Stop the pipeline
 pipeline.stop()
+
+try:
+    # try to add new input to pipeline, after stopped
+    pipeline.put(20)
+except queue.ShutDown as e:
+    print("The pipeline has terminated. No new values can be added to it.")
+
+# Join the thread to ensure it finishes execution before the program ends
 pipeline.join()
