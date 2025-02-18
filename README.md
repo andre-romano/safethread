@@ -10,7 +10,8 @@
 
 - **Thread-Safe Data Structures**: `SafeList`, `SafeDict`, `SafeTuple`, `SafeSet`, among others.
 - **Thread Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded environments.
-- **Utility Methods**: Additional helpers and utilities for threading and synchronization.
+- **Threaded Classes**: Threaded classes to perform parallel data processing (`Pipeline`), scheduled function calls (`Scheduler`), among others.
+- **Utility Classes**: Additional helpers and utilities for threading, synchronization and other functionality unrelated to multithread programming.
 
 ## Installation
 
@@ -23,7 +24,8 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread.datatype import SafeList, SafeDict, SafeSet
+from safethread.datatype import SafeList, SafeDict
+from safethread.thread import Pipeline
 
 # Using SafeList
 safe_list = SafeList()
@@ -35,10 +37,17 @@ safe_dict = SafeDict()
 safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 
-# Using SafeSet
-safe_set = SafeSet(['x','y'])
-safe_set.add('z')
-print('z' in safe_set)  # Output: True
+# Using Pipeline (separate working thread)
+pipeline = Pipeline(lambda x: x * 2)
+pipeline.start()
+
+# Put some values into the pipeline for processing
+pipeline.put(5)
+pipeline.put(10)
+
+# Stop pipeline
+pipeline.stop()
+pipeline.join()
 ```
 
 For further details, check the [``examples/``](./examples/) folder and the full documentation (link below).

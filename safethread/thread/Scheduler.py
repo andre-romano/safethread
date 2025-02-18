@@ -72,9 +72,9 @@ class Scheduler(ThreadBase):
         self._terminate = True
 
     def get_timeout(self) -> float:
-        """"Returns scheduler timeout"""
+        """Returns scheduler timeout"""
         return self._timeout
 
     def is_repeatable(self) -> bool:
-        """"Returns True if scheduler executes callback repeatedly (until .stop() is called)"""
+        """Returns True if scheduler executes callback repeatedly (until .stop() is called)"""
         return self._repeat
