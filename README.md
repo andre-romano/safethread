@@ -45,6 +45,10 @@ pipeline.start()
 pipeline.put(5)
 pipeline.put(10)
 
+# Get and print the results
+print(f"Processed result 1: {pipeline.get()}")  # Output: 10 (5 * 2)
+print(f"Processed result 2: {pipeline.get()}")  # Output: 20 (10 * 2)
+
 # Stop pipeline
 pipeline.stop()
 pipeline.join()
