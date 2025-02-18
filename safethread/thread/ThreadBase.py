@@ -1,5 +1,7 @@
 import threading
 
+from typing import Callable
+
 
 class ThreadBase:
     """
@@ -8,6 +10,28 @@ class ThreadBase:
     This class provides a structure for creating and managing threads using the threading module.
     It also ensures that the thread's operations are protected by a reentrant lock (_lock) to ensure thread safety.
     """
+
+    class CallableException(Exception):
+        def __init__(self, *args: object) -> None:
+            super().__init__(*args)
+
+    @staticmethod
+    def check_callable(callback: Callable):
+        """
+        Checks if callback is a Callable (function, lambda, etc).
+
+        Args:
+
+            callback (Callable): The Callable to check.
+
+        Raises:
+
+            ThreadBase.CallableException: If the callback argument is not callable.
+        """
+        if not isinstance(callback, Callable):
+            raise ThreadBase.CallableException(
+                "'callback' must be a Callable (e.g., function, lambda, etc)"
+            )
 
     def __init__(self, args: list, daemon: bool = True):
         """

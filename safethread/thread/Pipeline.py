@@ -23,7 +23,7 @@ class Pipeline(ThreadBase):
 
     Raises:
 
-        Exception: If the provided callback is not callable.
+        ThreadBase.CallableException: If the provided callback is not callable.
     """
 
     EmptyException = queue.Empty
@@ -40,13 +40,10 @@ class Pipeline(ThreadBase):
 
         Raises:
 
-            Exception: If the callback argument is not callable.
+            ThreadBase.CallableException: If the callback argument is not callable.
         """
         super().__init__(args=[])
-        if not isinstance(callback, Callable):
-            raise Exception(
-                "'callback' must be a Callable (e.g., function, lambda, etc)"
-            )
+        self.check_callable(callback)
         self._callback: Callable = callback
         self._input_queue = queue.Queue()
         self._output_queue = queue.Queue()

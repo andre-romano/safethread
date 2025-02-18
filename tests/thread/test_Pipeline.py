@@ -1,9 +1,8 @@
-import queue
 import unittest
 
 from queue import Queue
 
-from safethread.thread import Pipeline
+from safethread.thread import Pipeline, ThreadBase
 
 
 class TestPipeline(unittest.TestCase):
@@ -38,7 +37,7 @@ class TestPipeline(unittest.TestCase):
         """
         Test that an exception is raised if the callback is not callable.
         """
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(ThreadBase.CallableException) as context:
             Pipeline(None)  # type: ignore
 
     def test_put_and_get(self):
