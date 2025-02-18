@@ -14,6 +14,16 @@ class TestSubprocess(unittest.TestCase):
         else:
             command = ["echo", "Hello, World!"]
         sp = Subprocess(command)
+
+        with self.assertRaises(Subprocess.NotTerminatedException) as context:
+            sp.get_return_code()
+
+        with self.assertRaises(Subprocess.NotTerminatedException) as context:
+            sp.get_stderr()
+
+        with self.assertRaises(Subprocess.NotTerminatedException) as context:
+            sp.get_stdout()
+
         sp.start()
         sp.join()
 

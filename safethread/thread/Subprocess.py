@@ -8,6 +8,10 @@ from .ThreadBase import ThreadBase
 
 class Subprocess(ThreadBase):
 
+    class NotTerminatedException(Exception):
+        def __init__(self, *args: object) -> None:
+            super().__init__(*args)
+
     class Finished:
         def __init__(self, args: list[str], returncode: int, stderr: str, stdout: str):
             """Stores information about the finished subprocess"""
@@ -97,7 +101,7 @@ class Subprocess(ThreadBase):
 
         Raises:
 
-            Exception: If the subprocess has not yet terminated.
+            NotTerminatedException: If the subprocess has not yet terminated.
 
         Returns:
 
@@ -105,7 +109,8 @@ class Subprocess(ThreadBase):
         """
         with self._lock:
             if not self.is_terminated() or not self._result:
-                raise Exception("Cannot acquire return code from subprocess")
+                raise Subprocess.NotTerminatedException(
+                    "Cannot acquire return code from subprocess")
             return self._result.returncode
 
     def get_stdout(self) -> str:
@@ -114,7 +119,7 @@ class Subprocess(ThreadBase):
 
         Raises:
 
-            Exception: If the subprocess has not yet terminated.
+            NotTerminatedException: If the subprocess has not yet terminated.
 
         Returns:
 
@@ -122,7 +127,8 @@ class Subprocess(ThreadBase):
         """
         with self._lock:
             if not self.is_terminated() or not self._result:
-                raise Exception("Cannot acquire stdout from subprocess")
+                raise Subprocess.NotTerminatedException(
+                    "Cannot acquire stdout from subprocess")
             return self._result.stdout
 
     def get_stderr(self) -> str:
@@ -139,5 +145,6 @@ class Subprocess(ThreadBase):
         """
         with self._lock:
             if not self.is_terminated() or not self._result:
-                raise Exception("Cannot acquire stderr from subprocess")
+                raise Subprocess.NotTerminatedException(
+                    "Cannot acquire stderr from subprocess")
             return self._result.stderr
