@@ -37,6 +37,18 @@
                                 <a class="function" href="#ThreadBase.__init__">ThreadBase</a>
                         </li>
                         <li>
+                                <a class="class" href="#ThreadBase.CallableException">ThreadBase.CallableException</a>
+                                        <ul class="memberlist">
+                                    <li>
+                                            <a class="function" href="#ThreadBase.CallableException.__init__">CallableException</a>
+                                    </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                                <a class="function" href="#ThreadBase.check_callable">check_callable</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#ThreadBase.has_started">has_started</a>
                         </li>
                         <li>
@@ -81,104 +93,128 @@
 
                         <label class="view-source-button" for="mod-ThreadBase-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ThreadBase</span><span class="p">:</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">    A base class for managing threads with thread safety.</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    This class provides a structure for creating and managing threads using the threading module.</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    It also ensures that the thread&#39;s operations are protected by a reentrant lock (_lock) to ensure thread safety.</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        Args:</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>        <span class="p">)</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        Abstract method to be implemented by subclasses.</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">        This method should be overloaded in subclasses to define the work the thread will perform.</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        Raises:</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">            Exception: If the method is not overloaded by a subclass.</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_run() method NOT overloaded!&quot;</span><span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        Checks if the thread has started.</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        Returns:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        Checks if the thread is alive.</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        Returns:</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">        Checks if the thread has terminated.</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="sd">        Returns:</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">        Args:</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>
-</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a>
-</span><span id="L-93"><a href="#L-93"><span class="linenos">93</span></a><span class="sd">        Raises:</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos">94</span></a>
-</span><span id="L-95"><a href="#L-95"><span class="linenos">95</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos">96</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos">97</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ThreadBase</span><span class="p">:</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="sd">    A base class for managing threads with thread safety.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">    This class provides a structure for creating and managing threads using the threading module.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">    It also ensures that the thread&#39;s operations are protected by a reentrant lock (_lock) to ensure thread safety.</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">CallableException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        Checks if callback is a Callable (function, lambda, etc).</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        Args:</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">            callback (Callable): The Callable to check.</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">        Raises:</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>            <span class="p">)</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">        Args:</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>        <span class="p">)</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">        Abstract method to be implemented by subclasses.</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">        This method should be overloaded in subclasses to define the work the thread will perform.</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        Raises:</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">            Exception: If the method is not overloaded by a subclass.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_run() method NOT overloaded!&quot;</span><span class="p">)</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">        Checks if the thread has started.</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        Returns:</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        Checks if the thread is alive.</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        Returns:</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        Checks if the thread has terminated.</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">        Returns:</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        Args:</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        Starts the thread.</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">        Raises:</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -194,101 +230,123 @@
 
     </div>
     <a class="headerlink" href="#ThreadBase"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase-5"><a href="#ThreadBase-5"><span class="linenos"> 5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ThreadBase</span><span class="p">:</span>
-</span><span id="ThreadBase-6"><a href="#ThreadBase-6"><span class="linenos"> 6</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-7"><a href="#ThreadBase-7"><span class="linenos"> 7</span></a><span class="sd">    A base class for managing threads with thread safety.</span>
-</span><span id="ThreadBase-8"><a href="#ThreadBase-8"><span class="linenos"> 8</span></a>
-</span><span id="ThreadBase-9"><a href="#ThreadBase-9"><span class="linenos"> 9</span></a><span class="sd">    This class provides a structure for creating and managing threads using the threading module.</span>
-</span><span id="ThreadBase-10"><a href="#ThreadBase-10"><span class="linenos">10</span></a><span class="sd">    It also ensures that the thread&#39;s operations are protected by a reentrant lock (_lock) to ensure thread safety.</span>
-</span><span id="ThreadBase-11"><a href="#ThreadBase-11"><span class="linenos">11</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-12"><a href="#ThreadBase-12"><span class="linenos">12</span></a>
-</span><span id="ThreadBase-13"><a href="#ThreadBase-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-</span><span id="ThreadBase-14"><a href="#ThreadBase-14"><span class="linenos">14</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-15"><a href="#ThreadBase-15"><span class="linenos">15</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
-</span><span id="ThreadBase-16"><a href="#ThreadBase-16"><span class="linenos">16</span></a>
-</span><span id="ThreadBase-17"><a href="#ThreadBase-17"><span class="linenos">17</span></a><span class="sd">        Args:</span>
-</span><span id="ThreadBase-18"><a href="#ThreadBase-18"><span class="linenos">18</span></a>
-</span><span id="ThreadBase-19"><a href="#ThreadBase-19"><span class="linenos">19</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
-</span><span id="ThreadBase-20"><a href="#ThreadBase-20"><span class="linenos">20</span></a>
-</span><span id="ThreadBase-21"><a href="#ThreadBase-21"><span class="linenos">21</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
-</span><span id="ThreadBase-22"><a href="#ThreadBase-22"><span class="linenos">22</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-23"><a href="#ThreadBase-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="ThreadBase-24"><a href="#ThreadBase-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="ThreadBase-25"><a href="#ThreadBase-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="ThreadBase-26"><a href="#ThreadBase-26"><span class="linenos">26</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="ThreadBase-27"><a href="#ThreadBase-27"><span class="linenos">27</span></a>        <span class="p">)</span>
-</span><span id="ThreadBase-28"><a href="#ThreadBase-28"><span class="linenos">28</span></a>
-</span><span id="ThreadBase-29"><a href="#ThreadBase-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-</span><span id="ThreadBase-30"><a href="#ThreadBase-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-31"><a href="#ThreadBase-31"><span class="linenos">31</span></a><span class="sd">        Abstract method to be implemented by subclasses.</span>
-</span><span id="ThreadBase-32"><a href="#ThreadBase-32"><span class="linenos">32</span></a>
-</span><span id="ThreadBase-33"><a href="#ThreadBase-33"><span class="linenos">33</span></a><span class="sd">        This method should be overloaded in subclasses to define the work the thread will perform.</span>
-</span><span id="ThreadBase-34"><a href="#ThreadBase-34"><span class="linenos">34</span></a>
-</span><span id="ThreadBase-35"><a href="#ThreadBase-35"><span class="linenos">35</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase-36"><a href="#ThreadBase-36"><span class="linenos">36</span></a>
-</span><span id="ThreadBase-37"><a href="#ThreadBase-37"><span class="linenos">37</span></a><span class="sd">            Exception: If the method is not overloaded by a subclass.</span>
-</span><span id="ThreadBase-38"><a href="#ThreadBase-38"><span class="linenos">38</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-39"><a href="#ThreadBase-39"><span class="linenos">39</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_run() method NOT overloaded!&quot;</span><span class="p">)</span>
-</span><span id="ThreadBase-40"><a href="#ThreadBase-40"><span class="linenos">40</span></a>
-</span><span id="ThreadBase-41"><a href="#ThreadBase-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase-42"><a href="#ThreadBase-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-43"><a href="#ThreadBase-43"><span class="linenos">43</span></a><span class="sd">        Checks if the thread has started.</span>
-</span><span id="ThreadBase-44"><a href="#ThreadBase-44"><span class="linenos">44</span></a>
-</span><span id="ThreadBase-45"><a href="#ThreadBase-45"><span class="linenos">45</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase-46"><a href="#ThreadBase-46"><span class="linenos">46</span></a>
-</span><span id="ThreadBase-47"><a href="#ThreadBase-47"><span class="linenos">47</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
-</span><span id="ThreadBase-48"><a href="#ThreadBase-48"><span class="linenos">48</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-49"><a href="#ThreadBase-49"><span class="linenos">49</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
-</span><span id="ThreadBase-50"><a href="#ThreadBase-50"><span class="linenos">50</span></a>
-</span><span id="ThreadBase-51"><a href="#ThreadBase-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase-52"><a href="#ThreadBase-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-53"><a href="#ThreadBase-53"><span class="linenos">53</span></a><span class="sd">        Checks if the thread is alive.</span>
-</span><span id="ThreadBase-54"><a href="#ThreadBase-54"><span class="linenos">54</span></a>
-</span><span id="ThreadBase-55"><a href="#ThreadBase-55"><span class="linenos">55</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase-56"><a href="#ThreadBase-56"><span class="linenos">56</span></a>
-</span><span id="ThreadBase-57"><a href="#ThreadBase-57"><span class="linenos">57</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
-</span><span id="ThreadBase-58"><a href="#ThreadBase-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-59"><a href="#ThreadBase-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="ThreadBase-60"><a href="#ThreadBase-60"><span class="linenos">60</span></a>
-</span><span id="ThreadBase-61"><a href="#ThreadBase-61"><span class="linenos">61</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase-62"><a href="#ThreadBase-62"><span class="linenos">62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-63"><a href="#ThreadBase-63"><span class="linenos">63</span></a><span class="sd">        Checks if the thread has terminated.</span>
-</span><span id="ThreadBase-64"><a href="#ThreadBase-64"><span class="linenos">64</span></a>
-</span><span id="ThreadBase-65"><a href="#ThreadBase-65"><span class="linenos">65</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase-66"><a href="#ThreadBase-66"><span class="linenos">66</span></a>
-</span><span id="ThreadBase-67"><a href="#ThreadBase-67"><span class="linenos">67</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
-</span><span id="ThreadBase-68"><a href="#ThreadBase-68"><span class="linenos">68</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-69"><a href="#ThreadBase-69"><span class="linenos">69</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
-</span><span id="ThreadBase-70"><a href="#ThreadBase-70"><span class="linenos">70</span></a>
-</span><span id="ThreadBase-71"><a href="#ThreadBase-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-</span><span id="ThreadBase-72"><a href="#ThreadBase-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
-</span><span id="ThreadBase-73"><a href="#ThreadBase-73"><span class="linenos">73</span></a>
-</span><span id="ThreadBase-74"><a href="#ThreadBase-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase-75"><a href="#ThreadBase-75"><span class="linenos">75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-76"><a href="#ThreadBase-76"><span class="linenos">76</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
-</span><span id="ThreadBase-77"><a href="#ThreadBase-77"><span class="linenos">77</span></a>
-</span><span id="ThreadBase-78"><a href="#ThreadBase-78"><span class="linenos">78</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="ThreadBase-79"><a href="#ThreadBase-79"><span class="linenos">79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-80"><a href="#ThreadBase-80"><span class="linenos">80</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
-</span><span id="ThreadBase-81"><a href="#ThreadBase-81"><span class="linenos">81</span></a>
-</span><span id="ThreadBase-82"><a href="#ThreadBase-82"><span class="linenos">82</span></a><span class="sd">        Args:</span>
-</span><span id="ThreadBase-83"><a href="#ThreadBase-83"><span class="linenos">83</span></a>
-</span><span id="ThreadBase-84"><a href="#ThreadBase-84"><span class="linenos">84</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="ThreadBase-85"><a href="#ThreadBase-85"><span class="linenos">85</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-86"><a href="#ThreadBase-86"><span class="linenos">86</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="ThreadBase-87"><a href="#ThreadBase-87"><span class="linenos">87</span></a>
-</span><span id="ThreadBase-88"><a href="#ThreadBase-88"><span class="linenos">88</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase-89"><a href="#ThreadBase-89"><span class="linenos">89</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-90"><a href="#ThreadBase-90"><span class="linenos">90</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="ThreadBase-91"><a href="#ThreadBase-91"><span class="linenos">91</span></a>
-</span><span id="ThreadBase-92"><a href="#ThreadBase-92"><span class="linenos">92</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="ThreadBase-93"><a href="#ThreadBase-93"><span class="linenos">93</span></a>
-</span><span id="ThreadBase-94"><a href="#ThreadBase-94"><span class="linenos">94</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase-95"><a href="#ThreadBase-95"><span class="linenos">95</span></a>
-</span><span id="ThreadBase-96"><a href="#ThreadBase-96"><span class="linenos">96</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="ThreadBase-97"><a href="#ThreadBase-97"><span class="linenos">97</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-98"><a href="#ThreadBase-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase-99"><a href="#ThreadBase-99"><span class="linenos">99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase-7"><a href="#ThreadBase-7"><span class="linenos">  7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ThreadBase</span><span class="p">:</span>
+</span><span id="ThreadBase-8"><a href="#ThreadBase-8"><span class="linenos">  8</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-9"><a href="#ThreadBase-9"><span class="linenos">  9</span></a><span class="sd">    A base class for managing threads with thread safety.</span>
+</span><span id="ThreadBase-10"><a href="#ThreadBase-10"><span class="linenos"> 10</span></a>
+</span><span id="ThreadBase-11"><a href="#ThreadBase-11"><span class="linenos"> 11</span></a><span class="sd">    This class provides a structure for creating and managing threads using the threading module.</span>
+</span><span id="ThreadBase-12"><a href="#ThreadBase-12"><span class="linenos"> 12</span></a><span class="sd">    It also ensures that the thread&#39;s operations are protected by a reentrant lock (_lock) to ensure thread safety.</span>
+</span><span id="ThreadBase-13"><a href="#ThreadBase-13"><span class="linenos"> 13</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-14"><a href="#ThreadBase-14"><span class="linenos"> 14</span></a>
+</span><span id="ThreadBase-15"><a href="#ThreadBase-15"><span class="linenos"> 15</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">CallableException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="ThreadBase-16"><a href="#ThreadBase-16"><span class="linenos"> 16</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="ThreadBase-17"><a href="#ThreadBase-17"><span class="linenos"> 17</span></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span><span id="ThreadBase-18"><a href="#ThreadBase-18"><span class="linenos"> 18</span></a>
+</span><span id="ThreadBase-19"><a href="#ThreadBase-19"><span class="linenos"> 19</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="ThreadBase-20"><a href="#ThreadBase-20"><span class="linenos"> 20</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase-21"><a href="#ThreadBase-21"><span class="linenos"> 21</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-22"><a href="#ThreadBase-22"><span class="linenos"> 22</span></a><span class="sd">        Checks if callback is a Callable (function, lambda, etc).</span>
+</span><span id="ThreadBase-23"><a href="#ThreadBase-23"><span class="linenos"> 23</span></a>
+</span><span id="ThreadBase-24"><a href="#ThreadBase-24"><span class="linenos"> 24</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-25"><a href="#ThreadBase-25"><span class="linenos"> 25</span></a>
+</span><span id="ThreadBase-26"><a href="#ThreadBase-26"><span class="linenos"> 26</span></a><span class="sd">            callback (Callable): The Callable to check.</span>
+</span><span id="ThreadBase-27"><a href="#ThreadBase-27"><span class="linenos"> 27</span></a>
+</span><span id="ThreadBase-28"><a href="#ThreadBase-28"><span class="linenos"> 28</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase-29"><a href="#ThreadBase-29"><span class="linenos"> 29</span></a>
+</span><span id="ThreadBase-30"><a href="#ThreadBase-30"><span class="linenos"> 30</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="ThreadBase-31"><a href="#ThreadBase-31"><span class="linenos"> 31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-32"><a href="#ThreadBase-32"><span class="linenos"> 32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase-33"><a href="#ThreadBase-33"><span class="linenos"> 33</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
+</span><span id="ThreadBase-34"><a href="#ThreadBase-34"><span class="linenos"> 34</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
+</span><span id="ThreadBase-35"><a href="#ThreadBase-35"><span class="linenos"> 35</span></a>            <span class="p">)</span>
+</span><span id="ThreadBase-36"><a href="#ThreadBase-36"><span class="linenos"> 36</span></a>
+</span><span id="ThreadBase-37"><a href="#ThreadBase-37"><span class="linenos"> 37</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="ThreadBase-38"><a href="#ThreadBase-38"><span class="linenos"> 38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-39"><a href="#ThreadBase-39"><span class="linenos"> 39</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
+</span><span id="ThreadBase-40"><a href="#ThreadBase-40"><span class="linenos"> 40</span></a>
+</span><span id="ThreadBase-41"><a href="#ThreadBase-41"><span class="linenos"> 41</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-42"><a href="#ThreadBase-42"><span class="linenos"> 42</span></a>
+</span><span id="ThreadBase-43"><a href="#ThreadBase-43"><span class="linenos"> 43</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
+</span><span id="ThreadBase-44"><a href="#ThreadBase-44"><span class="linenos"> 44</span></a>
+</span><span id="ThreadBase-45"><a href="#ThreadBase-45"><span class="linenos"> 45</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
+</span><span id="ThreadBase-46"><a href="#ThreadBase-46"><span class="linenos"> 46</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-47"><a href="#ThreadBase-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+</span><span id="ThreadBase-48"><a href="#ThreadBase-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="ThreadBase-49"><a href="#ThreadBase-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+</span><span id="ThreadBase-50"><a href="#ThreadBase-50"><span class="linenos"> 50</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
+</span><span id="ThreadBase-51"><a href="#ThreadBase-51"><span class="linenos"> 51</span></a>        <span class="p">)</span>
+</span><span id="ThreadBase-52"><a href="#ThreadBase-52"><span class="linenos"> 52</span></a>
+</span><span id="ThreadBase-53"><a href="#ThreadBase-53"><span class="linenos"> 53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+</span><span id="ThreadBase-54"><a href="#ThreadBase-54"><span class="linenos"> 54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-55"><a href="#ThreadBase-55"><span class="linenos"> 55</span></a><span class="sd">        Abstract method to be implemented by subclasses.</span>
+</span><span id="ThreadBase-56"><a href="#ThreadBase-56"><span class="linenos"> 56</span></a>
+</span><span id="ThreadBase-57"><a href="#ThreadBase-57"><span class="linenos"> 57</span></a><span class="sd">        This method should be overloaded in subclasses to define the work the thread will perform.</span>
+</span><span id="ThreadBase-58"><a href="#ThreadBase-58"><span class="linenos"> 58</span></a>
+</span><span id="ThreadBase-59"><a href="#ThreadBase-59"><span class="linenos"> 59</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase-60"><a href="#ThreadBase-60"><span class="linenos"> 60</span></a>
+</span><span id="ThreadBase-61"><a href="#ThreadBase-61"><span class="linenos"> 61</span></a><span class="sd">            Exception: If the method is not overloaded by a subclass.</span>
+</span><span id="ThreadBase-62"><a href="#ThreadBase-62"><span class="linenos"> 62</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-63"><a href="#ThreadBase-63"><span class="linenos"> 63</span></a>        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_run() method NOT overloaded!&quot;</span><span class="p">)</span>
+</span><span id="ThreadBase-64"><a href="#ThreadBase-64"><span class="linenos"> 64</span></a>
+</span><span id="ThreadBase-65"><a href="#ThreadBase-65"><span class="linenos"> 65</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase-66"><a href="#ThreadBase-66"><span class="linenos"> 66</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-67"><a href="#ThreadBase-67"><span class="linenos"> 67</span></a><span class="sd">        Checks if the thread has started.</span>
+</span><span id="ThreadBase-68"><a href="#ThreadBase-68"><span class="linenos"> 68</span></a>
+</span><span id="ThreadBase-69"><a href="#ThreadBase-69"><span class="linenos"> 69</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase-70"><a href="#ThreadBase-70"><span class="linenos"> 70</span></a>
+</span><span id="ThreadBase-71"><a href="#ThreadBase-71"><span class="linenos"> 71</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
+</span><span id="ThreadBase-72"><a href="#ThreadBase-72"><span class="linenos"> 72</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-73"><a href="#ThreadBase-73"><span class="linenos"> 73</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
+</span><span id="ThreadBase-74"><a href="#ThreadBase-74"><span class="linenos"> 74</span></a>
+</span><span id="ThreadBase-75"><a href="#ThreadBase-75"><span class="linenos"> 75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase-76"><a href="#ThreadBase-76"><span class="linenos"> 76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-77"><a href="#ThreadBase-77"><span class="linenos"> 77</span></a><span class="sd">        Checks if the thread is alive.</span>
+</span><span id="ThreadBase-78"><a href="#ThreadBase-78"><span class="linenos"> 78</span></a>
+</span><span id="ThreadBase-79"><a href="#ThreadBase-79"><span class="linenos"> 79</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase-80"><a href="#ThreadBase-80"><span class="linenos"> 80</span></a>
+</span><span id="ThreadBase-81"><a href="#ThreadBase-81"><span class="linenos"> 81</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
+</span><span id="ThreadBase-82"><a href="#ThreadBase-82"><span class="linenos"> 82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-83"><a href="#ThreadBase-83"><span class="linenos"> 83</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</span><span id="ThreadBase-84"><a href="#ThreadBase-84"><span class="linenos"> 84</span></a>
+</span><span id="ThreadBase-85"><a href="#ThreadBase-85"><span class="linenos"> 85</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase-86"><a href="#ThreadBase-86"><span class="linenos"> 86</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-87"><a href="#ThreadBase-87"><span class="linenos"> 87</span></a><span class="sd">        Checks if the thread has terminated.</span>
+</span><span id="ThreadBase-88"><a href="#ThreadBase-88"><span class="linenos"> 88</span></a>
+</span><span id="ThreadBase-89"><a href="#ThreadBase-89"><span class="linenos"> 89</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase-90"><a href="#ThreadBase-90"><span class="linenos"> 90</span></a>
+</span><span id="ThreadBase-91"><a href="#ThreadBase-91"><span class="linenos"> 91</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
+</span><span id="ThreadBase-92"><a href="#ThreadBase-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-93"><a href="#ThreadBase-93"><span class="linenos"> 93</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+</span><span id="ThreadBase-94"><a href="#ThreadBase-94"><span class="linenos"> 94</span></a>
+</span><span id="ThreadBase-95"><a href="#ThreadBase-95"><span class="linenos"> 95</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="ThreadBase-96"><a href="#ThreadBase-96"><span class="linenos"> 96</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
+</span><span id="ThreadBase-97"><a href="#ThreadBase-97"><span class="linenos"> 97</span></a>
+</span><span id="ThreadBase-98"><a href="#ThreadBase-98"><span class="linenos"> 98</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase-99"><a href="#ThreadBase-99"><span class="linenos"> 99</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-100"><a href="#ThreadBase-100"><span class="linenos">100</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
+</span><span id="ThreadBase-101"><a href="#ThreadBase-101"><span class="linenos">101</span></a>
+</span><span id="ThreadBase-102"><a href="#ThreadBase-102"><span class="linenos">102</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase-103"><a href="#ThreadBase-103"><span class="linenos">103</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-104"><a href="#ThreadBase-104"><span class="linenos">104</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="ThreadBase-105"><a href="#ThreadBase-105"><span class="linenos">105</span></a>
+</span><span id="ThreadBase-106"><a href="#ThreadBase-106"><span class="linenos">106</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-107"><a href="#ThreadBase-107"><span class="linenos">107</span></a>
+</span><span id="ThreadBase-108"><a href="#ThreadBase-108"><span class="linenos">108</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase-109"><a href="#ThreadBase-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-110"><a href="#ThreadBase-110"><span class="linenos">110</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="ThreadBase-111"><a href="#ThreadBase-111"><span class="linenos">111</span></a>
+</span><span id="ThreadBase-112"><a href="#ThreadBase-112"><span class="linenos">112</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ThreadBase-113"><a href="#ThreadBase-113"><span class="linenos">113</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-114"><a href="#ThreadBase-114"><span class="linenos">114</span></a><span class="sd">        Starts the thread.</span>
+</span><span id="ThreadBase-115"><a href="#ThreadBase-115"><span class="linenos">115</span></a>
+</span><span id="ThreadBase-116"><a href="#ThreadBase-116"><span class="linenos">116</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
+</span><span id="ThreadBase-117"><a href="#ThreadBase-117"><span class="linenos">117</span></a>
+</span><span id="ThreadBase-118"><a href="#ThreadBase-118"><span class="linenos">118</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase-119"><a href="#ThreadBase-119"><span class="linenos">119</span></a>
+</span><span id="ThreadBase-120"><a href="#ThreadBase-120"><span class="linenos">120</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase-121"><a href="#ThreadBase-121"><span class="linenos">121</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-122"><a href="#ThreadBase-122"><span class="linenos">122</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase-123"><a href="#ThreadBase-123"><span class="linenos">123</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -309,21 +367,21 @@ It also ensures that the thread's operations are protected by a reentrant lock (
 
     </div>
     <a class="headerlink" href="#ThreadBase.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.__init__-13"><a href="#ThreadBase.__init__-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-</span><span id="ThreadBase.__init__-14"><a href="#ThreadBase.__init__-14"><span class="linenos">14</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.__init__-15"><a href="#ThreadBase.__init__-15"><span class="linenos">15</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
-</span><span id="ThreadBase.__init__-16"><a href="#ThreadBase.__init__-16"><span class="linenos">16</span></a>
-</span><span id="ThreadBase.__init__-17"><a href="#ThreadBase.__init__-17"><span class="linenos">17</span></a><span class="sd">        Args:</span>
-</span><span id="ThreadBase.__init__-18"><a href="#ThreadBase.__init__-18"><span class="linenos">18</span></a>
-</span><span id="ThreadBase.__init__-19"><a href="#ThreadBase.__init__-19"><span class="linenos">19</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
-</span><span id="ThreadBase.__init__-20"><a href="#ThreadBase.__init__-20"><span class="linenos">20</span></a>
-</span><span id="ThreadBase.__init__-21"><a href="#ThreadBase.__init__-21"><span class="linenos">21</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
-</span><span id="ThreadBase.__init__-22"><a href="#ThreadBase.__init__-22"><span class="linenos">22</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.__init__-23"><a href="#ThreadBase.__init__-23"><span class="linenos">23</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
-</span><span id="ThreadBase.__init__-24"><a href="#ThreadBase.__init__-24"><span class="linenos">24</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="ThreadBase.__init__-25"><a href="#ThreadBase.__init__-25"><span class="linenos">25</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
-</span><span id="ThreadBase.__init__-26"><a href="#ThreadBase.__init__-26"><span class="linenos">26</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
-</span><span id="ThreadBase.__init__-27"><a href="#ThreadBase.__init__-27"><span class="linenos">27</span></a>        <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.__init__-37"><a href="#ThreadBase.__init__-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="ThreadBase.__init__-38"><a href="#ThreadBase.__init__-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.__init__-39"><a href="#ThreadBase.__init__-39"><span class="linenos">39</span></a><span class="sd">        Initializes the thread and the reentrant lock.</span>
+</span><span id="ThreadBase.__init__-40"><a href="#ThreadBase.__init__-40"><span class="linenos">40</span></a>
+</span><span id="ThreadBase.__init__-41"><a href="#ThreadBase.__init__-41"><span class="linenos">41</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase.__init__-42"><a href="#ThreadBase.__init__-42"><span class="linenos">42</span></a>
+</span><span id="ThreadBase.__init__-43"><a href="#ThreadBase.__init__-43"><span class="linenos">43</span></a><span class="sd">            args (list): The arguments to pass to the _run method when the thread starts.</span>
+</span><span id="ThreadBase.__init__-44"><a href="#ThreadBase.__init__-44"><span class="linenos">44</span></a>
+</span><span id="ThreadBase.__init__-45"><a href="#ThreadBase.__init__-45"><span class="linenos">45</span></a><span class="sd">            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.</span>
+</span><span id="ThreadBase.__init__-46"><a href="#ThreadBase.__init__-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.__init__-47"><a href="#ThreadBase.__init__-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+</span><span id="ThreadBase.__init__-48"><a href="#ThreadBase.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="ThreadBase.__init__-49"><a href="#ThreadBase.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+</span><span id="ThreadBase.__init__-50"><a href="#ThreadBase.__init__-50"><span class="linenos">50</span></a>            <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="n">daemon</span>
+</span><span id="ThreadBase.__init__-51"><a href="#ThreadBase.__init__-51"><span class="linenos">51</span></a>        <span class="p">)</span>
 </span></pre></div>
 
 
@@ -334,6 +392,53 @@ It also ensures that the thread's operations are protected by a reentrant lock (
 <pre><code>args (list): The arguments to pass to the _run method when the thread starts.
 
 daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.
+</code></pre>
+</div>
+
+
+                            </div>
+                            <div id="ThreadBase.check_callable" class="classattr">
+                                        <input id="ThreadBase.check_callable-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+                    <div class="decorator decorator-staticmethod">@staticmethod</div>
+
+        <span class="def">def</span>
+        <span class="name">check_callable</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ThreadBase.check_callable-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadBase.check_callable"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.check_callable-19"><a href="#ThreadBase.check_callable-19"><span class="linenos">19</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="ThreadBase.check_callable-20"><a href="#ThreadBase.check_callable-20"><span class="linenos">20</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase.check_callable-21"><a href="#ThreadBase.check_callable-21"><span class="linenos">21</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.check_callable-22"><a href="#ThreadBase.check_callable-22"><span class="linenos">22</span></a><span class="sd">        Checks if callback is a Callable (function, lambda, etc).</span>
+</span><span id="ThreadBase.check_callable-23"><a href="#ThreadBase.check_callable-23"><span class="linenos">23</span></a>
+</span><span id="ThreadBase.check_callable-24"><a href="#ThreadBase.check_callable-24"><span class="linenos">24</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase.check_callable-25"><a href="#ThreadBase.check_callable-25"><span class="linenos">25</span></a>
+</span><span id="ThreadBase.check_callable-26"><a href="#ThreadBase.check_callable-26"><span class="linenos">26</span></a><span class="sd">            callback (Callable): The Callable to check.</span>
+</span><span id="ThreadBase.check_callable-27"><a href="#ThreadBase.check_callable-27"><span class="linenos">27</span></a>
+</span><span id="ThreadBase.check_callable-28"><a href="#ThreadBase.check_callable-28"><span class="linenos">28</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.check_callable-29"><a href="#ThreadBase.check_callable-29"><span class="linenos">29</span></a>
+</span><span id="ThreadBase.check_callable-30"><a href="#ThreadBase.check_callable-30"><span class="linenos">30</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="ThreadBase.check_callable-31"><a href="#ThreadBase.check_callable-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.check_callable-32"><a href="#ThreadBase.check_callable-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase.check_callable-33"><a href="#ThreadBase.check_callable-33"><span class="linenos">33</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
+</span><span id="ThreadBase.check_callable-34"><a href="#ThreadBase.check_callable-34"><span class="linenos">34</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
+</span><span id="ThreadBase.check_callable-35"><a href="#ThreadBase.check_callable-35"><span class="linenos">35</span></a>            <span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Checks if callback is a Callable (function, lambda, etc).</p>
+
+<p>Args:</p>
+
+<pre><code>callback (Callable): The Callable to check.
+</code></pre>
+
+<p>Raises:</p>
+
+<pre><code><a href="#ThreadBase.CallableException">ThreadBase.CallableException</a>: If the callback argument is not callable.
 </code></pre>
 </div>
 
@@ -350,15 +455,15 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.has_started"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.has_started-41"><a href="#ThreadBase.has_started-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase.has_started-42"><a href="#ThreadBase.has_started-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.has_started-43"><a href="#ThreadBase.has_started-43"><span class="linenos">43</span></a><span class="sd">        Checks if the thread has started.</span>
-</span><span id="ThreadBase.has_started-44"><a href="#ThreadBase.has_started-44"><span class="linenos">44</span></a>
-</span><span id="ThreadBase.has_started-45"><a href="#ThreadBase.has_started-45"><span class="linenos">45</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase.has_started-46"><a href="#ThreadBase.has_started-46"><span class="linenos">46</span></a>
-</span><span id="ThreadBase.has_started-47"><a href="#ThreadBase.has_started-47"><span class="linenos">47</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
-</span><span id="ThreadBase.has_started-48"><a href="#ThreadBase.has_started-48"><span class="linenos">48</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.has_started-49"><a href="#ThreadBase.has_started-49"><span class="linenos">49</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.has_started-65"><a href="#ThreadBase.has_started-65"><span class="linenos">65</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_started</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase.has_started-66"><a href="#ThreadBase.has_started-66"><span class="linenos">66</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.has_started-67"><a href="#ThreadBase.has_started-67"><span class="linenos">67</span></a><span class="sd">        Checks if the thread has started.</span>
+</span><span id="ThreadBase.has_started-68"><a href="#ThreadBase.has_started-68"><span class="linenos">68</span></a>
+</span><span id="ThreadBase.has_started-69"><a href="#ThreadBase.has_started-69"><span class="linenos">69</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase.has_started-70"><a href="#ThreadBase.has_started-70"><span class="linenos">70</span></a>
+</span><span id="ThreadBase.has_started-71"><a href="#ThreadBase.has_started-71"><span class="linenos">71</span></a><span class="sd">            bool: True if thread has started, otherwise False.</span>
+</span><span id="ThreadBase.has_started-72"><a href="#ThreadBase.has_started-72"><span class="linenos">72</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.has_started-73"><a href="#ThreadBase.has_started-73"><span class="linenos">73</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span>
 </span></pre></div>
 
 
@@ -383,15 +488,15 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.is_alive"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_alive-51"><a href="#ThreadBase.is_alive-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase.is_alive-52"><a href="#ThreadBase.is_alive-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_alive-53"><a href="#ThreadBase.is_alive-53"><span class="linenos">53</span></a><span class="sd">        Checks if the thread is alive.</span>
-</span><span id="ThreadBase.is_alive-54"><a href="#ThreadBase.is_alive-54"><span class="linenos">54</span></a>
-</span><span id="ThreadBase.is_alive-55"><a href="#ThreadBase.is_alive-55"><span class="linenos">55</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase.is_alive-56"><a href="#ThreadBase.is_alive-56"><span class="linenos">56</span></a>
-</span><span id="ThreadBase.is_alive-57"><a href="#ThreadBase.is_alive-57"><span class="linenos">57</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
-</span><span id="ThreadBase.is_alive-58"><a href="#ThreadBase.is_alive-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_alive-59"><a href="#ThreadBase.is_alive-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_alive-75"><a href="#ThreadBase.is_alive-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase.is_alive-76"><a href="#ThreadBase.is_alive-76"><span class="linenos">76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.is_alive-77"><a href="#ThreadBase.is_alive-77"><span class="linenos">77</span></a><span class="sd">        Checks if the thread is alive.</span>
+</span><span id="ThreadBase.is_alive-78"><a href="#ThreadBase.is_alive-78"><span class="linenos">78</span></a>
+</span><span id="ThreadBase.is_alive-79"><a href="#ThreadBase.is_alive-79"><span class="linenos">79</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase.is_alive-80"><a href="#ThreadBase.is_alive-80"><span class="linenos">80</span></a>
+</span><span id="ThreadBase.is_alive-81"><a href="#ThreadBase.is_alive-81"><span class="linenos">81</span></a><span class="sd">            bool: True if thread is alive, otherwise False.</span>
+</span><span id="ThreadBase.is_alive-82"><a href="#ThreadBase.is_alive-82"><span class="linenos">82</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.is_alive-83"><a href="#ThreadBase.is_alive-83"><span class="linenos">83</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -416,15 +521,15 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.is_terminated"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_terminated-61"><a href="#ThreadBase.is_terminated-61"><span class="linenos">61</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase.is_terminated-62"><a href="#ThreadBase.is_terminated-62"><span class="linenos">62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_terminated-63"><a href="#ThreadBase.is_terminated-63"><span class="linenos">63</span></a><span class="sd">        Checks if the thread has terminated.</span>
-</span><span id="ThreadBase.is_terminated-64"><a href="#ThreadBase.is_terminated-64"><span class="linenos">64</span></a>
-</span><span id="ThreadBase.is_terminated-65"><a href="#ThreadBase.is_terminated-65"><span class="linenos">65</span></a><span class="sd">        Returns:</span>
-</span><span id="ThreadBase.is_terminated-66"><a href="#ThreadBase.is_terminated-66"><span class="linenos">66</span></a>
-</span><span id="ThreadBase.is_terminated-67"><a href="#ThreadBase.is_terminated-67"><span class="linenos">67</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
-</span><span id="ThreadBase.is_terminated-68"><a href="#ThreadBase.is_terminated-68"><span class="linenos">68</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_terminated-69"><a href="#ThreadBase.is_terminated-69"><span class="linenos">69</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_terminated-85"><a href="#ThreadBase.is_terminated-85"><span class="linenos">85</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase.is_terminated-86"><a href="#ThreadBase.is_terminated-86"><span class="linenos">86</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.is_terminated-87"><a href="#ThreadBase.is_terminated-87"><span class="linenos">87</span></a><span class="sd">        Checks if the thread has terminated.</span>
+</span><span id="ThreadBase.is_terminated-88"><a href="#ThreadBase.is_terminated-88"><span class="linenos">88</span></a>
+</span><span id="ThreadBase.is_terminated-89"><a href="#ThreadBase.is_terminated-89"><span class="linenos">89</span></a><span class="sd">        Returns:</span>
+</span><span id="ThreadBase.is_terminated-90"><a href="#ThreadBase.is_terminated-90"><span class="linenos">90</span></a>
+</span><span id="ThreadBase.is_terminated-91"><a href="#ThreadBase.is_terminated-91"><span class="linenos">91</span></a><span class="sd">            bool: True if thread HAS started and is NOT alive, otherwise False.</span>
+</span><span id="ThreadBase.is_terminated-92"><a href="#ThreadBase.is_terminated-92"><span class="linenos">92</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.is_terminated-93"><a href="#ThreadBase.is_terminated-93"><span class="linenos">93</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_started</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -449,8 +554,8 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.set_daemon"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.set_daemon-71"><a href="#ThreadBase.set_daemon-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-</span><span id="ThreadBase.set_daemon-72"><a href="#ThreadBase.set_daemon-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.set_daemon-95"><a href="#ThreadBase.set_daemon-95"><span class="linenos">95</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="ThreadBase.set_daemon-96"><a href="#ThreadBase.set_daemon-96"><span class="linenos">96</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
 </span></pre></div>
 
 
@@ -468,9 +573,9 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.is_daemon"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_daemon-74"><a href="#ThreadBase.is_daemon-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ThreadBase.is_daemon-75"><a href="#ThreadBase.is_daemon-75"><span class="linenos">75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_daemon-76"><a href="#ThreadBase.is_daemon-76"><span class="linenos">76</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.is_daemon-98"><a href="#ThreadBase.is_daemon-98"><span class="linenos"> 98</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ThreadBase.is_daemon-99"><a href="#ThreadBase.is_daemon-99"><span class="linenos"> 99</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether this thread is a daemon.&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.is_daemon-100"><a href="#ThreadBase.is_daemon-100"><span class="linenos">100</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span>
 </span></pre></div>
 
 
@@ -490,15 +595,15 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.join"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.join-78"><a href="#ThreadBase.join-78"><span class="linenos">78</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="ThreadBase.join-79"><a href="#ThreadBase.join-79"><span class="linenos">79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.join-80"><a href="#ThreadBase.join-80"><span class="linenos">80</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
-</span><span id="ThreadBase.join-81"><a href="#ThreadBase.join-81"><span class="linenos">81</span></a>
-</span><span id="ThreadBase.join-82"><a href="#ThreadBase.join-82"><span class="linenos">82</span></a><span class="sd">        Args:</span>
-</span><span id="ThreadBase.join-83"><a href="#ThreadBase.join-83"><span class="linenos">83</span></a>
-</span><span id="ThreadBase.join-84"><a href="#ThreadBase.join-84"><span class="linenos">84</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="ThreadBase.join-85"><a href="#ThreadBase.join-85"><span class="linenos">85</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.join-86"><a href="#ThreadBase.join-86"><span class="linenos">86</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.join-102"><a href="#ThreadBase.join-102"><span class="linenos">102</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase.join-103"><a href="#ThreadBase.join-103"><span class="linenos">103</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.join-104"><a href="#ThreadBase.join-104"><span class="linenos">104</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="ThreadBase.join-105"><a href="#ThreadBase.join-105"><span class="linenos">105</span></a>
+</span><span id="ThreadBase.join-106"><a href="#ThreadBase.join-106"><span class="linenos">106</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase.join-107"><a href="#ThreadBase.join-107"><span class="linenos">107</span></a>
+</span><span id="ThreadBase.join-108"><a href="#ThreadBase.join-108"><span class="linenos">108</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase.join-109"><a href="#ThreadBase.join-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.join-110"><a href="#ThreadBase.join-110"><span class="linenos">110</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -523,18 +628,18 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 
     </div>
     <a class="headerlink" href="#ThreadBase.start"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.start-88"><a href="#ThreadBase.start-88"><span class="linenos">88</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase.start-89"><a href="#ThreadBase.start-89"><span class="linenos">89</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.start-90"><a href="#ThreadBase.start-90"><span class="linenos">90</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="ThreadBase.start-91"><a href="#ThreadBase.start-91"><span class="linenos">91</span></a>
-</span><span id="ThreadBase.start-92"><a href="#ThreadBase.start-92"><span class="linenos">92</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
-</span><span id="ThreadBase.start-93"><a href="#ThreadBase.start-93"><span class="linenos">93</span></a>
-</span><span id="ThreadBase.start-94"><a href="#ThreadBase.start-94"><span class="linenos">94</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase.start-95"><a href="#ThreadBase.start-95"><span class="linenos">95</span></a>
-</span><span id="ThreadBase.start-96"><a href="#ThreadBase.start-96"><span class="linenos">96</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="ThreadBase.start-97"><a href="#ThreadBase.start-97"><span class="linenos">97</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.start-98"><a href="#ThreadBase.start-98"><span class="linenos">98</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase.start-99"><a href="#ThreadBase.start-99"><span class="linenos">99</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.start-112"><a href="#ThreadBase.start-112"><span class="linenos">112</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ThreadBase.start-113"><a href="#ThreadBase.start-113"><span class="linenos">113</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.start-114"><a href="#ThreadBase.start-114"><span class="linenos">114</span></a><span class="sd">        Starts the thread.</span>
+</span><span id="ThreadBase.start-115"><a href="#ThreadBase.start-115"><span class="linenos">115</span></a>
+</span><span id="ThreadBase.start-116"><a href="#ThreadBase.start-116"><span class="linenos">116</span></a><span class="sd">        This method begins the execution of the thread by calling the _run method in the background.</span>
+</span><span id="ThreadBase.start-117"><a href="#ThreadBase.start-117"><span class="linenos">117</span></a>
+</span><span id="ThreadBase.start-118"><a href="#ThreadBase.start-118"><span class="linenos">118</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.start-119"><a href="#ThreadBase.start-119"><span class="linenos">119</span></a>
+</span><span id="ThreadBase.start-120"><a href="#ThreadBase.start-120"><span class="linenos">120</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase.start-121"><a href="#ThreadBase.start-121"><span class="linenos">121</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.start-122"><a href="#ThreadBase.start-122"><span class="linenos">122</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase.start-123"><a href="#ThreadBase.start-123"><span class="linenos">123</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -548,6 +653,46 @@ daemon (bool, optional): If True, the thread will be daemonized. Defaults to Tru
 </code></pre>
 </div>
 
+
+                            </div>
+                </section>
+                <section id="ThreadBase.CallableException">
+                            <input id="ThreadBase.CallableException-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ThreadBase.CallableException</span><wbr>(<span class="base">builtins.Exception</span>):
+
+                <label class="view-source-button" for="ThreadBase.CallableException-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadBase.CallableException"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.CallableException-15"><a href="#ThreadBase.CallableException-15"><span class="linenos">15</span></a>    <span class="k">class</span><span class="w"> </span><span class="nc">CallableException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="ThreadBase.CallableException-16"><a href="#ThreadBase.CallableException-16"><span class="linenos">16</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="ThreadBase.CallableException-17"><a href="#ThreadBase.CallableException-17"><span class="linenos">17</span></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Common base class for all non-exit exceptions.</p>
+</div>
+
+
+                            <div id="ThreadBase.CallableException.__init__" class="classattr">
+                                        <input id="ThreadBase.CallableException.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ThreadBase.CallableException</span><span class="signature pdoc-code condensed">(<span class="param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span></span>)</span>
+
+                <label class="view-source-button" for="ThreadBase.CallableException.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadBase.CallableException.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.CallableException.__init__-16"><a href="#ThreadBase.CallableException.__init__-16"><span class="linenos">16</span></a>        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="ThreadBase.CallableException.__init__-17"><a href="#ThreadBase.CallableException.__init__-17"><span class="linenos">17</span></a>            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
 
                             </div>
                 </section>

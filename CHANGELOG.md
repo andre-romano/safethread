@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.2 (2025-02-17 18:05:23 -0300)
+
+- a730fed added thread.Pipeline class
+- 9985cbf added ThreadBase in safethread.thread
+
 ## v1.0.1 (2025-02-17 01:29:26 -0300)
 
 - 9985cbf added ThreadBase in safethread.thread

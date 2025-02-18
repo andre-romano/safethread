@@ -37,6 +37,15 @@
                                 <a class="function" href="#Pipeline.__init__">Pipeline</a>
                         </li>
                         <li>
+                                <a class="variable" href="#Pipeline.EmptyException">EmptyException</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Pipeline.FullException">FullException</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Pipeline.StoppedException">StoppedException</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#Pipeline.put">put</a>
                         </li>
                         <li>
@@ -93,86 +102,98 @@
 </span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>
 </span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">    Raises:</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">        Exception: If the provided callback is not callable.</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">        ThreadBase.CallableException: If the provided callback is not callable.</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>    <span class="n">EmptyException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>    <span class="n">FullException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>    <span class="n">StoppedException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span>
 </span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">        Args:</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
 </span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">        Raises:</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">        Args:</span>
 </span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">            Exception: If the callback argument is not callable.</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>            <span class="p">)</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">        Method to be executed in the thread. It gets data from the input queue, </span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">        processes it through the callback function, and puts the result into </span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">        the output queue.</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        Raises:</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">            queue.Full: If the output queue is full (no available slot to store output)</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>                <span class="n">input_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>                <span class="n">output_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>            <span class="k">pass</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        Puts data into the input queue for processing.</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        Args:</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">        Raises:</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">        Method to be executed in the thread. It gets data from the input queue, </span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">        processes it through the callback function, and puts the result into </span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a><span class="sd">        the output queue.</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">        Raises:</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">            queue.Full: If the output queue is full (no available slot to store output)</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>                <span class="n">input_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>                <span class="n">output_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>            <span class="k">pass</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">        Puts data into the input queue for processing.</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">        Args:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        Raises:</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">            FullException: if block = True and timeout is exceeded, or </span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">                if block = False and there is no available space in the IN queue</span>
 </span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        Args:</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">            StoppedException: if pipeline has stopped</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
 </span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        Returns:</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
 </span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        Args:</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>        <span class="k">except</span><span class="p">:</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>            <span class="k">pass</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">        Returns:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        Raises:</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">            EmptyException: if block = True and timeout is exceeded, or </span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">                if block = False and no output is available in the OUT queue</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>        <span class="k">except</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>            <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -205,86 +226,98 @@
 </span><span id="Pipeline-24"><a href="#Pipeline-24"><span class="linenos"> 24</span></a>
 </span><span id="Pipeline-25"><a href="#Pipeline-25"><span class="linenos"> 25</span></a><span class="sd">    Raises:</span>
 </span><span id="Pipeline-26"><a href="#Pipeline-26"><span class="linenos"> 26</span></a>
-</span><span id="Pipeline-27"><a href="#Pipeline-27"><span class="linenos"> 27</span></a><span class="sd">        Exception: If the provided callback is not callable.</span>
+</span><span id="Pipeline-27"><a href="#Pipeline-27"><span class="linenos"> 27</span></a><span class="sd">        ThreadBase.CallableException: If the provided callback is not callable.</span>
 </span><span id="Pipeline-28"><a href="#Pipeline-28"><span class="linenos"> 28</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="Pipeline-29"><a href="#Pipeline-29"><span class="linenos"> 29</span></a>
-</span><span id="Pipeline-30"><a href="#Pipeline-30"><span class="linenos"> 30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="Pipeline-31"><a href="#Pipeline-31"><span class="linenos"> 31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline-32"><a href="#Pipeline-32"><span class="linenos"> 32</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
+</span><span id="Pipeline-30"><a href="#Pipeline-30"><span class="linenos"> 30</span></a>    <span class="n">EmptyException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span>
+</span><span id="Pipeline-31"><a href="#Pipeline-31"><span class="linenos"> 31</span></a>    <span class="n">FullException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Full</span>
+</span><span id="Pipeline-32"><a href="#Pipeline-32"><span class="linenos"> 32</span></a>    <span class="n">StoppedException</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span>
 </span><span id="Pipeline-33"><a href="#Pipeline-33"><span class="linenos"> 33</span></a>
-</span><span id="Pipeline-34"><a href="#Pipeline-34"><span class="linenos"> 34</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline-35"><a href="#Pipeline-35"><span class="linenos"> 35</span></a>
-</span><span id="Pipeline-36"><a href="#Pipeline-36"><span class="linenos"> 36</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+</span><span id="Pipeline-34"><a href="#Pipeline-34"><span class="linenos"> 34</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="Pipeline-35"><a href="#Pipeline-35"><span class="linenos"> 35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline-36"><a href="#Pipeline-36"><span class="linenos"> 36</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
 </span><span id="Pipeline-37"><a href="#Pipeline-37"><span class="linenos"> 37</span></a>
-</span><span id="Pipeline-38"><a href="#Pipeline-38"><span class="linenos"> 38</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline-38"><a href="#Pipeline-38"><span class="linenos"> 38</span></a><span class="sd">        Args:</span>
 </span><span id="Pipeline-39"><a href="#Pipeline-39"><span class="linenos"> 39</span></a>
-</span><span id="Pipeline-40"><a href="#Pipeline-40"><span class="linenos"> 40</span></a><span class="sd">            Exception: If the callback argument is not callable.</span>
-</span><span id="Pipeline-41"><a href="#Pipeline-41"><span class="linenos"> 41</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline-42"><a href="#Pipeline-42"><span class="linenos"> 42</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
-</span><span id="Pipeline-43"><a href="#Pipeline-43"><span class="linenos"> 43</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="Pipeline-44"><a href="#Pipeline-44"><span class="linenos"> 44</span></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-</span><span id="Pipeline-45"><a href="#Pipeline-45"><span class="linenos"> 45</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
-</span><span id="Pipeline-46"><a href="#Pipeline-46"><span class="linenos"> 46</span></a>            <span class="p">)</span>
-</span><span id="Pipeline-47"><a href="#Pipeline-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="Pipeline-48"><a href="#Pipeline-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span id="Pipeline-49"><a href="#Pipeline-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span id="Pipeline-50"><a href="#Pipeline-50"><span class="linenos"> 50</span></a>
-</span><span id="Pipeline-51"><a href="#Pipeline-51"><span class="linenos"> 51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Pipeline-52"><a href="#Pipeline-52"><span class="linenos"> 52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline-53"><a href="#Pipeline-53"><span class="linenos"> 53</span></a><span class="sd">        Method to be executed in the thread. It gets data from the input queue, </span>
-</span><span id="Pipeline-54"><a href="#Pipeline-54"><span class="linenos"> 54</span></a><span class="sd">        processes it through the callback function, and puts the result into </span>
-</span><span id="Pipeline-55"><a href="#Pipeline-55"><span class="linenos"> 55</span></a><span class="sd">        the output queue.</span>
-</span><span id="Pipeline-56"><a href="#Pipeline-56"><span class="linenos"> 56</span></a>
-</span><span id="Pipeline-57"><a href="#Pipeline-57"><span class="linenos"> 57</span></a><span class="sd">        Raises:</span>
-</span><span id="Pipeline-58"><a href="#Pipeline-58"><span class="linenos"> 58</span></a>
-</span><span id="Pipeline-59"><a href="#Pipeline-59"><span class="linenos"> 59</span></a><span class="sd">            queue.Full: If the output queue is full (no available slot to store output)</span>
-</span><span id="Pipeline-60"><a href="#Pipeline-60"><span class="linenos"> 60</span></a>
-</span><span id="Pipeline-61"><a href="#Pipeline-61"><span class="linenos"> 61</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline-62"><a href="#Pipeline-62"><span class="linenos"> 62</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="Pipeline-63"><a href="#Pipeline-63"><span class="linenos"> 63</span></a>            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-</span><span id="Pipeline-64"><a href="#Pipeline-64"><span class="linenos"> 64</span></a>                <span class="n">input_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="Pipeline-65"><a href="#Pipeline-65"><span class="linenos"> 65</span></a>                <span class="n">output_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
-</span><span id="Pipeline-66"><a href="#Pipeline-66"><span class="linenos"> 66</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="Pipeline-67"><a href="#Pipeline-67"><span class="linenos"> 67</span></a>        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="Pipeline-68"><a href="#Pipeline-68"><span class="linenos"> 68</span></a>            <span class="k">pass</span>
-</span><span id="Pipeline-69"><a href="#Pipeline-69"><span class="linenos"> 69</span></a>
-</span><span id="Pipeline-70"><a href="#Pipeline-70"><span class="linenos"> 70</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Pipeline-71"><a href="#Pipeline-71"><span class="linenos"> 71</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline-72"><a href="#Pipeline-72"><span class="linenos"> 72</span></a><span class="sd">        Puts data into the input queue for processing.</span>
-</span><span id="Pipeline-73"><a href="#Pipeline-73"><span class="linenos"> 73</span></a>
-</span><span id="Pipeline-74"><a href="#Pipeline-74"><span class="linenos"> 74</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline-75"><a href="#Pipeline-75"><span class="linenos"> 75</span></a>
-</span><span id="Pipeline-76"><a href="#Pipeline-76"><span class="linenos"> 76</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
-</span><span id="Pipeline-77"><a href="#Pipeline-77"><span class="linenos"> 77</span></a>
-</span><span id="Pipeline-78"><a href="#Pipeline-78"><span class="linenos"> 78</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
-</span><span id="Pipeline-79"><a href="#Pipeline-79"><span class="linenos"> 79</span></a>
-</span><span id="Pipeline-80"><a href="#Pipeline-80"><span class="linenos"> 80</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
-</span><span id="Pipeline-81"><a href="#Pipeline-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline-82"><a href="#Pipeline-82"><span class="linenos"> 82</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
-</span><span id="Pipeline-83"><a href="#Pipeline-83"><span class="linenos"> 83</span></a>
-</span><span id="Pipeline-84"><a href="#Pipeline-84"><span class="linenos"> 84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Pipeline-85"><a href="#Pipeline-85"><span class="linenos"> 85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline-86"><a href="#Pipeline-86"><span class="linenos"> 86</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
+</span><span id="Pipeline-40"><a href="#Pipeline-40"><span class="linenos"> 40</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+</span><span id="Pipeline-41"><a href="#Pipeline-41"><span class="linenos"> 41</span></a>
+</span><span id="Pipeline-42"><a href="#Pipeline-42"><span class="linenos"> 42</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline-43"><a href="#Pipeline-43"><span class="linenos"> 43</span></a>
+</span><span id="Pipeline-44"><a href="#Pipeline-44"><span class="linenos"> 44</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="Pipeline-45"><a href="#Pipeline-45"><span class="linenos"> 45</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline-46"><a href="#Pipeline-46"><span class="linenos"> 46</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
+</span><span id="Pipeline-47"><a href="#Pipeline-47"><span class="linenos"> 47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="Pipeline-48"><a href="#Pipeline-48"><span class="linenos"> 48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
+</span><span id="Pipeline-49"><a href="#Pipeline-49"><span class="linenos"> 49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="Pipeline-50"><a href="#Pipeline-50"><span class="linenos"> 50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="Pipeline-51"><a href="#Pipeline-51"><span class="linenos"> 51</span></a>
+</span><span id="Pipeline-52"><a href="#Pipeline-52"><span class="linenos"> 52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Pipeline-53"><a href="#Pipeline-53"><span class="linenos"> 53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline-54"><a href="#Pipeline-54"><span class="linenos"> 54</span></a><span class="sd">        Method to be executed in the thread. It gets data from the input queue, </span>
+</span><span id="Pipeline-55"><a href="#Pipeline-55"><span class="linenos"> 55</span></a><span class="sd">        processes it through the callback function, and puts the result into </span>
+</span><span id="Pipeline-56"><a href="#Pipeline-56"><span class="linenos"> 56</span></a><span class="sd">        the output queue.</span>
+</span><span id="Pipeline-57"><a href="#Pipeline-57"><span class="linenos"> 57</span></a>
+</span><span id="Pipeline-58"><a href="#Pipeline-58"><span class="linenos"> 58</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline-59"><a href="#Pipeline-59"><span class="linenos"> 59</span></a>
+</span><span id="Pipeline-60"><a href="#Pipeline-60"><span class="linenos"> 60</span></a><span class="sd">            queue.Full: If the output queue is full (no available slot to store output)</span>
+</span><span id="Pipeline-61"><a href="#Pipeline-61"><span class="linenos"> 61</span></a>
+</span><span id="Pipeline-62"><a href="#Pipeline-62"><span class="linenos"> 62</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline-63"><a href="#Pipeline-63"><span class="linenos"> 63</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Pipeline-64"><a href="#Pipeline-64"><span class="linenos"> 64</span></a>            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="Pipeline-65"><a href="#Pipeline-65"><span class="linenos"> 65</span></a>                <span class="n">input_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span id="Pipeline-66"><a href="#Pipeline-66"><span class="linenos"> 66</span></a>                <span class="n">output_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+</span><span id="Pipeline-67"><a href="#Pipeline-67"><span class="linenos"> 67</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">output_data</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="Pipeline-68"><a href="#Pipeline-68"><span class="linenos"> 68</span></a>        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">ShutDown</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="Pipeline-69"><a href="#Pipeline-69"><span class="linenos"> 69</span></a>            <span class="k">pass</span>
+</span><span id="Pipeline-70"><a href="#Pipeline-70"><span class="linenos"> 70</span></a>
+</span><span id="Pipeline-71"><a href="#Pipeline-71"><span class="linenos"> 71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Pipeline-72"><a href="#Pipeline-72"><span class="linenos"> 72</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline-73"><a href="#Pipeline-73"><span class="linenos"> 73</span></a><span class="sd">        Puts data into the input queue for processing.</span>
+</span><span id="Pipeline-74"><a href="#Pipeline-74"><span class="linenos"> 74</span></a>
+</span><span id="Pipeline-75"><a href="#Pipeline-75"><span class="linenos"> 75</span></a><span class="sd">        Args:</span>
+</span><span id="Pipeline-76"><a href="#Pipeline-76"><span class="linenos"> 76</span></a>
+</span><span id="Pipeline-77"><a href="#Pipeline-77"><span class="linenos"> 77</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
+</span><span id="Pipeline-78"><a href="#Pipeline-78"><span class="linenos"> 78</span></a>
+</span><span id="Pipeline-79"><a href="#Pipeline-79"><span class="linenos"> 79</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
+</span><span id="Pipeline-80"><a href="#Pipeline-80"><span class="linenos"> 80</span></a>
+</span><span id="Pipeline-81"><a href="#Pipeline-81"><span class="linenos"> 81</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
+</span><span id="Pipeline-82"><a href="#Pipeline-82"><span class="linenos"> 82</span></a>
+</span><span id="Pipeline-83"><a href="#Pipeline-83"><span class="linenos"> 83</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline-84"><a href="#Pipeline-84"><span class="linenos"> 84</span></a>
+</span><span id="Pipeline-85"><a href="#Pipeline-85"><span class="linenos"> 85</span></a><span class="sd">            FullException: if block = True and timeout is exceeded, or </span>
+</span><span id="Pipeline-86"><a href="#Pipeline-86"><span class="linenos"> 86</span></a><span class="sd">                if block = False and there is no available space in the IN queue</span>
 </span><span id="Pipeline-87"><a href="#Pipeline-87"><span class="linenos"> 87</span></a>
-</span><span id="Pipeline-88"><a href="#Pipeline-88"><span class="linenos"> 88</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline-89"><a href="#Pipeline-89"><span class="linenos"> 89</span></a>
-</span><span id="Pipeline-90"><a href="#Pipeline-90"><span class="linenos"> 90</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
+</span><span id="Pipeline-88"><a href="#Pipeline-88"><span class="linenos"> 88</span></a><span class="sd">            StoppedException: if pipeline has stopped</span>
+</span><span id="Pipeline-89"><a href="#Pipeline-89"><span class="linenos"> 89</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline-90"><a href="#Pipeline-90"><span class="linenos"> 90</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
 </span><span id="Pipeline-91"><a href="#Pipeline-91"><span class="linenos"> 91</span></a>
-</span><span id="Pipeline-92"><a href="#Pipeline-92"><span class="linenos"> 92</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
-</span><span id="Pipeline-93"><a href="#Pipeline-93"><span class="linenos"> 93</span></a>
-</span><span id="Pipeline-94"><a href="#Pipeline-94"><span class="linenos"> 94</span></a><span class="sd">        Returns:</span>
+</span><span id="Pipeline-92"><a href="#Pipeline-92"><span class="linenos"> 92</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Pipeline-93"><a href="#Pipeline-93"><span class="linenos"> 93</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline-94"><a href="#Pipeline-94"><span class="linenos"> 94</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
 </span><span id="Pipeline-95"><a href="#Pipeline-95"><span class="linenos"> 95</span></a>
-</span><span id="Pipeline-96"><a href="#Pipeline-96"><span class="linenos"> 96</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
+</span><span id="Pipeline-96"><a href="#Pipeline-96"><span class="linenos"> 96</span></a><span class="sd">        Args:</span>
 </span><span id="Pipeline-97"><a href="#Pipeline-97"><span class="linenos"> 97</span></a>
-</span><span id="Pipeline-98"><a href="#Pipeline-98"><span class="linenos"> 98</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline-99"><a href="#Pipeline-99"><span class="linenos"> 99</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
-</span><span id="Pipeline-100"><a href="#Pipeline-100"><span class="linenos">100</span></a>
-</span><span id="Pipeline-101"><a href="#Pipeline-101"><span class="linenos">101</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Pipeline-102"><a href="#Pipeline-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
-</span><span id="Pipeline-103"><a href="#Pipeline-103"><span class="linenos">103</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="Pipeline-104"><a href="#Pipeline-104"><span class="linenos">104</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</span><span id="Pipeline-105"><a href="#Pipeline-105"><span class="linenos">105</span></a>        <span class="k">except</span><span class="p">:</span>
-</span><span id="Pipeline-106"><a href="#Pipeline-106"><span class="linenos">106</span></a>            <span class="k">pass</span>
+</span><span id="Pipeline-98"><a href="#Pipeline-98"><span class="linenos"> 98</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
+</span><span id="Pipeline-99"><a href="#Pipeline-99"><span class="linenos"> 99</span></a>
+</span><span id="Pipeline-100"><a href="#Pipeline-100"><span class="linenos">100</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
+</span><span id="Pipeline-101"><a href="#Pipeline-101"><span class="linenos">101</span></a>
+</span><span id="Pipeline-102"><a href="#Pipeline-102"><span class="linenos">102</span></a><span class="sd">        Returns:</span>
+</span><span id="Pipeline-103"><a href="#Pipeline-103"><span class="linenos">103</span></a>
+</span><span id="Pipeline-104"><a href="#Pipeline-104"><span class="linenos">104</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
+</span><span id="Pipeline-105"><a href="#Pipeline-105"><span class="linenos">105</span></a>
+</span><span id="Pipeline-106"><a href="#Pipeline-106"><span class="linenos">106</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline-107"><a href="#Pipeline-107"><span class="linenos">107</span></a>
+</span><span id="Pipeline-108"><a href="#Pipeline-108"><span class="linenos">108</span></a><span class="sd">            EmptyException: if block = True and timeout is exceeded, or </span>
+</span><span id="Pipeline-109"><a href="#Pipeline-109"><span class="linenos">109</span></a><span class="sd">                if block = False and no output is available in the OUT queue</span>
+</span><span id="Pipeline-110"><a href="#Pipeline-110"><span class="linenos">110</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline-111"><a href="#Pipeline-111"><span class="linenos">111</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+</span><span id="Pipeline-112"><a href="#Pipeline-112"><span class="linenos">112</span></a>
+</span><span id="Pipeline-113"><a href="#Pipeline-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Pipeline-114"><a href="#Pipeline-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
+</span><span id="Pipeline-115"><a href="#Pipeline-115"><span class="linenos">115</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Pipeline-116"><a href="#Pipeline-116"><span class="linenos">116</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</span><span id="Pipeline-117"><a href="#Pipeline-117"><span class="linenos">117</span></a>        <span class="k">except</span><span class="p">:</span>
+</span><span id="Pipeline-118"><a href="#Pipeline-118"><span class="linenos">118</span></a>            <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -304,7 +337,7 @@ fashion.</p>
 
 <p>Raises:</p>
 
-<pre><code>Exception: If the provided callback is not callable.
+<pre><code>ThreadBase.CallableException: If the provided callback is not callable.
 </code></pre>
 </div>
 
@@ -319,26 +352,23 @@ fashion.</p>
 
     </div>
     <a class="headerlink" href="#Pipeline.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.__init__-30"><a href="#Pipeline.__init__-30"><span class="linenos">30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="Pipeline.__init__-31"><a href="#Pipeline.__init__-31"><span class="linenos">31</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline.__init__-32"><a href="#Pipeline.__init__-32"><span class="linenos">32</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
-</span><span id="Pipeline.__init__-33"><a href="#Pipeline.__init__-33"><span class="linenos">33</span></a>
-</span><span id="Pipeline.__init__-34"><a href="#Pipeline.__init__-34"><span class="linenos">34</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline.__init__-35"><a href="#Pipeline.__init__-35"><span class="linenos">35</span></a>
-</span><span id="Pipeline.__init__-36"><a href="#Pipeline.__init__-36"><span class="linenos">36</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.__init__-34"><a href="#Pipeline.__init__-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="Pipeline.__init__-35"><a href="#Pipeline.__init__-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline.__init__-36"><a href="#Pipeline.__init__-36"><span class="linenos">36</span></a><span class="sd">        Initializes the pipeline with a callback function.</span>
 </span><span id="Pipeline.__init__-37"><a href="#Pipeline.__init__-37"><span class="linenos">37</span></a>
-</span><span id="Pipeline.__init__-38"><a href="#Pipeline.__init__-38"><span class="linenos">38</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline.__init__-38"><a href="#Pipeline.__init__-38"><span class="linenos">38</span></a><span class="sd">        Args:</span>
 </span><span id="Pipeline.__init__-39"><a href="#Pipeline.__init__-39"><span class="linenos">39</span></a>
-</span><span id="Pipeline.__init__-40"><a href="#Pipeline.__init__-40"><span class="linenos">40</span></a><span class="sd">            Exception: If the callback argument is not callable.</span>
-</span><span id="Pipeline.__init__-41"><a href="#Pipeline.__init__-41"><span class="linenos">41</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline.__init__-42"><a href="#Pipeline.__init__-42"><span class="linenos">42</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
-</span><span id="Pipeline.__init__-43"><a href="#Pipeline.__init__-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
-</span><span id="Pipeline.__init__-44"><a href="#Pipeline.__init__-44"><span class="linenos">44</span></a>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-</span><span id="Pipeline.__init__-45"><a href="#Pipeline.__init__-45"><span class="linenos">45</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
-</span><span id="Pipeline.__init__-46"><a href="#Pipeline.__init__-46"><span class="linenos">46</span></a>            <span class="p">)</span>
-</span><span id="Pipeline.__init__-47"><a href="#Pipeline.__init__-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="Pipeline.__init__-48"><a href="#Pipeline.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
-</span><span id="Pipeline.__init__-49"><a href="#Pipeline.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="Pipeline.__init__-40"><a href="#Pipeline.__init__-40"><span class="linenos">40</span></a><span class="sd">            callback (Callable): The function to process data through the pipeline.</span>
+</span><span id="Pipeline.__init__-41"><a href="#Pipeline.__init__-41"><span class="linenos">41</span></a>
+</span><span id="Pipeline.__init__-42"><a href="#Pipeline.__init__-42"><span class="linenos">42</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline.__init__-43"><a href="#Pipeline.__init__-43"><span class="linenos">43</span></a>
+</span><span id="Pipeline.__init__-44"><a href="#Pipeline.__init__-44"><span class="linenos">44</span></a><span class="sd">            ThreadBase.CallableException: If the callback argument is not callable.</span>
+</span><span id="Pipeline.__init__-45"><a href="#Pipeline.__init__-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline.__init__-46"><a href="#Pipeline.__init__-46"><span class="linenos">46</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>
+</span><span id="Pipeline.__init__-47"><a href="#Pipeline.__init__-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="Pipeline.__init__-48"><a href="#Pipeline.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
+</span><span id="Pipeline.__init__-49"><a href="#Pipeline.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+</span><span id="Pipeline.__init__-50"><a href="#Pipeline.__init__-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -351,10 +381,46 @@ fashion.</p>
 
 <p>Raises:</p>
 
-<pre><code>Exception: If the callback argument is not callable.
+<pre><code>ThreadBase.CallableException: If the callback argument is not callable.
 </code></pre>
 </div>
 
+
+                            </div>
+                            <div id="Pipeline.EmptyException" class="classattr">
+                                <div class="attr variable">
+            <span class="name">EmptyException</span>        =
+<span class="default_value">&lt;class &#39;_queue.Empty&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Pipeline.EmptyException"></a>
+    
+    
+
+                            </div>
+                            <div id="Pipeline.FullException" class="classattr">
+                                <div class="attr variable">
+            <span class="name">FullException</span>        =
+<span class="default_value">&lt;class &#39;queue.Full&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Pipeline.FullException"></a>
+    
+    
+
+                            </div>
+                            <div id="Pipeline.StoppedException" class="classattr">
+                                <div class="attr variable">
+            <span class="name">StoppedException</span>        =
+<span class="default_value">&lt;class &#39;queue.ShutDown&#39;&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Pipeline.StoppedException"></a>
+    
+    
 
                             </div>
                             <div id="Pipeline.put" class="classattr">
@@ -368,19 +434,26 @@ fashion.</p>
 
     </div>
     <a class="headerlink" href="#Pipeline.put"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.put-70"><a href="#Pipeline.put-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Pipeline.put-71"><a href="#Pipeline.put-71"><span class="linenos">71</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline.put-72"><a href="#Pipeline.put-72"><span class="linenos">72</span></a><span class="sd">        Puts data into the input queue for processing.</span>
-</span><span id="Pipeline.put-73"><a href="#Pipeline.put-73"><span class="linenos">73</span></a>
-</span><span id="Pipeline.put-74"><a href="#Pipeline.put-74"><span class="linenos">74</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline.put-75"><a href="#Pipeline.put-75"><span class="linenos">75</span></a>
-</span><span id="Pipeline.put-76"><a href="#Pipeline.put-76"><span class="linenos">76</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
-</span><span id="Pipeline.put-77"><a href="#Pipeline.put-77"><span class="linenos">77</span></a>
-</span><span id="Pipeline.put-78"><a href="#Pipeline.put-78"><span class="linenos">78</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
-</span><span id="Pipeline.put-79"><a href="#Pipeline.put-79"><span class="linenos">79</span></a>
-</span><span id="Pipeline.put-80"><a href="#Pipeline.put-80"><span class="linenos">80</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
-</span><span id="Pipeline.put-81"><a href="#Pipeline.put-81"><span class="linenos">81</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline.put-82"><a href="#Pipeline.put-82"><span class="linenos">82</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.put-71"><a href="#Pipeline.put-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Pipeline.put-72"><a href="#Pipeline.put-72"><span class="linenos">72</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline.put-73"><a href="#Pipeline.put-73"><span class="linenos">73</span></a><span class="sd">        Puts data into the input queue for processing.</span>
+</span><span id="Pipeline.put-74"><a href="#Pipeline.put-74"><span class="linenos">74</span></a>
+</span><span id="Pipeline.put-75"><a href="#Pipeline.put-75"><span class="linenos">75</span></a><span class="sd">        Args:</span>
+</span><span id="Pipeline.put-76"><a href="#Pipeline.put-76"><span class="linenos">76</span></a>
+</span><span id="Pipeline.put-77"><a href="#Pipeline.put-77"><span class="linenos">77</span></a><span class="sd">            value (Any): The data to be processed by the pipeline.</span>
+</span><span id="Pipeline.put-78"><a href="#Pipeline.put-78"><span class="linenos">78</span></a>
+</span><span id="Pipeline.put-79"><a href="#Pipeline.put-79"><span class="linenos">79</span></a><span class="sd">            block (true): Block until data can be inserted in queue</span>
+</span><span id="Pipeline.put-80"><a href="#Pipeline.put-80"><span class="linenos">80</span></a>
+</span><span id="Pipeline.put-81"><a href="#Pipeline.put-81"><span class="linenos">81</span></a><span class="sd">            timeout (float, optional): Timeout for the put operation.</span>
+</span><span id="Pipeline.put-82"><a href="#Pipeline.put-82"><span class="linenos">82</span></a>
+</span><span id="Pipeline.put-83"><a href="#Pipeline.put-83"><span class="linenos">83</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline.put-84"><a href="#Pipeline.put-84"><span class="linenos">84</span></a>
+</span><span id="Pipeline.put-85"><a href="#Pipeline.put-85"><span class="linenos">85</span></a><span class="sd">            FullException: if block = True and timeout is exceeded, or </span>
+</span><span id="Pipeline.put-86"><a href="#Pipeline.put-86"><span class="linenos">86</span></a><span class="sd">                if block = False and there is no available space in the IN queue</span>
+</span><span id="Pipeline.put-87"><a href="#Pipeline.put-87"><span class="linenos">87</span></a>
+</span><span id="Pipeline.put-88"><a href="#Pipeline.put-88"><span class="linenos">88</span></a><span class="sd">            StoppedException: if pipeline has stopped</span>
+</span><span id="Pipeline.put-89"><a href="#Pipeline.put-89"><span class="linenos">89</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline.put-90"><a href="#Pipeline.put-90"><span class="linenos">90</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -393,6 +466,14 @@ fashion.</p>
 block (true): Block until data can be inserted in queue
 
 timeout (float, optional): Timeout for the put operation.
+</code></pre>
+
+<p>Raises:</p>
+
+<pre><code>FullException: if block = True and timeout is exceeded, or 
+    if block = False and there is no available space in the IN queue
+
+StoppedException: if pipeline has stopped
 </code></pre>
 </div>
 
@@ -409,22 +490,26 @@ timeout (float, optional): Timeout for the put operation.
 
     </div>
     <a class="headerlink" href="#Pipeline.get"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.get-84"><a href="#Pipeline.get-84"><span class="linenos">84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="Pipeline.get-85"><a href="#Pipeline.get-85"><span class="linenos">85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Pipeline.get-86"><a href="#Pipeline.get-86"><span class="linenos">86</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
-</span><span id="Pipeline.get-87"><a href="#Pipeline.get-87"><span class="linenos">87</span></a>
-</span><span id="Pipeline.get-88"><a href="#Pipeline.get-88"><span class="linenos">88</span></a><span class="sd">        Args:</span>
-</span><span id="Pipeline.get-89"><a href="#Pipeline.get-89"><span class="linenos">89</span></a>
-</span><span id="Pipeline.get-90"><a href="#Pipeline.get-90"><span class="linenos">90</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
-</span><span id="Pipeline.get-91"><a href="#Pipeline.get-91"><span class="linenos">91</span></a>
-</span><span id="Pipeline.get-92"><a href="#Pipeline.get-92"><span class="linenos">92</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
-</span><span id="Pipeline.get-93"><a href="#Pipeline.get-93"><span class="linenos">93</span></a>
-</span><span id="Pipeline.get-94"><a href="#Pipeline.get-94"><span class="linenos">94</span></a><span class="sd">        Returns:</span>
-</span><span id="Pipeline.get-95"><a href="#Pipeline.get-95"><span class="linenos">95</span></a>
-</span><span id="Pipeline.get-96"><a href="#Pipeline.get-96"><span class="linenos">96</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
-</span><span id="Pipeline.get-97"><a href="#Pipeline.get-97"><span class="linenos">97</span></a>
-</span><span id="Pipeline.get-98"><a href="#Pipeline.get-98"><span class="linenos">98</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Pipeline.get-99"><a href="#Pipeline.get-99"><span class="linenos">99</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.get-92"><a href="#Pipeline.get-92"><span class="linenos"> 92</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="Pipeline.get-93"><a href="#Pipeline.get-93"><span class="linenos"> 93</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Pipeline.get-94"><a href="#Pipeline.get-94"><span class="linenos"> 94</span></a><span class="sd">        Retrieves the processed data from the output queue.</span>
+</span><span id="Pipeline.get-95"><a href="#Pipeline.get-95"><span class="linenos"> 95</span></a>
+</span><span id="Pipeline.get-96"><a href="#Pipeline.get-96"><span class="linenos"> 96</span></a><span class="sd">        Args:</span>
+</span><span id="Pipeline.get-97"><a href="#Pipeline.get-97"><span class="linenos"> 97</span></a>
+</span><span id="Pipeline.get-98"><a href="#Pipeline.get-98"><span class="linenos"> 98</span></a><span class="sd">            block (true): Block until data can be get from queue</span>
+</span><span id="Pipeline.get-99"><a href="#Pipeline.get-99"><span class="linenos"> 99</span></a>
+</span><span id="Pipeline.get-100"><a href="#Pipeline.get-100"><span class="linenos">100</span></a><span class="sd">            timeout (float, optional): Timeout for the get operation.</span>
+</span><span id="Pipeline.get-101"><a href="#Pipeline.get-101"><span class="linenos">101</span></a>
+</span><span id="Pipeline.get-102"><a href="#Pipeline.get-102"><span class="linenos">102</span></a><span class="sd">        Returns:</span>
+</span><span id="Pipeline.get-103"><a href="#Pipeline.get-103"><span class="linenos">103</span></a>
+</span><span id="Pipeline.get-104"><a href="#Pipeline.get-104"><span class="linenos">104</span></a><span class="sd">            Any: The processed data after passing through the callback function.</span>
+</span><span id="Pipeline.get-105"><a href="#Pipeline.get-105"><span class="linenos">105</span></a>
+</span><span id="Pipeline.get-106"><a href="#Pipeline.get-106"><span class="linenos">106</span></a><span class="sd">        Raises:</span>
+</span><span id="Pipeline.get-107"><a href="#Pipeline.get-107"><span class="linenos">107</span></a>
+</span><span id="Pipeline.get-108"><a href="#Pipeline.get-108"><span class="linenos">108</span></a><span class="sd">            EmptyException: if block = True and timeout is exceeded, or </span>
+</span><span id="Pipeline.get-109"><a href="#Pipeline.get-109"><span class="linenos">109</span></a><span class="sd">                if block = False and no output is available in the OUT queue</span>
+</span><span id="Pipeline.get-110"><a href="#Pipeline.get-110"><span class="linenos">110</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Pipeline.get-111"><a href="#Pipeline.get-111"><span class="linenos">111</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -441,6 +526,12 @@ timeout (float, optional): Timeout for the get operation.
 
 <pre><code>Any: The processed data after passing through the callback function.
 </code></pre>
+
+<p>Raises:</p>
+
+<pre><code>EmptyException: if block = True and timeout is exceeded, or 
+    if block = False and no output is available in the OUT queue
+</code></pre>
 </div>
 
 
@@ -456,12 +547,12 @@ timeout (float, optional): Timeout for the get operation.
 
     </div>
     <a class="headerlink" href="#Pipeline.stop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.stop-101"><a href="#Pipeline.stop-101"><span class="linenos">101</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Pipeline.stop-102"><a href="#Pipeline.stop-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
-</span><span id="Pipeline.stop-103"><a href="#Pipeline.stop-103"><span class="linenos">103</span></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="Pipeline.stop-104"><a href="#Pipeline.stop-104"><span class="linenos">104</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-</span><span id="Pipeline.stop-105"><a href="#Pipeline.stop-105"><span class="linenos">105</span></a>        <span class="k">except</span><span class="p">:</span>
-</span><span id="Pipeline.stop-106"><a href="#Pipeline.stop-106"><span class="linenos">106</span></a>            <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Pipeline.stop-113"><a href="#Pipeline.stop-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Pipeline.stop-114"><a href="#Pipeline.stop-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the pipeline thread&quot;&quot;&quot;</span>
+</span><span id="Pipeline.stop-115"><a href="#Pipeline.stop-115"><span class="linenos">115</span></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="Pipeline.stop-116"><a href="#Pipeline.stop-116"><span class="linenos">116</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_input_queue</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</span><span id="Pipeline.stop-117"><a href="#Pipeline.stop-117"><span class="linenos">117</span></a>        <span class="k">except</span><span class="p">:</span>
+</span><span id="Pipeline.stop-118"><a href="#Pipeline.stop-118"><span class="linenos">118</span></a>            <span class="k">pass</span>
 </span></pre></div>
 
 
@@ -474,7 +565,9 @@ timeout (float, optional): Timeout for the get operation.
                                 <h5>Inherited Members</h5>
                                 <dl>
                                     <div><dt><a href="ThreadBase.html#ThreadBase">safethread.thread.ThreadBase.ThreadBase</a></dt>
-                                <dd id="Pipeline.has_started" class="function"><a href="ThreadBase.html#ThreadBase.has_started">has_started</a></dd>
+                                <dd id="Pipeline.CallableException" class="class"><a href="ThreadBase.html#ThreadBase.CallableException">CallableException</a></dd>
+                <dd id="Pipeline.check_callable" class="function"><a href="ThreadBase.html#ThreadBase.check_callable">check_callable</a></dd>
+                <dd id="Pipeline.has_started" class="function"><a href="ThreadBase.html#ThreadBase.has_started">has_started</a></dd>
                 <dd id="Pipeline.is_alive" class="function"><a href="ThreadBase.html#ThreadBase.is_alive">is_alive</a></dd>
                 <dd id="Pipeline.is_terminated" class="function"><a href="ThreadBase.html#ThreadBase.is_terminated">is_terminated</a></dd>
                 <dd id="Pipeline.set_daemon" class="function"><a href="ThreadBase.html#ThreadBase.set_daemon">set_daemon</a></dd>
