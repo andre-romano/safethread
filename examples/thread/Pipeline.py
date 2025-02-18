@@ -29,7 +29,7 @@ pipeline.stop()
 try:
     # try to add new input to pipeline, after stopped
     pipeline.put(20)
-except queue.ShutDown as e:
+except Pipeline.StoppedException as e:
     print("The pipeline has terminated. No new values can be added to it.")
 
 # Join the thread to ensure it finishes execution before the program ends

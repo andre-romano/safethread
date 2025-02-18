@@ -122,7 +122,7 @@ class TestPipeline(unittest.TestCase):
         # Join the thread to ensure it finishes execution before the program ends
         self.pipeline.stop()
 
-        with self.assertRaises(queue.ShutDown) as context:
+        with self.assertRaises(Pipeline.StoppedException) as context:
             self.pipeline.put(20)
 
         self.pipeline.join()

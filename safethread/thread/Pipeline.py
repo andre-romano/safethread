@@ -26,6 +26,10 @@ class Pipeline(ThreadBase):
         Exception: If the provided callback is not callable.
     """
 
+    EmptyException = queue.Empty
+    FullException = queue.Full
+    StoppedException = queue.ShutDown
+
     def __init__(self, callback: Callable):
         """
         Initializes the pipeline with a callback function.
@@ -77,6 +81,13 @@ class Pipeline(ThreadBase):
             block (true): Block until data can be inserted in queue
 
             timeout (float, optional): Timeout for the put operation.
+
+        Raises:
+
+            FullException: if block = True and timeout is exceeded, or 
+                if block = False and there is no available space in the IN queue
+
+            StoppedException: if pipeline has stopped
         """
         self._input_queue.put(value, block, timeout)
 
@@ -94,6 +105,10 @@ class Pipeline(ThreadBase):
 
             Any: The processed data after passing through the callback function.
 
+        Raises:
+
+            EmptyException: if block = True and timeout is exceeded, or 
+                if block = False and no output is available in the OUT queue
         """
         return self._output_queue.get(block, timeout)
 
