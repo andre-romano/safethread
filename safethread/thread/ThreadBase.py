@@ -134,6 +134,10 @@ class ThreadBase:
         Args:
 
             timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
         self.__thread.join(timeout)
 

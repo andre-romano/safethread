@@ -1,12 +1,12 @@
 
 import queue
 
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Iterable, Self, Type
 
 from .ThreadBase import ThreadBase
 
 
-class Pipeline(ThreadBase):
+class PipelineStage(ThreadBase):
     """
     A pipeline that processes data through a callback function in a separate thread.
 
@@ -44,6 +44,27 @@ class Pipeline(ThreadBase):
 
     StoppedException = queue.ShutDown
     """Raised when put()/get() is called after Pipeline.stop()"""
+
+    @staticmethod
+    def is_instance(obj: Any):
+        """
+        Checks if obj is an instance of PipelineStage
+
+        Args:
+
+            obj (Any): Object to check
+
+        Raises:
+
+            TypeError: if obj is not an instance of PipelineStage
+
+        Returns:
+
+            PipelineStage: object
+        """
+        if not isinstance(obj, PipelineStage):
+            raise TypeError("Object is not a Pipeline Stage.")
+        return obj
 
     def __init__(self, callback: Callable):
         """
@@ -136,3 +157,9 @@ class Pipeline(ThreadBase):
             self.__output_queue.shutdown(immediate=True)
         except:
             pass
+
+    def connect_output(self, other_pipeline: Self):
+        """
+        Connects this Pipeline output to the input of other_pipeline
+        """
+        self.__output_queue = other_pipeline.__input_queue

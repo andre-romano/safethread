@@ -1,9 +1,9 @@
 import unittest
 
-from safethread.thread import Pipeline, ThreadBase
+from safethread.thread import PipelineStage, ThreadBase
 
 
-class TestPipeline(unittest.TestCase):
+class TestPipelineStage(unittest.TestCase):
     """
     Unit tests for the Pipeline class.
     """
@@ -13,13 +13,13 @@ class TestPipeline(unittest.TestCase):
         Test that an exception is raised if the callback is not callable.
         """
         with self.assertRaises(ThreadBase.CallableException) as context:
-            Pipeline(None)  # type: ignore
+            PipelineStage(None)  # type: ignore
 
     def test_put_and_get(self):
         """
         Test that data can be put into the pipeline, processed, and retrieved correctly.
         """
-        pipeline = Pipeline(lambda x: x * 2)
+        pipeline = PipelineStage(lambda x: x * 2)
         test_input = 5
         expected_output = 10  # Since the callback doubles the input value
 
@@ -46,7 +46,7 @@ class TestPipeline(unittest.TestCase):
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = Pipeline(lambda x: x + 1)
+        pipeline = PipelineStage(lambda x: x + 1)
         pipeline.start()
 
         # Test multiple inputs
@@ -70,7 +70,7 @@ class TestPipeline(unittest.TestCase):
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = Pipeline(lambda x: x + 1)
+        pipeline = PipelineStage(lambda x: x + 1)
 
         # Test multiple inputs
         inputs = [1, 2, 3, 4, 5]
@@ -95,7 +95,7 @@ class TestPipeline(unittest.TestCase):
             return input_data * 2
 
         # Start pipeline with the 'multiply_by_two' function as the callback
-        pipeline = Pipeline(multiply_by_two)
+        pipeline = PipelineStage(multiply_by_two)
         pipeline.start()
 
         # Test multiple inputs
@@ -113,7 +113,7 @@ class TestPipeline(unittest.TestCase):
         # Stop the thread immediately (no processing will be done)
         pipeline.stop()
 
-        with self.assertRaises(Pipeline.StoppedException) as context:
+        with self.assertRaises(PipelineStage.StoppedException) as context:
             pipeline.put(20)
 
         # Join to ensure it finishes execution before the program ends
@@ -122,6 +122,38 @@ class TestPipeline(unittest.TestCase):
         # check if it finished properly
         self.assertEqual(pipeline.is_alive(), False)
         self.assertEqual(pipeline.is_terminated(), True)
+
+    def test_connect_output(self):
+        # Create two pipeline instances
+        pipe1 = PipelineStage(lambda x: x+1)
+        pipe2 = PipelineStage(lambda x: x*2)
+
+        # Connect pipe1's output to pipe2's input
+        pipe1.connect_output(pipe2)
+
+        # start pipeline stages
+        pipe1.start()
+        pipe2.start()
+
+        # Test multiple inputs
+        inputs = [5, 10, 15]
+        expected_outputs = [12, 22, 32]
+
+        for item in inputs:
+            pipe1.put(item)
+
+        #  check results
+        for expected in expected_outputs:
+            result = pipe2.get()
+            self.assertEqual(result, expected)
+
+        # stop pipes
+        pipe1.stop()
+        pipe2.stop()
+
+        # join pipes
+        pipe1.join()
+        pipe2.join()
 
 
 if __name__ == '__main__':
