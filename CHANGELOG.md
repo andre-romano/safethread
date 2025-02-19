@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.0 (2025-02-18 12:01:33 -0300)
+
+- 5afc4eb release version v1.1.0
+- ce265b6 added ThreadBase.CallableException added thread.Scheduler class
+- f3b5bb5 improved exception mgmnt in Subprocess
+- 0330fc6 improved Pipeline Exception handling
+- 6b31f5d fixed some Pipeline tests
+- a730fed added thread.Pipeline class
+
 ## v1.0.2 (2025-02-17 18:05:23 -0300)
 
 - a730fed added thread.Pipeline class

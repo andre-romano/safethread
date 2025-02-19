@@ -30,6 +30,7 @@
             <h2>Submodules</h2>
             <ul>
                     <li><a href="utils/Factory.html">Factory</a></li>
+                    <li><a href="utils/Pipeline.html">Pipeline</a></li>
                     <li><a href="utils/Singleton.html">Singleton</a></li>
             </ul>
 
@@ -53,6 +54,7 @@
 
 <ul>
 <li><strong>Factory</strong>: A class that provides a <code>create()</code> method to create objects dynamically based on certain parameters or configurations. This can be used for creating objects of various types at runtime, without tightly coupling the client code to specific class implementations.</li>
+<li><strong>Pipeline</strong>: A class that connects multiple <code>thread.PipelineStage</code> objects together (input_queue =&gt; Pipe 1 =&gt; Pipe 2 =&gt; ... =&gt; output_queue).</li>
 <li><strong>Singleton</strong>: A class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.</li>
 </ul>
 </div>
@@ -68,11 +70,13 @@
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">Classes:</span>
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">- **Factory**: A class that provides a `create()` method to create objects dynamically based on certain parameters or configurations. This can be used for creating objects of various types at runtime, without tightly coupling the client code to specific class implementations.</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">- **Singleton**: A class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Factory</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Singleton</span><span class="w"> </span><span class="kn">import</span> <span class="n">Singleton</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">- **Pipeline**: A class that connects multiple ``thread.PipelineStage`` objects together (input_queue =&gt; Pipe 1 =&gt; Pipe 2 =&gt; ... =&gt; output_queue).</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">- **Singleton**: A class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Factory</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Singleton</span><span class="w"> </span><span class="kn">import</span> <span class="n">Singleton</span>
 </span></pre></div>
 
 

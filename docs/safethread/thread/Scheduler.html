@@ -37,13 +37,7 @@
                                 <a class="function" href="#Scheduler.__init__">Scheduler</a>
                         </li>
                         <li>
-                                <a class="function" href="#Scheduler.stop">stop</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#Scheduler.get_timeout">get_timeout</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Scheduler.is_repeatable">is_repeatable</a>
                         </li>
                 </ul>
 
@@ -71,7 +65,7 @@
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.ThreadBase</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadBase</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
@@ -86,12 +80,12 @@
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        callback (Callable): The function (or callable) to execute at each timeout.</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">        args (list, optional): Optional arguments to pass to the callback. Defaults to None.</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">        args (Iterable, optional): Optional arguments to pass to the callback. Defaults to None.</span>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">        repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">        Initializes the scheduler with the given parameters.</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
@@ -109,45 +103,30 @@
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
 </span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">            ThreadBase.CallableException: If &#39;callback&#39; is not callable.</span>
 </span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># Assuming ThreadBase expects args to be passed this way</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span> <span class="ow">or</span> <span class="p">[]</span>  <span class="c1"># Default to empty list if args is None</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span> <span class="o">=</span> <span class="n">repeat</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        The main run loop of the scheduler. This will repeatedly execute the callback at </span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        the given interval (timeout) and stop after the first execution if repeat is False.</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="sd">        This method runs in a separate thread and should not be called directly.</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span><span class="p">:</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>            <span class="c1"># Wait for timeout before running the callback</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">)</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">)</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>            <span class="c1"># Terminate thread if not repeating</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span><span class="p">:</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">        Stops the scheduler thread.</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        This will stop the thread loop in the scheduler and prevent further callback executions.</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_repeatable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if scheduler executes callback repeatedly (until .stop() is called)&quot;&quot;&quot;</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__run_scheduler</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>            <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="c1"># Default to empty list if args is None</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">args</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__run_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        The main run loop of the scheduler. This will repeatedly execute the callback at </span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        the given interval (timeout) and stop after the first execution if repeat is False.</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        This method runs in a separate thread and should not be called directly.</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="c1"># Wait for timeout before running the callback</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span><span class="p">)</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__callback</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__args</span><span class="p">)</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span>
 </span></pre></div>
 
 
@@ -173,12 +152,12 @@
 </span><span id="Scheduler-17"><a href="#Scheduler-17"><span class="linenos">17</span></a>
 </span><span id="Scheduler-18"><a href="#Scheduler-18"><span class="linenos">18</span></a><span class="sd">        callback (Callable): The function (or callable) to execute at each timeout.</span>
 </span><span id="Scheduler-19"><a href="#Scheduler-19"><span class="linenos">19</span></a>
-</span><span id="Scheduler-20"><a href="#Scheduler-20"><span class="linenos">20</span></a><span class="sd">        args (list, optional): Optional arguments to pass to the callback. Defaults to None.</span>
+</span><span id="Scheduler-20"><a href="#Scheduler-20"><span class="linenos">20</span></a><span class="sd">        args (Iterable, optional): Optional arguments to pass to the callback. Defaults to None.</span>
 </span><span id="Scheduler-21"><a href="#Scheduler-21"><span class="linenos">21</span></a>
 </span><span id="Scheduler-22"><a href="#Scheduler-22"><span class="linenos">22</span></a><span class="sd">        repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.</span>
 </span><span id="Scheduler-23"><a href="#Scheduler-23"><span class="linenos">23</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="Scheduler-24"><a href="#Scheduler-24"><span class="linenos">24</span></a>
-</span><span id="Scheduler-25"><a href="#Scheduler-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="Scheduler-25"><a href="#Scheduler-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 </span><span id="Scheduler-26"><a href="#Scheduler-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="Scheduler-27"><a href="#Scheduler-27"><span class="linenos">27</span></a><span class="sd">        Initializes the scheduler with the given parameters.</span>
 </span><span id="Scheduler-28"><a href="#Scheduler-28"><span class="linenos">28</span></a>
@@ -196,45 +175,30 @@
 </span><span id="Scheduler-40"><a href="#Scheduler-40"><span class="linenos">40</span></a>
 </span><span id="Scheduler-41"><a href="#Scheduler-41"><span class="linenos">41</span></a><span class="sd">            ThreadBase.CallableException: If &#39;callback&#39; is not callable.</span>
 </span><span id="Scheduler-42"><a href="#Scheduler-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Scheduler-43"><a href="#Scheduler-43"><span class="linenos">43</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># Assuming ThreadBase expects args to be passed this way</span>
-</span><span id="Scheduler-44"><a href="#Scheduler-44"><span class="linenos">44</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-</span><span id="Scheduler-45"><a href="#Scheduler-45"><span class="linenos">45</span></a>
-</span><span id="Scheduler-46"><a href="#Scheduler-46"><span class="linenos">46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-</span><span id="Scheduler-47"><a href="#Scheduler-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="Scheduler-48"><a href="#Scheduler-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span> <span class="ow">or</span> <span class="p">[]</span>  <span class="c1"># Default to empty list if args is None</span>
-</span><span id="Scheduler-49"><a href="#Scheduler-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span> <span class="o">=</span> <span class="n">repeat</span>
-</span><span id="Scheduler-50"><a href="#Scheduler-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="Scheduler-51"><a href="#Scheduler-51"><span class="linenos">51</span></a>
-</span><span id="Scheduler-52"><a href="#Scheduler-52"><span class="linenos">52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Scheduler-53"><a href="#Scheduler-53"><span class="linenos">53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Scheduler-54"><a href="#Scheduler-54"><span class="linenos">54</span></a><span class="sd">        The main run loop of the scheduler. This will repeatedly execute the callback at </span>
-</span><span id="Scheduler-55"><a href="#Scheduler-55"><span class="linenos">55</span></a><span class="sd">        the given interval (timeout) and stop after the first execution if repeat is False.</span>
-</span><span id="Scheduler-56"><a href="#Scheduler-56"><span class="linenos">56</span></a>
-</span><span id="Scheduler-57"><a href="#Scheduler-57"><span class="linenos">57</span></a><span class="sd">        This method runs in a separate thread and should not be called directly.</span>
-</span><span id="Scheduler-58"><a href="#Scheduler-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Scheduler-59"><a href="#Scheduler-59"><span class="linenos">59</span></a>        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span><span class="p">:</span>
-</span><span id="Scheduler-60"><a href="#Scheduler-60"><span class="linenos">60</span></a>            <span class="c1"># Wait for timeout before running the callback</span>
-</span><span id="Scheduler-61"><a href="#Scheduler-61"><span class="linenos">61</span></a>            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="p">)</span>
-</span><span id="Scheduler-62"><a href="#Scheduler-62"><span class="linenos">62</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">)</span>
-</span><span id="Scheduler-63"><a href="#Scheduler-63"><span class="linenos">63</span></a>            <span class="c1"># Terminate thread if not repeating</span>
-</span><span id="Scheduler-64"><a href="#Scheduler-64"><span class="linenos">64</span></a>            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span><span class="p">:</span>
-</span><span id="Scheduler-65"><a href="#Scheduler-65"><span class="linenos">65</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-</span><span id="Scheduler-66"><a href="#Scheduler-66"><span class="linenos">66</span></a>
-</span><span id="Scheduler-67"><a href="#Scheduler-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Scheduler-68"><a href="#Scheduler-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Scheduler-69"><a href="#Scheduler-69"><span class="linenos">69</span></a><span class="sd">        Stops the scheduler thread.</span>
-</span><span id="Scheduler-70"><a href="#Scheduler-70"><span class="linenos">70</span></a>
-</span><span id="Scheduler-71"><a href="#Scheduler-71"><span class="linenos">71</span></a><span class="sd">        This will stop the thread loop in the scheduler and prevent further callback executions.</span>
-</span><span id="Scheduler-72"><a href="#Scheduler-72"><span class="linenos">72</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Scheduler-73"><a href="#Scheduler-73"><span class="linenos">73</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="Scheduler-74"><a href="#Scheduler-74"><span class="linenos">74</span></a>
-</span><span id="Scheduler-75"><a href="#Scheduler-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Scheduler-76"><a href="#Scheduler-76"><span class="linenos">76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
-</span><span id="Scheduler-77"><a href="#Scheduler-77"><span class="linenos">77</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span>
-</span><span id="Scheduler-78"><a href="#Scheduler-78"><span class="linenos">78</span></a>
-</span><span id="Scheduler-79"><a href="#Scheduler-79"><span class="linenos">79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_repeatable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Scheduler-80"><a href="#Scheduler-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if scheduler executes callback repeatedly (until .stop() is called)&quot;&quot;&quot;</span>
-</span><span id="Scheduler-81"><a href="#Scheduler-81"><span class="linenos">81</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span>
+</span><span id="Scheduler-43"><a href="#Scheduler-43"><span class="linenos">43</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="Scheduler-44"><a href="#Scheduler-44"><span class="linenos">44</span></a>            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__run_scheduler</span><span class="p">,</span>
+</span><span id="Scheduler-45"><a href="#Scheduler-45"><span class="linenos">45</span></a>            <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span>
+</span><span id="Scheduler-46"><a href="#Scheduler-46"><span class="linenos">46</span></a>        <span class="p">)</span>
+</span><span id="Scheduler-47"><a href="#Scheduler-47"><span class="linenos">47</span></a>
+</span><span id="Scheduler-48"><a href="#Scheduler-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="Scheduler-49"><a href="#Scheduler-49"><span class="linenos">49</span></a>        <span class="c1"># Default to empty list if args is None</span>
+</span><span id="Scheduler-50"><a href="#Scheduler-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">args</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="Scheduler-51"><a href="#Scheduler-51"><span class="linenos">51</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+</span><span id="Scheduler-52"><a href="#Scheduler-52"><span class="linenos">52</span></a>
+</span><span id="Scheduler-53"><a href="#Scheduler-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__run_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Scheduler-54"><a href="#Scheduler-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Scheduler-55"><a href="#Scheduler-55"><span class="linenos">55</span></a><span class="sd">        The main run loop of the scheduler. This will repeatedly execute the callback at </span>
+</span><span id="Scheduler-56"><a href="#Scheduler-56"><span class="linenos">56</span></a><span class="sd">        the given interval (timeout) and stop after the first execution if repeat is False.</span>
+</span><span id="Scheduler-57"><a href="#Scheduler-57"><span class="linenos">57</span></a>
+</span><span id="Scheduler-58"><a href="#Scheduler-58"><span class="linenos">58</span></a><span class="sd">        This method runs in a separate thread and should not be called directly.</span>
+</span><span id="Scheduler-59"><a href="#Scheduler-59"><span class="linenos">59</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Scheduler-60"><a href="#Scheduler-60"><span class="linenos">60</span></a>        <span class="c1"># Wait for timeout before running the callback</span>
+</span><span id="Scheduler-61"><a href="#Scheduler-61"><span class="linenos">61</span></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span><span class="p">)</span>
+</span><span id="Scheduler-62"><a href="#Scheduler-62"><span class="linenos">62</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__callback</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__args</span><span class="p">)</span>
+</span><span id="Scheduler-63"><a href="#Scheduler-63"><span class="linenos">63</span></a>
+</span><span id="Scheduler-64"><a href="#Scheduler-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="Scheduler-65"><a href="#Scheduler-65"><span class="linenos">65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
+</span><span id="Scheduler-66"><a href="#Scheduler-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span>
 </span></pre></div>
 
 
@@ -246,7 +210,7 @@
 
 callback (Callable): The function (or callable) to execute at each timeout.
 
-args (list, optional): Optional arguments to pass to the callback. Defaults to None.
+args (Iterable, optional): Optional arguments to pass to the callback. Defaults to None.
 
 repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.
 </code></pre>
@@ -257,13 +221,13 @@ repeat (bool, optional): Whether the callback should be repeated indefinitely or
                                         <input id="Scheduler.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
-        <span class="name">Scheduler</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span>,</span><span class="param">	<span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span>,</span><span class="param">	<span class="n">args</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></span>)</span>
+        <span class="name">Scheduler</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span>,</span><span class="param">	<span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span>,</span><span class="param">	<span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>,</span><span class="param">	<span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></span>)</span>
 
                 <label class="view-source-button" for="Scheduler.__init__-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#Scheduler.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.__init__-25"><a href="#Scheduler.__init__-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.__init__-25"><a href="#Scheduler.__init__-25"><span class="linenos">25</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 </span><span id="Scheduler.__init__-26"><a href="#Scheduler.__init__-26"><span class="linenos">26</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="Scheduler.__init__-27"><a href="#Scheduler.__init__-27"><span class="linenos">27</span></a><span class="sd">        Initializes the scheduler with the given parameters.</span>
 </span><span id="Scheduler.__init__-28"><a href="#Scheduler.__init__-28"><span class="linenos">28</span></a>
@@ -281,14 +245,15 @@ repeat (bool, optional): Whether the callback should be repeated indefinitely or
 </span><span id="Scheduler.__init__-40"><a href="#Scheduler.__init__-40"><span class="linenos">40</span></a>
 </span><span id="Scheduler.__init__-41"><a href="#Scheduler.__init__-41"><span class="linenos">41</span></a><span class="sd">            ThreadBase.CallableException: If &#39;callback&#39; is not callable.</span>
 </span><span id="Scheduler.__init__-42"><a href="#Scheduler.__init__-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Scheduler.__init__-43"><a href="#Scheduler.__init__-43"><span class="linenos">43</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># Assuming ThreadBase expects args to be passed this way</span>
-</span><span id="Scheduler.__init__-44"><a href="#Scheduler.__init__-44"><span class="linenos">44</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">check_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
-</span><span id="Scheduler.__init__-45"><a href="#Scheduler.__init__-45"><span class="linenos">45</span></a>
-</span><span id="Scheduler.__init__-46"><a href="#Scheduler.__init__-46"><span class="linenos">46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
-</span><span id="Scheduler.__init__-47"><a href="#Scheduler.__init__-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">callback</span>
-</span><span id="Scheduler.__init__-48"><a href="#Scheduler.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span> <span class="ow">or</span> <span class="p">[]</span>  <span class="c1"># Default to empty list if args is None</span>
-</span><span id="Scheduler.__init__-49"><a href="#Scheduler.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span> <span class="o">=</span> <span class="n">repeat</span>
-</span><span id="Scheduler.__init__-50"><a href="#Scheduler.__init__-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="Scheduler.__init__-43"><a href="#Scheduler.__init__-43"><span class="linenos">43</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+</span><span id="Scheduler.__init__-44"><a href="#Scheduler.__init__-44"><span class="linenos">44</span></a>            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__run_scheduler</span><span class="p">,</span>
+</span><span id="Scheduler.__init__-45"><a href="#Scheduler.__init__-45"><span class="linenos">45</span></a>            <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span>
+</span><span id="Scheduler.__init__-46"><a href="#Scheduler.__init__-46"><span class="linenos">46</span></a>        <span class="p">)</span>
+</span><span id="Scheduler.__init__-47"><a href="#Scheduler.__init__-47"><span class="linenos">47</span></a>
+</span><span id="Scheduler.__init__-48"><a href="#Scheduler.__init__-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_callable</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span><span id="Scheduler.__init__-49"><a href="#Scheduler.__init__-49"><span class="linenos">49</span></a>        <span class="c1"># Default to empty list if args is None</span>
+</span><span id="Scheduler.__init__-50"><a href="#Scheduler.__init__-50"><span class="linenos">50</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">args</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="Scheduler.__init__-51"><a href="#Scheduler.__init__-51"><span class="linenos">51</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span> <span class="o">=</span> <span class="n">timeout</span>
 </span></pre></div>
 
 
@@ -313,34 +278,6 @@ repeat (bool, optional): Whether the callback should be repeated indefinitely or
 
 
                             </div>
-                            <div id="Scheduler.stop" class="classattr">
-                                        <input id="Scheduler.stop-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">stop</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
-
-                <label class="view-source-button" for="Scheduler.stop-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Scheduler.stop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.stop-67"><a href="#Scheduler.stop-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Scheduler.stop-68"><a href="#Scheduler.stop-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Scheduler.stop-69"><a href="#Scheduler.stop-69"><span class="linenos">69</span></a><span class="sd">        Stops the scheduler thread.</span>
-</span><span id="Scheduler.stop-70"><a href="#Scheduler.stop-70"><span class="linenos">70</span></a>
-</span><span id="Scheduler.stop-71"><a href="#Scheduler.stop-71"><span class="linenos">71</span></a><span class="sd">        This will stop the thread loop in the scheduler and prevent further callback executions.</span>
-</span><span id="Scheduler.stop-72"><a href="#Scheduler.stop-72"><span class="linenos">72</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Scheduler.stop-73"><a href="#Scheduler.stop-73"><span class="linenos">73</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span> <span class="o">=</span> <span class="kc">True</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Stops the scheduler thread.</p>
-
-<p>This will stop the thread loop in the scheduler and prevent further callback executions.</p>
-</div>
-
-
-                            </div>
                             <div id="Scheduler.get_timeout" class="classattr">
                                         <input id="Scheduler.get_timeout-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -352,35 +289,13 @@ repeat (bool, optional): Whether the callback should be repeated indefinitely or
 
     </div>
     <a class="headerlink" href="#Scheduler.get_timeout"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.get_timeout-75"><a href="#Scheduler.get_timeout-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="Scheduler.get_timeout-76"><a href="#Scheduler.get_timeout-76"><span class="linenos">76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
-</span><span id="Scheduler.get_timeout-77"><a href="#Scheduler.get_timeout-77"><span class="linenos">77</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.get_timeout-64"><a href="#Scheduler.get_timeout-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="Scheduler.get_timeout-65"><a href="#Scheduler.get_timeout-65"><span class="linenos">65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns scheduler timeout&quot;&quot;&quot;</span>
+</span><span id="Scheduler.get_timeout-66"><a href="#Scheduler.get_timeout-66"><span class="linenos">66</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__timeout</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns scheduler timeout</p>
-</div>
-
-
-                            </div>
-                            <div id="Scheduler.is_repeatable" class="classattr">
-                                        <input id="Scheduler.is_repeatable-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">is_repeatable</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
-
-                <label class="view-source-button" for="Scheduler.is_repeatable-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#Scheduler.is_repeatable"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Scheduler.is_repeatable-79"><a href="#Scheduler.is_repeatable-79"><span class="linenos">79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_repeatable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="Scheduler.is_repeatable-80"><a href="#Scheduler.is_repeatable-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if scheduler executes callback repeatedly (until .stop() is called)&quot;&quot;&quot;</span>
-</span><span id="Scheduler.is_repeatable-81"><a href="#Scheduler.is_repeatable-81"><span class="linenos">81</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repeat</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Returns True if scheduler executes callback repeatedly (until .stop() is called)</p>
 </div>
 
 
@@ -390,14 +305,17 @@ repeat (bool, optional): Whether the callback should be repeated indefinitely or
                                 <dl>
                                     <div><dt><a href="ThreadBase.html#ThreadBase">safethread.thread.ThreadBase.ThreadBase</a></dt>
                                 <dd id="Scheduler.CallableException" class="class"><a href="ThreadBase.html#ThreadBase.CallableException">CallableException</a></dd>
-                <dd id="Scheduler.check_callable" class="function"><a href="ThreadBase.html#ThreadBase.check_callable">check_callable</a></dd>
+                <dd id="Scheduler.is_callable" class="function"><a href="ThreadBase.html#ThreadBase.is_callable">is_callable</a></dd>
+                <dd id="Scheduler.get_lock" class="function"><a href="ThreadBase.html#ThreadBase.get_lock">get_lock</a></dd>
                 <dd id="Scheduler.has_started" class="function"><a href="ThreadBase.html#ThreadBase.has_started">has_started</a></dd>
                 <dd id="Scheduler.is_alive" class="function"><a href="ThreadBase.html#ThreadBase.is_alive">is_alive</a></dd>
                 <dd id="Scheduler.is_terminated" class="function"><a href="ThreadBase.html#ThreadBase.is_terminated">is_terminated</a></dd>
-                <dd id="Scheduler.set_daemon" class="function"><a href="ThreadBase.html#ThreadBase.set_daemon">set_daemon</a></dd>
+                <dd id="Scheduler.is_repeatable" class="function"><a href="ThreadBase.html#ThreadBase.is_repeatable">is_repeatable</a></dd>
                 <dd id="Scheduler.is_daemon" class="function"><a href="ThreadBase.html#ThreadBase.is_daemon">is_daemon</a></dd>
+                <dd id="Scheduler.set_daemon" class="function"><a href="ThreadBase.html#ThreadBase.set_daemon">set_daemon</a></dd>
                 <dd id="Scheduler.join" class="function"><a href="ThreadBase.html#ThreadBase.join">join</a></dd>
                 <dd id="Scheduler.start" class="function"><a href="ThreadBase.html#ThreadBase.start">start</a></dd>
+                <dd id="Scheduler.stop" class="function"><a href="ThreadBase.html#ThreadBase.stop">stop</a></dd>
 
             </div>
                                 </dl>
