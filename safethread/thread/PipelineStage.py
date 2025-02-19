@@ -8,7 +8,7 @@ from .ThreadBase import ThreadBase
 
 class PipelineStage(ThreadBase):
     """
-    A pipeline that processes data through a callback function in a separate thread.
+    A pipeline stage that processes data through a callback function in a separate thread.
 
     This class allows data to be pushed to an input queue, where it is processed
     by the provided callback function, and the result is then placed in an output
@@ -68,7 +68,7 @@ class PipelineStage(ThreadBase):
 
     def __init__(self, callback: Callable):
         """
-        Initializes the pipeline with a callback function.
+        Initializes the pipeline stage with a callback function.
 
         Args:
 
@@ -83,7 +83,7 @@ class PipelineStage(ThreadBase):
             repeat=True
         )
 
-        self.__callback: Callable = self.check_callable(callback)
+        self.__callback: Callable = self.is_callable(callback)
         self.__input_queue = queue.Queue()
         self.__output_queue = queue.Queue()
 
@@ -160,6 +160,10 @@ class PipelineStage(ThreadBase):
 
     def connect_output(self, other_pipeline: Self):
         """
-        Connects this Pipeline output to the input of other_pipeline
+        Connects this Pipeline Stage output to the input of other_pipeline
+
+        Args:
+
+            other_pipeline (Self): other pipeline stage
         """
         self.__output_queue = other_pipeline.__input_queue

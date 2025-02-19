@@ -18,7 +18,7 @@ class ThreadBase:
             super().__init__(*args)
 
     @staticmethod
-    def check_callable(callback: Callable) -> Callable:
+    def is_callable(callback: Callable) -> Callable:
         """
         Checks if callback is a Callable (function, lambda, etc).
 
@@ -59,7 +59,7 @@ class ThreadBase:
 
             repeat (bool, optional): If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
         """
-        self.__callback: Callable = self.check_callable(callback)
+        self.__callback: Callable = self.is_callable(callback)
         self.__args = tuple(args or [])
         self.__repeat = repeat
 

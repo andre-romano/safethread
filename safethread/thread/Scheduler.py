@@ -44,7 +44,7 @@ class Scheduler(ThreadBase):
             repeat=repeat
         )
 
-        self.__callback: Callable = self.check_callable(callback)
+        self.__callback: Callable = self.is_callable(callback)
         # Default to empty list if args is None
         self.__args = tuple(args or [])
         self.__timeout = timeout
