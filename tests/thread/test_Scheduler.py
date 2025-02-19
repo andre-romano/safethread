@@ -54,7 +54,8 @@ class TestScheduler(unittest.TestCase):
         self.assertEqual(self.scheduler_called, 1)
         self.assertEqual(self.scheduler_result, 2)
 
-        self.assertGreaterEqual(end-begin, self.scheduler._timeout)  # in secs
+        self.assertGreaterEqual(
+            end-begin, self.scheduler.get_timeout())  # in secs
 
     def test_callback_repeat(self):
         """Test that the callback is executed repeatedly if repeat is True."""

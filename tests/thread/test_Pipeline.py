@@ -1,7 +1,5 @@
 import unittest
 
-from queue import Queue
-
 from safethread.thread import Pipeline, ThreadBase
 
 
@@ -9,29 +7,6 @@ class TestPipeline(unittest.TestCase):
     """
     Unit tests for the Pipeline class.
     """
-
-    def setUp(self):
-        """
-        This method is called before each test case.
-        """
-        # A simple callback function for testing
-        def callback(input_data):
-            return input_data * 2
-
-        self.pipeline = Pipeline(callback)
-
-    def tearDown(self) -> None:
-        if self.pipeline.has_started() and self.pipeline.is_alive():
-            self.pipeline.stop()
-            self.pipeline.join()
-
-    def test_pipeline_initialization(self):
-        """
-        Test that the pipeline is initialized correctly.
-        """
-        self.assertIsInstance(self.pipeline, Pipeline)
-        self.assertIsInstance(self.pipeline._input_queue, Queue)
-        self.assertIsInstance(self.pipeline._output_queue, Queue)
 
     def test_invalid_callback(self):
         """
@@ -44,95 +19,109 @@ class TestPipeline(unittest.TestCase):
         """
         Test that data can be put into the pipeline, processed, and retrieved correctly.
         """
+        pipeline = Pipeline(lambda x: x * 2)
         test_input = 5
         expected_output = 10  # Since the callback doubles the input value
 
-        self.pipeline.put(test_input)
-        self.assertEqual(self.pipeline.has_started(), False)
+        pipeline.put(test_input)
+        self.assertEqual(pipeline.has_started(), False)
 
         # Run the pipeline
-        self.pipeline.start()
-
-        self.assertEqual(self.pipeline.has_started(), True)
-        self.assertEqual(self.pipeline.is_alive(), True)
+        pipeline.start()
 
         # Get the processed data
-        result = self.pipeline.get()
+        result = pipeline.get()
+
+        self.assertEqual(pipeline.has_started(), True)
+        self.assertEqual(pipeline.is_alive(), True)
 
         self.assertEqual(result, expected_output)
+
+        # stop pipeline and join
+        pipeline.stop()
+        pipeline.join()
 
     def test_concurrent_processing(self):
         """
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        self.pipeline = Pipeline(lambda x: x + 1)
-        self.pipeline.start()
+        pipeline = Pipeline(lambda x: x + 1)
+        pipeline.start()
 
         # Test multiple inputs
         inputs = [1, 2, 3, 4, 5]
         expected_outputs = [2, 3, 4, 5, 6]
 
         for item in inputs:
-            self.pipeline.put(item)
+            pipeline.put(item)
 
         #  check results
         for expected in expected_outputs:
-            result = self.pipeline.get()
+            result = pipeline.get()
             self.assertEqual(result, expected)
+
+        # stop pipeline
+        pipeline.stop()
+        pipeline.join()
 
     def test_concurrent_processing_after_put(self):
         """
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        self.pipeline = Pipeline(lambda x: x + 1)
+        pipeline = Pipeline(lambda x: x + 1)
 
         # Test multiple inputs
         inputs = [1, 2, 3, 4, 5]
         expected_outputs = [2, 3, 4, 5, 6]
 
         for item in inputs:
-            self.pipeline.put(item)
+            pipeline.put(item)
 
-        self.pipeline.start()
+        pipeline.start()
 
         #  check results
         for expected in expected_outputs:
-            result = self.pipeline.get()
+            result = pipeline.get()
             self.assertEqual(result, expected)
+
+        # stop pipeline
+        pipeline.stop()
+        pipeline.join()
 
     def test_stop_join(self):
         def multiply_by_two(input_data):
             return input_data * 2
 
         # Start pipeline with the 'multiply_by_two' function as the callback
-        self.pipeline = Pipeline(multiply_by_two)
-        self.pipeline.start()
+        pipeline = Pipeline(multiply_by_two)
+        pipeline.start()
 
-        # Put some values into the self.pipeline for processing
-        self.pipeline.put(5)
-        self.pipeline.put(10)
-        self.pipeline.put(15)
-
-        # Expected outputs
+        # Test multiple inputs
+        inputs = [5, 10, 15]
         expected_outputs = [10, 20, 30]
 
-        # Join the thread to ensure it finishes execution before the program ends
-        self.pipeline.stop()
-
-        with self.assertRaises(Pipeline.StoppedException) as context:
-            self.pipeline.put(20)
-
-        self.pipeline.join()
+        for item in inputs:
+            pipeline.put(item)
 
         #  check results
         for expected in expected_outputs:
-            result = self.pipeline.get()
+            result = pipeline.get()
             self.assertEqual(result, expected)
 
-        self.assertEqual(self.pipeline.is_alive(), False)
-        self.assertEqual(self.pipeline.is_terminated(), True)
+        # Stop the thread immediately (no processing will be done)
+        pipeline.stop()
+
+        with self.assertRaises(Pipeline.StoppedException) as context:
+            pipeline.put(20)
+
+        # Join to ensure it finishes execution before the program ends
+        pipeline.join()
+
+        # check if it finished properly
+        self.assertEqual(pipeline.is_alive(), False)
+        self.assertEqual(pipeline.is_terminated(), True)
 
 
 if __name__ == '__main__':

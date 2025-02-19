@@ -13,6 +13,8 @@
     "python.languageServer": "Pylance", // Ensure Pylance is being used as the language server
     "python.analysis.typeCheckingMode": "basic", // Set the type checking mode: "off", "basic", or "strict"
     "python.analysis.diagnosticMode": "workspace", // Checks errors only for open files (use "workspace" to check all files)
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.supportDocstringTemplate": true,
     "python.analysis.autoSearchPaths": true, // Automatically adds paths to the environment
     "python.analysis.useLibraryCodeForTypes": true, // Use type stubs from libraries for better error detection
     "python.analysis.completeFunctionParens": true, // Show function parameter hints
@@ -26,20 +28,42 @@
         "**/.nox/**", // Exclude nox folder (optional)
         "**/.coverage/**", // Exclude coverage files (optional)
         "**/.mypy_cache/**", // Exclude mypy cache (optional)
-        "**/.pytest_cache/**" // Exclude pytest cache (optional)
+        "**/.pytest_cache/**", // Exclude pytest cache (optional)
+        "**/*.egg-info",
+        "**/*.egg",
+        "**/node_modules/**",
+        "dist/",
     ],
     "files.exclude": {
-        "**/venv": true,
-        "**/__pycache__": true,
+        "**/venv/": true, // Exclude virtual environment folder
+        "**/__pycache__/": true, // Exclude __pycache__ folders
+        "**/build/": true, // Exclude build folder
+        "**/dist/": true, // Exclude dist folder
+        "**/.tox/": true, // Exclude tox folder (optional)
+        "**/.nox/": true, // Exclude nox folder (optional)
+        "**/.coverage/": true, // Exclude coverage files (optional)
+        "**/.mypy_cache/": true, // Exclude mypy cache (optional)
+        "**/.pytest_cache/": true, // Exclude pytest cache (optional)
         "**/*.egg-info": true,
         "**/*.egg": true,
-        "node_modules/": true,
+        "**/node_modules/": true,
         "dist/": true,
     },
     "search.exclude": {
-        "**/venv": true,
-        "**/__pycache__": true,
-        "docs/": true,
+        "**/venv/": true, // Exclude virtual environment folder
+        "**/__pycache__/": true, // Exclude __pycache__ folders
+        "**/build/": true, // Exclude build folder
+        "**/dist/": true, // Exclude dist folder
+        "**/.tox/": true, // Exclude tox folder (optional)
+        "**/.nox/": true, // Exclude nox folder (optional)
+        "**/.coverage/": true, // Exclude coverage files (optional)
+        "**/.mypy_cache/": true, // Exclude mypy cache (optional)
+        "**/.pytest_cache/": true, // Exclude pytest cache (optional)
+        "**/*.egg-info": true,
+        "**/*.egg": true,
+        "**/docs/": true,
+        "**/node_modules/": true,
+        "dist/": true,
     },
     "files.associations": {
         "*.yml": "yaml", // for YAML files
