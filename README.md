@@ -25,7 +25,7 @@ pip install safethread
 
 ```python
 from safethread.datatype import SafeList, SafeDict
-from safethread.utils import Pipeline
+from safethread.utils import PipelineStage
 
 # Using SafeList
 safe_list = SafeList()
@@ -38,20 +38,20 @@ safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 
 # Using Pipeline (separate working thread)
-pipeline = Pipeline(lambda x: x * 2)
-pipeline.start()
+stage = PipelineStage(lambda x: x * 2)
+stage.start()
 
 # Put some values into the pipeline for processing
-pipeline.put(5)
-pipeline.put(10)
+stage.put(5)
+stage.put(10)
 
 # Get and print the results
-print(f"Processed result 1: {pipeline.get()}")  # Output: 10 (5 * 2)
-print(f"Processed result 2: {pipeline.get()}")  # Output: 20 (10 * 2)
+print(f"Processed result 1: {stage.get()}")  # Output: 10 (5 * 2)
+print(f"Processed result 2: {stage.get()}")  # Output: 20 (10 * 2)
 
 # Stop pipeline
-pipeline.stop()
-pipeline.join()
+stage.stop()
+stage.join()
 ```
 
 For further details, check the [``examples/``](./examples/) folder and the full documentation (link below).
