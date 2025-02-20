@@ -1,6 +1,6 @@
 
-import queue
-from safethread.thread import PipelineStage
+
+from safethread.utils import PipelineStage
 
 # A simple callback function that doubles the input number
 

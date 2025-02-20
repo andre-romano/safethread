@@ -2,9 +2,7 @@ import unittest
 
 from typing import Callable
 
-from safethread.thread import PipelineStage
-
-from safethread.utils import Pipeline
+from safethread.utils import PipelineStage, Pipeline
 
 # Assuming the `Pipeline` and `PipelineStage` classes are already imported
 # from your module, the mock `PipelineStage` is needed to test the `Pipeline`.

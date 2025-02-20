@@ -3,12 +3,15 @@ import queue
 
 from typing import Any, Callable, Iterable, Self, Type
 
-from .ThreadBase import ThreadBase
+from .utils import *
+
+from ..thread.ThreadBase import ThreadBase
 
 
-class PipelineStage(ThreadBase):
+class PipelineStage:
     """
-    A pipeline stage that processes data through a callback function in a separate thread.
+    A pipeline stage that processes data through a callback function.
+    It can run N separate threads to read and write data in parallel.
 
     This class allows data to be pushed to an input queue, where it is processed
     by the provided callback function, and the result is then placed in an output
@@ -26,6 +29,8 @@ class PipelineStage(ThreadBase):
     Raises:
 
         ThreadBase.CallableException: If the provided callback is not callable.
+
+        ValueError: If `n_threads` < 1.
     """
 
     EmptyException = queue.Empty
@@ -66,26 +71,35 @@ class PipelineStage(ThreadBase):
             raise TypeError("Object is not a Pipeline Stage.")
         return obj
 
-    def __init__(self, callback: Callable):
+    def __init__(self, callback: Callable, n_threads: int = 1):
         """
         Initializes the pipeline stage with a callback function.
 
         Args:
 
-            callback (Callable): The function to process data through the pipeline.
+            callback (Callable): The function to process data through the pipeline stage.
+            n_threads (int): Number of threads that will read the input queue, and store result in output queue.
 
         Raises:
 
             ThreadBase.CallableException: If the callback argument is not callable.
+            ValueError: If `n_threads` < 1.
         """
-        super().__init__(
-            callback=self.__run_pipeline,
-            repeat=True
-        )
 
-        self.__callback: Callable = self.is_callable(callback)
+        self.__callback: Callable = ThreadBase.is_callable(callback)
         self.__input_queue = queue.Queue()
         self.__output_queue = queue.Queue()
+        self.__started = False
+        self.__threads: list[ThreadBase] = []
+
+        if n_threads < 1:
+            raise ValueError(
+                "At least one thread is needed to run PipelineStage")
+
+        for i in range(n_threads):
+            self.__threads.append(
+                ThreadBase(self.__run_pipeline, repeat=True)
+            )
 
     def __run_pipeline(self):
         """
@@ -104,6 +118,39 @@ class PipelineStage(ThreadBase):
             self.__output_queue.put(output_data)
         except queue.ShutDown as e:
             self.stop()
+
+    def has_started(self) -> bool:
+        """
+        Checks if the pipeline stage has started.
+
+        Returns:
+
+            bool: True if pipeline stage has started, otherwise False.
+        """
+        return self.__started
+
+    def is_alive(self) -> bool:
+        """
+        Checks if the pipeline stage is alive.
+
+        Returns:
+
+            bool: True if any thread of pipeline stage is still alive, otherwise False.
+        """
+        result = False
+        for thread in self.__threads:
+            result = result or thread.is_alive()
+        return result
+
+    def is_terminated(self) -> bool:
+        """
+        Checks if the pipeline stage has terminated.
+
+        Returns:
+
+            bool: True if pipeline stage HAS started and is NOT alive, otherwise False.
+        """
+        return self.has_started() and not self.is_alive()
 
     def put(self, value, block: bool = True, timeout: float | None = None):
         """
@@ -147,17 +194,6 @@ class PipelineStage(ThreadBase):
         """
         return self.__output_queue.get(block, timeout)
 
-    def stop(self):
-        """
-        Stops the pipeline thread (immediately)
-        """
-        super().stop()
-        try:
-            self.__input_queue.shutdown(immediate=True)
-            self.__output_queue.shutdown(immediate=True)
-        except:
-            pass
-
     def connect_output(self, other_pipeline: Self):
         """
         Connects this Pipeline Stage output to the input of other_pipeline
@@ -167,3 +203,42 @@ class PipelineStage(ThreadBase):
             other_pipeline (Self): other pipeline stage
         """
         self.__output_queue = other_pipeline.__input_queue
+
+    def join(self, timeout: float | None = None):
+        """
+        Joins the pipeline stages' threads, waiting for them to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        for thread in self.__threads:
+            thread.join(timeout)
+
+    def start(self):
+        """
+        Starts the pipeline stage threads
+
+        Raises:
+            RuntimeError: if start() is called more than once on the same thread object.
+        """
+        for thread in self.__threads:
+            thread.start()
+        self.__started = True
+
+    def stop(self):
+        """
+        Stops the pipeline thread (immediately)
+        """
+        for thread in self.__threads:
+            try_except_finally_wrap(lambda: thread.stop())
+        try_except_finally_wrap(
+            lambda: self.__input_queue.shutdown(immediate=True)
+        )
+        try_except_finally_wrap(
+            lambda: self.__output_queue.shutdown(immediate=True)
+        )

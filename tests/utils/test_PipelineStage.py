@@ -1,6 +1,7 @@
 import unittest
 
-from safethread.thread import PipelineStage, ThreadBase
+from safethread.thread import ThreadBase
+from safethread.utils import PipelineStage
 
 
 class TestPipelineStage(unittest.TestCase):
@@ -8,12 +9,14 @@ class TestPipelineStage(unittest.TestCase):
     Unit tests for the Pipeline class.
     """
 
-    def test_invalid_callback(self):
+    def test_invalid_initialization(self):
         """
-        Test that an exception is raised if the callback is not callable.
+        Test that an exception is raised when pipeline stage is improperly initialized.
         """
         with self.assertRaises(ThreadBase.CallableException) as context:
             PipelineStage(None)  # type: ignore
+        with self.assertRaises(ValueError) as context:
+            PipelineStage(lambda x: x + 3, n_threads=0)  # type: ignore
 
     def test_put_and_get(self):
         """
@@ -24,7 +27,8 @@ class TestPipelineStage(unittest.TestCase):
         expected_output = 10  # Since the callback doubles the input value
 
         pipeline.put(test_input)
-        self.assertEqual(pipeline.has_started(), False)
+        self.assertFalse(pipeline.has_started())
+        self.assertFalse(pipeline.is_alive())
 
         # Run the pipeline
         pipeline.start()
@@ -32,8 +36,8 @@ class TestPipelineStage(unittest.TestCase):
         # Get the processed data
         result = pipeline.get()
 
-        self.assertEqual(pipeline.has_started(), True)
-        self.assertEqual(pipeline.is_alive(), True)
+        self.assertTrue(pipeline.has_started())
+        self.assertTrue(pipeline.is_alive())
 
         self.assertEqual(result, expected_output)
 
@@ -46,7 +50,7 @@ class TestPipelineStage(unittest.TestCase):
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = PipelineStage(lambda x: x + 1)
+        pipeline = PipelineStage(lambda x: x + 1, n_threads=5)
         pipeline.start()
 
         # Test multiple inputs
@@ -64,13 +68,18 @@ class TestPipelineStage(unittest.TestCase):
         # stop pipeline
         pipeline.stop()
         pipeline.join()
+
+        # check if pipeline indeed stopped
+        self.assertTrue(pipeline.has_started())
+        self.assertFalse(pipeline.is_alive())
+        self.assertTrue(pipeline.is_terminated())
 
     def test_concurrent_processing_after_put(self):
         """
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = PipelineStage(lambda x: x + 1)
+        pipeline = PipelineStage(lambda x: x + 1, n_threads=5)
 
         # Test multiple inputs
         inputs = [1, 2, 3, 4, 5]
@@ -89,6 +98,11 @@ class TestPipelineStage(unittest.TestCase):
         # stop pipeline
         pipeline.stop()
         pipeline.join()
+
+        # check if pipeline indeed stopped
+        self.assertTrue(pipeline.has_started())
+        self.assertFalse(pipeline.is_alive())
+        self.assertTrue(pipeline.is_terminated())
 
     def test_stop_join(self):
         def multiply_by_two(input_data):
@@ -122,6 +136,16 @@ class TestPipelineStage(unittest.TestCase):
         # check if it finished properly
         self.assertEqual(pipeline.is_alive(), False)
         self.assertEqual(pipeline.is_terminated(), True)
+
+    def test_pipeline_stopped_exception(self):
+        """Tests that putting/getting data from a stopped pipeline raises an exception."""
+        pipeline = PipelineStage(lambda: None)
+        pipeline.start()
+        pipeline.stop()
+        with self.assertRaises(PipelineStage.StoppedException):
+            pipeline.put(5)
+        with self.assertRaises(PipelineStage.StoppedException):
+            pipeline.get()
 
     def test_connect_output(self):
         # Create two pipeline instances

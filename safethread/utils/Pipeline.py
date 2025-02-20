@@ -2,15 +2,17 @@
 
 from typing import Any, Iterable
 
-from ..thread.PipelineStage import PipelineStage
+from .PipelineStage import PipelineStage
 
 
 class Pipeline:
     """
-    A processing pipeline composed of multiple interconnected `PipelineStage` instances.
+    A processing pipeline composed by interconnected `PipelineStage` instances.
 
     This class manages the sequential execution of pipeline stages, allowing data 
     to be passed through multiple stages of processing in a controlled manner.
+
+    E.g., input => Stage 1 => Stage 2 => ... => output
     """
 
     def __init__(self, pipeline_stages: Iterable[PipelineStage]):
