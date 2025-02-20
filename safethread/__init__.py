@@ -13,8 +13,8 @@ The package is designed to ensure safe, concurrent operations on common Python d
 ### **Features:**
 - **Thread-Safe Data Structures**: Safe implementations of common data structures (list, dict) to avoid race conditions in concurrent threads.
 - **Thread Synchronization**: Use of Python's `threading.Lock` to manage concurrent access to shared resources.
-- **Threaded Classes**: Threaded classes to perform parallel data processing (`Pipeline`), scheduled function calls (`Scheduler`), among others.
-- **Utility Classes**: Additional helpers and utilities for threading, synchronization and other functionality unrelated to multithread programming.
+- **Threaded Classes**: Threaded classes to perform parallel data processing , scheduled function calls (`Scheduler`), among others.
+- **Utility Classes**: Additional helpers and utilities for threading (`Pipeline`, `PipelineStage`, `Publish`/`Subscribe`, etc), synchronization and other functionality unrelated to multithread programming.
 
 ### **Installation:**
 - Install via PyPI: `pip install safethread`
