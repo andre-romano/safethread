@@ -54,7 +54,7 @@ stage.stop()
 stage.join()
 ```
 
-For further details, check the [``examples/``](./examples/) folder and the full documentation (link below).
+For further details, check the [``examples/``](https://github.com/andre-romano/safethread/tree/master/examples) folder and the full documentation (link below).
 
 ## Documentation
 
@@ -76,4 +76,4 @@ Copyright (C) 2025 - Andre Luiz Romano Madureira
 
 This project is licensed under the Apache License 2.0.  
 
-For more details, see the full license text (see [``LICENSE``](./LICENSE) file).
+For more details, see the full license text (see [``LICENSE``](https://github.com/andre-romano/safethread/blob/master/LICENSE) file).
