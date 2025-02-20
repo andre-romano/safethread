@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0 (2025-02-20 16:42:53 -0300)
+
+- 270cb73 release version v1.3.0
+- 1e358aa added utils.Publish and utils.Subscribe fixed circular import in datatype.__init__ => datatype.SafeObjBase => utils.Factory => utils.__init__ => utils.Publisher => datatype.SafeSet => datatype.__init__
+- 0403868 added stop_join() to facilitate library usage (*syntatic sugar*)
+- adb5669 added multithread capabilities to PipelineStage moved thread.PipelineStage and Pipeline to utils package (they use ThreadBase, but they are not a subclass of it)
+- a31226c release version v1.2.0
+
 ## v1.2.0 (2025-02-19 17:38:26 -0300)
 
 - a31226c release version v1.2.0
