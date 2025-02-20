@@ -20,6 +20,8 @@ class PipelineStage:
 
     The pipeline runs indefinetely, until .stop() is called.
 
+    <img src="../../../img/utils/PipelineStage.svg" alt="" width="100%">
+
     Args:
 
         callback (Callable): The function (or callable) that processes input data

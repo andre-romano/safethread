@@ -19,6 +19,8 @@ class Scheduler(ThreadBase):
         args (Iterable, optional): Optional arguments to pass to the callback. Defaults to None.
 
         repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.
+
+    <img src="../../../img/thread/Scheduler.svg" alt="" width="100%">
     """
 
     def __init__(self, timeout: float, callback: Callable, args: Iterable | None = None, repeat: bool = True):

@@ -13,6 +13,8 @@ class Pipeline:
     to be passed through multiple stages of processing in a controlled manner.
 
     E.g., input => Stage 1 => Stage 2 => ... => output
+
+    <img src="../../../img/utils/Pipeline.svg" alt="" width="100%">
     """
 
     def __init__(self, pipeline_stages: Iterable[PipelineStage]):

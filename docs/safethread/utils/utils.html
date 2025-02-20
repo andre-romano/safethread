@@ -66,16 +66,19 @@
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    Wraps callback in a try except finally block</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    Args:</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">        callback (Callable): Callable to wrap in try block</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">        callback_fail (Callable): Callable to run if except block is executed</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">        callback_final (Callable): Callable to run in finally block</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>        <span class="n">callback</span><span class="p">()</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="k">except</span><span class="p">:</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="n">callback_fail</span><span class="p">()</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="k">finally</span><span class="p">:</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="n">callback_final</span><span class="p">()</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">        callback (Callable): Callable to wrap in try block</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">        callback_fail (Callable): Callable to run if except block is executed</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        callback_final (Callable): Callable to run in finally block</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="n">callback</span><span class="p">()</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">except</span><span class="p">:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="n">callback_fail</span><span class="p">()</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">finally</span><span class="p">:</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>        <span class="n">callback_final</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -96,25 +99,32 @@
 </span><span id="try_except_finally_wrap-10"><a href="#try_except_finally_wrap-10"><span class="linenos">10</span></a><span class="sd">    Wraps callback in a try except finally block</span>
 </span><span id="try_except_finally_wrap-11"><a href="#try_except_finally_wrap-11"><span class="linenos">11</span></a>
 </span><span id="try_except_finally_wrap-12"><a href="#try_except_finally_wrap-12"><span class="linenos">12</span></a><span class="sd">    Args:</span>
-</span><span id="try_except_finally_wrap-13"><a href="#try_except_finally_wrap-13"><span class="linenos">13</span></a><span class="sd">        callback (Callable): Callable to wrap in try block</span>
-</span><span id="try_except_finally_wrap-14"><a href="#try_except_finally_wrap-14"><span class="linenos">14</span></a><span class="sd">        callback_fail (Callable): Callable to run if except block is executed</span>
-</span><span id="try_except_finally_wrap-15"><a href="#try_except_finally_wrap-15"><span class="linenos">15</span></a><span class="sd">        callback_final (Callable): Callable to run in finally block</span>
-</span><span id="try_except_finally_wrap-16"><a href="#try_except_finally_wrap-16"><span class="linenos">16</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="try_except_finally_wrap-17"><a href="#try_except_finally_wrap-17"><span class="linenos">17</span></a>    <span class="k">try</span><span class="p">:</span>
-</span><span id="try_except_finally_wrap-18"><a href="#try_except_finally_wrap-18"><span class="linenos">18</span></a>        <span class="n">callback</span><span class="p">()</span>
-</span><span id="try_except_finally_wrap-19"><a href="#try_except_finally_wrap-19"><span class="linenos">19</span></a>    <span class="k">except</span><span class="p">:</span>
-</span><span id="try_except_finally_wrap-20"><a href="#try_except_finally_wrap-20"><span class="linenos">20</span></a>        <span class="n">callback_fail</span><span class="p">()</span>
-</span><span id="try_except_finally_wrap-21"><a href="#try_except_finally_wrap-21"><span class="linenos">21</span></a>    <span class="k">finally</span><span class="p">:</span>
-</span><span id="try_except_finally_wrap-22"><a href="#try_except_finally_wrap-22"><span class="linenos">22</span></a>        <span class="n">callback_final</span><span class="p">()</span>
+</span><span id="try_except_finally_wrap-13"><a href="#try_except_finally_wrap-13"><span class="linenos">13</span></a>
+</span><span id="try_except_finally_wrap-14"><a href="#try_except_finally_wrap-14"><span class="linenos">14</span></a><span class="sd">        callback (Callable): Callable to wrap in try block</span>
+</span><span id="try_except_finally_wrap-15"><a href="#try_except_finally_wrap-15"><span class="linenos">15</span></a>
+</span><span id="try_except_finally_wrap-16"><a href="#try_except_finally_wrap-16"><span class="linenos">16</span></a><span class="sd">        callback_fail (Callable): Callable to run if except block is executed</span>
+</span><span id="try_except_finally_wrap-17"><a href="#try_except_finally_wrap-17"><span class="linenos">17</span></a>
+</span><span id="try_except_finally_wrap-18"><a href="#try_except_finally_wrap-18"><span class="linenos">18</span></a><span class="sd">        callback_final (Callable): Callable to run in finally block</span>
+</span><span id="try_except_finally_wrap-19"><a href="#try_except_finally_wrap-19"><span class="linenos">19</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="try_except_finally_wrap-20"><a href="#try_except_finally_wrap-20"><span class="linenos">20</span></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="try_except_finally_wrap-21"><a href="#try_except_finally_wrap-21"><span class="linenos">21</span></a>        <span class="n">callback</span><span class="p">()</span>
+</span><span id="try_except_finally_wrap-22"><a href="#try_except_finally_wrap-22"><span class="linenos">22</span></a>    <span class="k">except</span><span class="p">:</span>
+</span><span id="try_except_finally_wrap-23"><a href="#try_except_finally_wrap-23"><span class="linenos">23</span></a>        <span class="n">callback_fail</span><span class="p">()</span>
+</span><span id="try_except_finally_wrap-24"><a href="#try_except_finally_wrap-24"><span class="linenos">24</span></a>    <span class="k">finally</span><span class="p">:</span>
+</span><span id="try_except_finally_wrap-25"><a href="#try_except_finally_wrap-25"><span class="linenos">25</span></a>        <span class="n">callback_final</span><span class="p">()</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Wraps callback in a try except finally block</p>
 
-<p>Args:
-    callback (Callable): Callable to wrap in try block
-    callback_fail (Callable): Callable to run if except block is executed
-    callback_final (Callable): Callable to run in finally block</p>
+<p>Args:</p>
+
+<pre><code>callback (Callable): Callable to wrap in try block
+
+callback_fail (Callable): Callable to run if except block is executed
+
+callback_final (Callable): Callable to run in finally block
+</code></pre>
 </div>
 
 

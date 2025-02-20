@@ -1,0 +1,6 @@
+stateDiagram-v2
+    direction LR
+    [*] --> Waiting
+    Waiting --> Run_Callback :if timeout        
+    Run_Callback --> Waiting :if repeat
+    Run_Callback --> [*] :else

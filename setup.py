@@ -12,7 +12,7 @@ requirements = (this_directory / "requirements.txt").read_text()
 setup(
     name="safethread",
     version=version,
-    packages=find_packages(exclude=["tests", "docs", "examples"]),
+    packages=find_packages(exclude=["tests", "docs", "examples", "img"]),
     python_requires=">=3.11",
     install_requires=requirements.splitlines(),
     include_package_data=True,

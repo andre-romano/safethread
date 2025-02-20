@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.10" pages="2">
+  <diagram name="Pipeline" id="uQFlcSA_ZE5pRMsBc9r-">
+    <mxGraphModel dx="1114" dy="560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-1" value="&lt;b&gt;PipelineStage&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=14;spacingTop=-30;" vertex="1" parent="1">
+          <mxGeometry x="110" y="80" width="500" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-2" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Input&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Queue&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="125" y="96" width="70" height="139" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-3" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;width=19.090909090909093;endSize=6.672727272727273;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="208" y="164.12" as="sourcePoint" />
+            <mxPoint x="248" y="164.12" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-4" value="&lt;b&gt;Thread 1&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="94" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-5" value="&lt;b&gt;Thread 2&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="134" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-6" value="&lt;b&gt;&lt;font style=&quot;font-size: 32px;&quot;&gt;. . .&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="330" y="163" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-7" value="&lt;b&gt;Thread N&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="205" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-8" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Output&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Queue&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="527" y="96" width="70" height="139" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-9" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;width=19.090909090909093;endSize=6.503030303030304;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="476" y="164.12" as="sourcePoint" />
+            <mxPoint x="516" y="164.12" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-16" value="&lt;b&gt;Pipeline&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=14;spacingTop=-30;" vertex="1" parent="1">
+          <mxGeometry x="110" y="290" width="470" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-19" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Pipeline&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Stage&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="126" y="306" width="70" height="139" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-24" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;width=19.090909090909093;endSize=6.503030303030304;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="207" y="373.62" as="sourcePoint" />
+            <mxPoint x="247" y="373.62" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-26" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Pipeline&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Stage&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="257" y="306" width="70" height="139" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-27" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;width=19.090909090909093;endSize=6.672727272727273;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="337" y="374.62" as="sourcePoint" />
+            <mxPoint x="377" y="374.62" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-28" value="&lt;b&gt;&lt;font style=&quot;font-size: 32px;&quot;&gt;. . .&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="380" y="353" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-31" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;width=19.090909090909093;endSize=6.503030303030304;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="445" y="374.12" as="sourcePoint" />
+            <mxPoint x="485" y="374.12" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Eavzj1u1CZOzdD7Hqyk9-32" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Pipeline&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Stage&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="494" y="306" width="70" height="139" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Scheduler" id="Zf2whKMq1RFTmTaHC2p6">
+    <mxGraphModel dx="1114" dy="560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="yyVQBxMjXHmjcxHvv_1D-0" />
+        <mxCell id="yyVQBxMjXHmjcxHvv_1D-1" parent="yyVQBxMjXHmjcxHvv_1D-0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
