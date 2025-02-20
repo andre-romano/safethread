@@ -127,20 +127,6 @@ class ThreadBase:
     def set_daemon(self, daemon: bool):
         self.__thread.daemon = daemon
 
-    def join(self, timeout: float | None = None):
-        """
-        Joins the thread, waiting for it to finish.
-
-        Args:
-
-            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
-        """
-        self.__thread.join(timeout)
-
     def start(self):
         """
         Starts the thread.
@@ -157,3 +143,32 @@ class ThreadBase:
     def stop(self):
         """Stops the thread"""
         self.__thread_terminate = True
+
+    def join(self, timeout: float | None = None):
+        """
+        Joins the thread, waiting for it to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        self.__thread.join(timeout)
+
+    def stop_join(self, timeout: float | None = None):
+        """
+        Calls stop() and join() to stop the thread and wait for it to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        self.stop()
+        self.join(timeout=timeout)

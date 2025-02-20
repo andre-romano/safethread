@@ -122,21 +122,6 @@ class Pipeline:
         """
         return self.has_started() and not self.is_alive()
 
-    def join(self, timeout: float | None = None):
-        """
-        Waits for all pipeline stages to complete execution.
-
-        Args:
-
-            timeout (float, optional): The maximum time to wait for each pipeline stage to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if the join() is called before start()
-        """
-        for stage in self.__stages:
-            stage.join(timeout=timeout)
-
     def start(self):
         """
         Starts all pipeline stages.        
@@ -153,3 +138,33 @@ class Pipeline:
         """Stops all pipeline stages"""
         for stage in self.__stages:
             stage.stop()
+
+    def join(self, timeout: float | None = None):
+        """
+        Waits for all pipeline stages to complete execution.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for each pipeline stage to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if the join() is called before start()
+        """
+        for stage in self.__stages:
+            stage.join(timeout=timeout)
+
+    def stop_join(self, timeout: float | None = None):
+        """
+        Calls stop() and join() to stop the Pipeline and waiting for its stages to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for stages to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        self.stop()
+        self.join(timeout=timeout)

@@ -204,21 +204,6 @@ class PipelineStage:
         """
         self.__output_queue = other_pipeline.__input_queue
 
-    def join(self, timeout: float | None = None):
-        """
-        Joins the pipeline stages' threads, waiting for them to finish.
-
-        Args:
-
-            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
-        """
-        for thread in self.__threads:
-            thread.join(timeout)
-
     def start(self):
         """
         Starts the pipeline stage threads
@@ -234,11 +219,43 @@ class PipelineStage:
         """
         Stops the pipeline thread (immediately)
         """
+        # stops threads' main loops
         for thread in self.__threads:
             try_except_finally_wrap(lambda: thread.stop())
+        # prevent in/out queues from storing data
         try_except_finally_wrap(
             lambda: self.__input_queue.shutdown(immediate=True)
         )
         try_except_finally_wrap(
             lambda: self.__output_queue.shutdown(immediate=True)
         )
+
+    def join(self, timeout: float | None = None):
+        """
+        Joins the pipeline stages' threads, waiting for them to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        for thread in self.__threads:
+            thread.join(timeout)
+
+    def stop_join(self, timeout: float | None = None):
+        """
+        Calls stop() and join() to stop the PipelineStage and waiting for its threads to finish.
+
+        Args:
+
+            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
+
+        Raises:
+
+            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        """
+        self.stop()
+        self.join(timeout=timeout)

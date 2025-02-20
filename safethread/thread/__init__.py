@@ -2,7 +2,7 @@
 # safethread/utils/__init__.py
 
 """
-This module provides threaded classes.
+This module provides threaded classes that inherit from ThreadBase.
 
 Classes:
 - **Scheduler**: A class that runs a scheduled Callable (function, lambda, etc), after a pre-defined timeout, either singleshot or periodically.
