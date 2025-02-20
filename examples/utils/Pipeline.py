@@ -2,14 +2,14 @@
 from safethread.utils import PipelineStage
 from safethread.utils import Pipeline
 
-# Criando a pipeline com os estágios conectados em sequência
+# creating pipeline and its stages (sequentially executed)
 pipeline = Pipeline([
     PipelineStage(lambda x: x*2),
     PipelineStage(lambda x: x+1),
     PipelineStage(lambda x: x**2),
 ])
 
-# Iniciando a pipeline
+# starting pipeline
 pipeline.start()
 if pipeline.has_started():
     print(f"Pipeline has started")
@@ -18,16 +18,16 @@ if pipeline.has_started():
 input_values = [1, 2, 3]
 expected_output_values = [9, 25, 49]
 
-# Enviando um valores para processamento
+# sending input values to pipeline
 for input_value in input_values:
     pipeline.put(input_value)
 
-# Obtendo o resultados
+# getting results
 for expected_output_value in expected_output_values:
     result = pipeline.get()
     print(f"Final result: {result} - Expected output: {expected_output_value}")
 
-# Parando a pipeline
+# stopping pipeline
 pipeline.stop()
 pipeline.join()
 

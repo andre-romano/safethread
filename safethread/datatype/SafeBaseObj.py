@@ -1,14 +1,18 @@
 
 from threading import RLock
+from typing import Self
 
-from ..utils import Factory
 
-
-class SafeBaseObj(Factory):
+class SafeBaseObj:
     """
     A thread-safe wrapper around a data object, ensuring safe access 
     in multithreaded environments using locking mechanisms.
     """
+
+    @classmethod
+    def create(cls, *args) -> Self:
+        """Creates an instance of Self class"""
+        return cls(*args)
 
     def __index__(self):
         """Return the integer representation of the object, ensuring thread safety."""
