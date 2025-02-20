@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0 (2025-02-19 17:38:26 -0300)
+
+- a31226c release version v1.2.0
+- 6a177b9 added utils.Pipeline to automate multi-stage pipeline creation, based on thread.PipelineStage
+- 1daea17 changed thread.Pipeline => thread.PipelineStage added Raises RuntimeError docstring for ThreadBase.join
+- a23cd8d major bug fixes; avoid name collisions (using name mangling); modified ThreadBase to allow repeated execution and added stop() method; added run_examples.bat (test all examples/**/*.py files)
+- fb73c16 big fix in docs
+- 80c502a improved docs
+- 5afc4eb release version v1.1.0
+
 ## v1.1.0 (2025-02-18 12:01:33 -0300)
 
 - 5afc4eb release version v1.1.0

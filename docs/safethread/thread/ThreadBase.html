@@ -70,13 +70,16 @@
                                 <a class="function" href="#ThreadBase.set_daemon">set_daemon</a>
                         </li>
                         <li>
-                                <a class="function" href="#ThreadBase.join">join</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#ThreadBase.start">start</a>
                         </li>
                         <li>
                                 <a class="function" href="#ThreadBase.stop">stop</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ThreadBase.join">join</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ThreadBase.stop_join">stop_join</a>
                         </li>
                 </ul>
 
@@ -231,36 +234,51 @@
 </span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
 </span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
 </span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        Starts the thread.</span>
 </span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">        Args:</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
 </span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">        Raises:</span>
 </span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">        Raises:</span>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
-</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">        Raises:</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">        Args:</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="sd">        Raises:</span>
 </span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">        Calls stop() and join() to stop the thread and wait for it to finish.</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">        Args:</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="sd">        Raises:</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -400,36 +418,51 @@
 </span><span id="ThreadBase-128"><a href="#ThreadBase-128"><span class="linenos">128</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
 </span><span id="ThreadBase-129"><a href="#ThreadBase-129"><span class="linenos">129</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="n">daemon</span>
 </span><span id="ThreadBase-130"><a href="#ThreadBase-130"><span class="linenos">130</span></a>
-</span><span id="ThreadBase-131"><a href="#ThreadBase-131"><span class="linenos">131</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase-131"><a href="#ThreadBase-131"><span class="linenos">131</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="ThreadBase-132"><a href="#ThreadBase-132"><span class="linenos">132</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-133"><a href="#ThreadBase-133"><span class="linenos">133</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="ThreadBase-133"><a href="#ThreadBase-133"><span class="linenos">133</span></a><span class="sd">        Starts the thread.</span>
 </span><span id="ThreadBase-134"><a href="#ThreadBase-134"><span class="linenos">134</span></a>
-</span><span id="ThreadBase-135"><a href="#ThreadBase-135"><span class="linenos">135</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-135"><a href="#ThreadBase-135"><span class="linenos">135</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
 </span><span id="ThreadBase-136"><a href="#ThreadBase-136"><span class="linenos">136</span></a>
-</span><span id="ThreadBase-137"><a href="#ThreadBase-137"><span class="linenos">137</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase-137"><a href="#ThreadBase-137"><span class="linenos">137</span></a><span class="sd">        Raises:</span>
 </span><span id="ThreadBase-138"><a href="#ThreadBase-138"><span class="linenos">138</span></a>
-</span><span id="ThreadBase-139"><a href="#ThreadBase-139"><span class="linenos">139</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase-140"><a href="#ThreadBase-140"><span class="linenos">140</span></a>
-</span><span id="ThreadBase-141"><a href="#ThreadBase-141"><span class="linenos">141</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
-</span><span id="ThreadBase-142"><a href="#ThreadBase-142"><span class="linenos">142</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-143"><a href="#ThreadBase-143"><span class="linenos">143</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span><span id="ThreadBase-144"><a href="#ThreadBase-144"><span class="linenos">144</span></a>
-</span><span id="ThreadBase-145"><a href="#ThreadBase-145"><span class="linenos">145</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase-146"><a href="#ThreadBase-146"><span class="linenos">146</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-147"><a href="#ThreadBase-147"><span class="linenos">147</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="ThreadBase-148"><a href="#ThreadBase-148"><span class="linenos">148</span></a>
-</span><span id="ThreadBase-149"><a href="#ThreadBase-149"><span class="linenos">149</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
-</span><span id="ThreadBase-150"><a href="#ThreadBase-150"><span class="linenos">150</span></a>
-</span><span id="ThreadBase-151"><a href="#ThreadBase-151"><span class="linenos">151</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase-152"><a href="#ThreadBase-152"><span class="linenos">152</span></a>
-</span><span id="ThreadBase-153"><a href="#ThreadBase-153"><span class="linenos">153</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="ThreadBase-154"><a href="#ThreadBase-154"><span class="linenos">154</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-155"><a href="#ThreadBase-155"><span class="linenos">155</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase-156"><a href="#ThreadBase-156"><span class="linenos">156</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase-139"><a href="#ThreadBase-139"><span class="linenos">139</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase-140"><a href="#ThreadBase-140"><span class="linenos">140</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-141"><a href="#ThreadBase-141"><span class="linenos">141</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase-142"><a href="#ThreadBase-142"><span class="linenos">142</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase-143"><a href="#ThreadBase-143"><span class="linenos">143</span></a>
+</span><span id="ThreadBase-144"><a href="#ThreadBase-144"><span class="linenos">144</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ThreadBase-145"><a href="#ThreadBase-145"><span class="linenos">145</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-146"><a href="#ThreadBase-146"><span class="linenos">146</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase-147"><a href="#ThreadBase-147"><span class="linenos">147</span></a>
+</span><span id="ThreadBase-148"><a href="#ThreadBase-148"><span class="linenos">148</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase-149"><a href="#ThreadBase-149"><span class="linenos">149</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-150"><a href="#ThreadBase-150"><span class="linenos">150</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="ThreadBase-151"><a href="#ThreadBase-151"><span class="linenos">151</span></a>
+</span><span id="ThreadBase-152"><a href="#ThreadBase-152"><span class="linenos">152</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-153"><a href="#ThreadBase-153"><span class="linenos">153</span></a>
+</span><span id="ThreadBase-154"><a href="#ThreadBase-154"><span class="linenos">154</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase-155"><a href="#ThreadBase-155"><span class="linenos">155</span></a>
+</span><span id="ThreadBase-156"><a href="#ThreadBase-156"><span class="linenos">156</span></a><span class="sd">        Raises:</span>
 </span><span id="ThreadBase-157"><a href="#ThreadBase-157"><span class="linenos">157</span></a>
-</span><span id="ThreadBase-158"><a href="#ThreadBase-158"><span class="linenos">158</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase-159"><a href="#ThreadBase-159"><span class="linenos">159</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
-</span><span id="ThreadBase-160"><a href="#ThreadBase-160"><span class="linenos">160</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="ThreadBase-158"><a href="#ThreadBase-158"><span class="linenos">158</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="ThreadBase-159"><a href="#ThreadBase-159"><span class="linenos">159</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-160"><a href="#ThreadBase-160"><span class="linenos">160</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span><span id="ThreadBase-161"><a href="#ThreadBase-161"><span class="linenos">161</span></a>
+</span><span id="ThreadBase-162"><a href="#ThreadBase-162"><span class="linenos">162</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase-163"><a href="#ThreadBase-163"><span class="linenos">163</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase-164"><a href="#ThreadBase-164"><span class="linenos">164</span></a><span class="sd">        Calls stop() and join() to stop the thread and wait for it to finish.</span>
+</span><span id="ThreadBase-165"><a href="#ThreadBase-165"><span class="linenos">165</span></a>
+</span><span id="ThreadBase-166"><a href="#ThreadBase-166"><span class="linenos">166</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase-167"><a href="#ThreadBase-167"><span class="linenos">167</span></a>
+</span><span id="ThreadBase-168"><a href="#ThreadBase-168"><span class="linenos">168</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase-169"><a href="#ThreadBase-169"><span class="linenos">169</span></a>
+</span><span id="ThreadBase-170"><a href="#ThreadBase-170"><span class="linenos">170</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase-171"><a href="#ThreadBase-171"><span class="linenos">171</span></a>
+</span><span id="ThreadBase-172"><a href="#ThreadBase-172"><span class="linenos">172</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="ThreadBase-173"><a href="#ThreadBase-173"><span class="linenos">173</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase-174"><a href="#ThreadBase-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span id="ThreadBase-175"><a href="#ThreadBase-175"><span class="linenos">175</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -736,48 +769,6 @@ repeat (bool, optional): If True, the thread will repeat the execution of callba
     
 
                             </div>
-                            <div id="ThreadBase.join" class="classattr">
-                                        <input id="ThreadBase.join-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">join</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">):</span></span>
-
-                <label class="view-source-button" for="ThreadBase.join-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#ThreadBase.join"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.join-131"><a href="#ThreadBase.join-131"><span class="linenos">131</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="ThreadBase.join-132"><a href="#ThreadBase.join-132"><span class="linenos">132</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.join-133"><a href="#ThreadBase.join-133"><span class="linenos">133</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
-</span><span id="ThreadBase.join-134"><a href="#ThreadBase.join-134"><span class="linenos">134</span></a>
-</span><span id="ThreadBase.join-135"><a href="#ThreadBase.join-135"><span class="linenos">135</span></a><span class="sd">        Args:</span>
-</span><span id="ThreadBase.join-136"><a href="#ThreadBase.join-136"><span class="linenos">136</span></a>
-</span><span id="ThreadBase.join-137"><a href="#ThreadBase.join-137"><span class="linenos">137</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
-</span><span id="ThreadBase.join-138"><a href="#ThreadBase.join-138"><span class="linenos">138</span></a>
-</span><span id="ThreadBase.join-139"><a href="#ThreadBase.join-139"><span class="linenos">139</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase.join-140"><a href="#ThreadBase.join-140"><span class="linenos">140</span></a>
-</span><span id="ThreadBase.join-141"><a href="#ThreadBase.join-141"><span class="linenos">141</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
-</span><span id="ThreadBase.join-142"><a href="#ThreadBase.join-142"><span class="linenos">142</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.join-143"><a href="#ThreadBase.join-143"><span class="linenos">143</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Joins the thread, waiting for it to finish.</p>
-
-<p>Args:</p>
-
-<pre><code>timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
-</code></pre>
-
-<p>Raises:</p>
-
-<pre><code>RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
-</code></pre>
-</div>
-
-
-                            </div>
                             <div id="ThreadBase.start" class="classattr">
                                         <input id="ThreadBase.start-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -789,18 +780,18 @@ repeat (bool, optional): If True, the thread will repeat the execution of callba
 
     </div>
     <a class="headerlink" href="#ThreadBase.start"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.start-145"><a href="#ThreadBase.start-145"><span class="linenos">145</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase.start-146"><a href="#ThreadBase.start-146"><span class="linenos">146</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.start-147"><a href="#ThreadBase.start-147"><span class="linenos">147</span></a><span class="sd">        Starts the thread.</span>
-</span><span id="ThreadBase.start-148"><a href="#ThreadBase.start-148"><span class="linenos">148</span></a>
-</span><span id="ThreadBase.start-149"><a href="#ThreadBase.start-149"><span class="linenos">149</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
-</span><span id="ThreadBase.start-150"><a href="#ThreadBase.start-150"><span class="linenos">150</span></a>
-</span><span id="ThreadBase.start-151"><a href="#ThreadBase.start-151"><span class="linenos">151</span></a><span class="sd">        Raises:</span>
-</span><span id="ThreadBase.start-152"><a href="#ThreadBase.start-152"><span class="linenos">152</span></a>
-</span><span id="ThreadBase.start-153"><a href="#ThreadBase.start-153"><span class="linenos">153</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
-</span><span id="ThreadBase.start-154"><a href="#ThreadBase.start-154"><span class="linenos">154</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.start-155"><a href="#ThreadBase.start-155"><span class="linenos">155</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span id="ThreadBase.start-156"><a href="#ThreadBase.start-156"><span class="linenos">156</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.start-131"><a href="#ThreadBase.start-131"><span class="linenos">131</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ThreadBase.start-132"><a href="#ThreadBase.start-132"><span class="linenos">132</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.start-133"><a href="#ThreadBase.start-133"><span class="linenos">133</span></a><span class="sd">        Starts the thread.</span>
+</span><span id="ThreadBase.start-134"><a href="#ThreadBase.start-134"><span class="linenos">134</span></a>
+</span><span id="ThreadBase.start-135"><a href="#ThreadBase.start-135"><span class="linenos">135</span></a><span class="sd">        This method begins the execution of the thread by calling the __run method in the background.</span>
+</span><span id="ThreadBase.start-136"><a href="#ThreadBase.start-136"><span class="linenos">136</span></a>
+</span><span id="ThreadBase.start-137"><a href="#ThreadBase.start-137"><span class="linenos">137</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.start-138"><a href="#ThreadBase.start-138"><span class="linenos">138</span></a>
+</span><span id="ThreadBase.start-139"><a href="#ThreadBase.start-139"><span class="linenos">139</span></a><span class="sd">            RuntimeError: if start() is called more than once on the same thread object.</span>
+</span><span id="ThreadBase.start-140"><a href="#ThreadBase.start-140"><span class="linenos">140</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.start-141"><a href="#ThreadBase.start-141"><span class="linenos">141</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ThreadBase.start-142"><a href="#ThreadBase.start-142"><span class="linenos">142</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_started</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -827,13 +818,98 @@ repeat (bool, optional): If True, the thread will repeat the execution of callba
 
     </div>
     <a class="headerlink" href="#ThreadBase.stop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.stop-158"><a href="#ThreadBase.stop-158"><span class="linenos">158</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ThreadBase.stop-159"><a href="#ThreadBase.stop-159"><span class="linenos">159</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
-</span><span id="ThreadBase.stop-160"><a href="#ThreadBase.stop-160"><span class="linenos">160</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.stop-144"><a href="#ThreadBase.stop-144"><span class="linenos">144</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ThreadBase.stop-145"><a href="#ThreadBase.stop-145"><span class="linenos">145</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Stops the thread&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.stop-146"><a href="#ThreadBase.stop-146"><span class="linenos">146</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread_terminate</span> <span class="o">=</span> <span class="kc">True</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Stops the thread</p>
+</div>
+
+
+                            </div>
+                            <div id="ThreadBase.join" class="classattr">
+                                        <input id="ThreadBase.join-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">join</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ThreadBase.join-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadBase.join"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.join-148"><a href="#ThreadBase.join-148"><span class="linenos">148</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase.join-149"><a href="#ThreadBase.join-149"><span class="linenos">149</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.join-150"><a href="#ThreadBase.join-150"><span class="linenos">150</span></a><span class="sd">        Joins the thread, waiting for it to finish.</span>
+</span><span id="ThreadBase.join-151"><a href="#ThreadBase.join-151"><span class="linenos">151</span></a>
+</span><span id="ThreadBase.join-152"><a href="#ThreadBase.join-152"><span class="linenos">152</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase.join-153"><a href="#ThreadBase.join-153"><span class="linenos">153</span></a>
+</span><span id="ThreadBase.join-154"><a href="#ThreadBase.join-154"><span class="linenos">154</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase.join-155"><a href="#ThreadBase.join-155"><span class="linenos">155</span></a>
+</span><span id="ThreadBase.join-156"><a href="#ThreadBase.join-156"><span class="linenos">156</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.join-157"><a href="#ThreadBase.join-157"><span class="linenos">157</span></a>
+</span><span id="ThreadBase.join-158"><a href="#ThreadBase.join-158"><span class="linenos">158</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="ThreadBase.join-159"><a href="#ThreadBase.join-159"><span class="linenos">159</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.join-160"><a href="#ThreadBase.join-160"><span class="linenos">160</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Joins the thread, waiting for it to finish.</p>
+
+<p>Args:</p>
+
+<pre><code>timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
+</code></pre>
+
+<p>Raises:</p>
+
+<pre><code>RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+</code></pre>
+</div>
+
+
+                            </div>
+                            <div id="ThreadBase.stop_join" class="classattr">
+                                        <input id="ThreadBase.stop_join-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">stop_join</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ThreadBase.stop_join-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ThreadBase.stop_join"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ThreadBase.stop_join-162"><a href="#ThreadBase.stop_join-162"><span class="linenos">162</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stop_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="ThreadBase.stop_join-163"><a href="#ThreadBase.stop_join-163"><span class="linenos">163</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ThreadBase.stop_join-164"><a href="#ThreadBase.stop_join-164"><span class="linenos">164</span></a><span class="sd">        Calls stop() and join() to stop the thread and wait for it to finish.</span>
+</span><span id="ThreadBase.stop_join-165"><a href="#ThreadBase.stop_join-165"><span class="linenos">165</span></a>
+</span><span id="ThreadBase.stop_join-166"><a href="#ThreadBase.stop_join-166"><span class="linenos">166</span></a><span class="sd">        Args:</span>
+</span><span id="ThreadBase.stop_join-167"><a href="#ThreadBase.stop_join-167"><span class="linenos">167</span></a>
+</span><span id="ThreadBase.stop_join-168"><a href="#ThreadBase.stop_join-168"><span class="linenos">168</span></a><span class="sd">            timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.</span>
+</span><span id="ThreadBase.stop_join-169"><a href="#ThreadBase.stop_join-169"><span class="linenos">169</span></a>
+</span><span id="ThreadBase.stop_join-170"><a href="#ThreadBase.stop_join-170"><span class="linenos">170</span></a><span class="sd">        Raises:</span>
+</span><span id="ThreadBase.stop_join-171"><a href="#ThreadBase.stop_join-171"><span class="linenos">171</span></a>
+</span><span id="ThreadBase.stop_join-172"><a href="#ThreadBase.stop_join-172"><span class="linenos">172</span></a><span class="sd">            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()</span>
+</span><span id="ThreadBase.stop_join-173"><a href="#ThreadBase.stop_join-173"><span class="linenos">173</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ThreadBase.stop_join-174"><a href="#ThreadBase.stop_join-174"><span class="linenos">174</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</span><span id="ThreadBase.stop_join-175"><a href="#ThreadBase.stop_join-175"><span class="linenos">175</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Calls stop() and join() to stop the thread and wait for it to finish.</p>
+
+<p>Args:</p>
+
+<pre><code>timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.
+</code></pre>
+
+<p>Raises:</p>
+
+<pre><code>RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+</code></pre>
 </div>
 
 
