@@ -96,107 +96,148 @@
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeDict</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared dictionary with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely clear the dictionary.&quot;&quot;&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="sd">        Initialize a shared dictionary with a Lock for thread safety.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">        :param data: Initial data to populate the dictionary. Defaults to None.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">        :type data: dict or Iterable, optional</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new dictionary with keys from iterable and values set to value.&quot;&quot;&quot;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely retrieve a value from the dictionary.&quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary items (key-value pairs).&quot;&quot;&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary keys.&quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">        D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">        If the key is not found, return the default if given; otherwise,</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">        raise a KeyError.</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">        Removes and returns the last key-value pair from the dictionary in a thread-safe manner.</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">        Returns:</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a><span class="sd">            tuple: The last key-value pair removed from the dictionary.</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        Raises:</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">            KeyError: If the dictionary is empty.</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">        Retrieves the value for a given key if it exists; otherwise, inserts the key with the provided default value </span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        in a thread-safe manner.</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">        Args:</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">            key: The key to look up in the dictionary.</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">            default (optional): The value to set if the key is not found. Defaults to None.</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">        Returns:</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">            The value associated with the key if it exists; otherwise, the default value that was set.</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">        Updates the dictionary with key-value pairs from another dictionary or iterable of key-value pairs, </span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">        in a thread-safe manner.</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">        Safely clear the dictionary.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">        Create a new dictionary with keys from an iterable and values set to a specified value.</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="sd">        :param iterable: Iterable containing the keys for the new dictionary.</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">        :type iterable: Iterable</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        :param value: Value assigned to each key. Defaults to None.</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="sd">        :type value: Any, optional</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">        :return: A new dictionary with the specified keys and values.</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">        :rtype: dict</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">        Safely retrieve a value from the dictionary.</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">        :param key: The key to look up.</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">        :type key: Any</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">        :param default: The default value if the key is not found. Defaults to None.</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="sd">        Return a set-like view of dictionary items (key-value pairs).</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s items.</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">        :rtype: dict_items</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">        Return a set-like view of dictionary keys.</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s keys.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">        :rtype: dict_keys</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a><span class="sd">        Remove the specified key and return the corresponding value.</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        :param key: The key to remove.</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        :type key: Any</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        :param default: The default value to return if the key is not found. Defaults to None.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">        :raises KeyError: If the key is not found and no default value is provided.</span>
 </span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        Args:</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">            m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">            **kwargs: Additional key-value pairs to update the dictionary.</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        Example:</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">            ```python</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">            safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
-</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">            safe_dict.update(a=3, c=4)</span>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">            ```</span>
-</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary values.&quot;&quot;&quot;</span>
-</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">        Remove and return the last key-value pair from the dictionary in a thread-safe manner.</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">        :raises KeyError: If the dictionary is empty.</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="sd">        :return: The last key-value pair removed from the dictionary.</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">        :rtype: tuple</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        Retrieve the value for a given key if it exists; otherwise, insert the key with the provided default value.</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        :param key: The key to look up in the dictionary.</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        :type key: Any</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="sd">        :param default: The value to set if the key is not found. Defaults to None.</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">        :return: The value associated with the key if it exists; otherwise, the default value that was set.</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        Update the dictionary with key-value pairs from another dictionary or iterable of key-value pairs.</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        :param m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">        :type m: dict or Iterable, optional</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">        :param kwargs: Additional key-value pairs to update the dictionary.</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">        :type kwargs: dict</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="sd">        **Example:**</span>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        ```python</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">        safe_dict.update(a=3, c=4)</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        ```</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">        Return a set-like view of dictionary values.</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s values.</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">        :rtype: dict_values</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -214,111 +255,152 @@
     <a class="headerlink" href="#SafeDict"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict-7"><a href="#SafeDict-7"><span class="linenos">  7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeDict</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
 </span><span id="SafeDict-8"><a href="#SafeDict-8"><span class="linenos">  8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict-9"><a href="#SafeDict-9"><span class="linenos">  9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared dictionary with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-10"><a href="#SafeDict-10"><span class="linenos"> 10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
-</span><span id="SafeDict-11"><a href="#SafeDict-11"><span class="linenos"> 11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeDict-12"><a href="#SafeDict-12"><span class="linenos"> 12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
-</span><span id="SafeDict-13"><a href="#SafeDict-13"><span class="linenos"> 13</span></a>
-</span><span id="SafeDict-14"><a href="#SafeDict-14"><span class="linenos"> 14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict-15"><a href="#SafeDict-15"><span class="linenos"> 15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely clear the dictionary.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-16"><a href="#SafeDict-16"><span class="linenos"> 16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-17"><a href="#SafeDict-17"><span class="linenos"> 17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="SafeDict-9"><a href="#SafeDict-9"><span class="linenos">  9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-10"><a href="#SafeDict-10"><span class="linenos"> 10</span></a><span class="sd">        Initialize a shared dictionary with a Lock for thread safety.</span>
+</span><span id="SafeDict-11"><a href="#SafeDict-11"><span class="linenos"> 11</span></a>
+</span><span id="SafeDict-12"><a href="#SafeDict-12"><span class="linenos"> 12</span></a><span class="sd">        :param data: Initial data to populate the dictionary. Defaults to None.</span>
+</span><span id="SafeDict-13"><a href="#SafeDict-13"><span class="linenos"> 13</span></a><span class="sd">        :type data: dict or Iterable, optional</span>
+</span><span id="SafeDict-14"><a href="#SafeDict-14"><span class="linenos"> 14</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-15"><a href="#SafeDict-15"><span class="linenos"> 15</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
+</span><span id="SafeDict-16"><a href="#SafeDict-16"><span class="linenos"> 16</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeDict-17"><a href="#SafeDict-17"><span class="linenos"> 17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
 </span><span id="SafeDict-18"><a href="#SafeDict-18"><span class="linenos"> 18</span></a>
-</span><span id="SafeDict-19"><a href="#SafeDict-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict-20"><a href="#SafeDict-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new dictionary with keys from iterable and values set to value.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-21"><a href="#SafeDict-21"><span class="linenos"> 21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-22"><a href="#SafeDict-22"><span class="linenos"> 22</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</span><span id="SafeDict-23"><a href="#SafeDict-23"><span class="linenos"> 23</span></a>
-</span><span id="SafeDict-24"><a href="#SafeDict-24"><span class="linenos"> 24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict-25"><a href="#SafeDict-25"><span class="linenos"> 25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely retrieve a value from the dictionary.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-26"><a href="#SafeDict-26"><span class="linenos"> 26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-27"><a href="#SafeDict-27"><span class="linenos"> 27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="SafeDict-28"><a href="#SafeDict-28"><span class="linenos"> 28</span></a>
-</span><span id="SafeDict-29"><a href="#SafeDict-29"><span class="linenos"> 29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict-30"><a href="#SafeDict-30"><span class="linenos"> 30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary items (key-value pairs).&quot;&quot;&quot;</span>
-</span><span id="SafeDict-31"><a href="#SafeDict-31"><span class="linenos"> 31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-32"><a href="#SafeDict-32"><span class="linenos"> 32</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span id="SafeDict-33"><a href="#SafeDict-33"><span class="linenos"> 33</span></a>
-</span><span id="SafeDict-34"><a href="#SafeDict-34"><span class="linenos"> 34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict-35"><a href="#SafeDict-35"><span class="linenos"> 35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary keys.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-36"><a href="#SafeDict-36"><span class="linenos"> 36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-37"><a href="#SafeDict-37"><span class="linenos"> 37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</span><span id="SafeDict-38"><a href="#SafeDict-38"><span class="linenos"> 38</span></a>
-</span><span id="SafeDict-39"><a href="#SafeDict-39"><span class="linenos"> 39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict-40"><a href="#SafeDict-40"><span class="linenos"> 40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict-41"><a href="#SafeDict-41"><span class="linenos"> 41</span></a><span class="sd">        D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
-</span><span id="SafeDict-42"><a href="#SafeDict-42"><span class="linenos"> 42</span></a>
-</span><span id="SafeDict-43"><a href="#SafeDict-43"><span class="linenos"> 43</span></a><span class="sd">        If the key is not found, return the default if given; otherwise,</span>
-</span><span id="SafeDict-44"><a href="#SafeDict-44"><span class="linenos"> 44</span></a><span class="sd">        raise a KeyError.</span>
-</span><span id="SafeDict-45"><a href="#SafeDict-45"><span class="linenos"> 45</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict-46"><a href="#SafeDict-46"><span class="linenos"> 46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-47"><a href="#SafeDict-47"><span class="linenos"> 47</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="SafeDict-48"><a href="#SafeDict-48"><span class="linenos"> 48</span></a>
-</span><span id="SafeDict-49"><a href="#SafeDict-49"><span class="linenos"> 49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict-50"><a href="#SafeDict-50"><span class="linenos"> 50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict-51"><a href="#SafeDict-51"><span class="linenos"> 51</span></a><span class="sd">        Removes and returns the last key-value pair from the dictionary in a thread-safe manner.</span>
-</span><span id="SafeDict-52"><a href="#SafeDict-52"><span class="linenos"> 52</span></a>
-</span><span id="SafeDict-53"><a href="#SafeDict-53"><span class="linenos"> 53</span></a><span class="sd">        Returns:</span>
-</span><span id="SafeDict-54"><a href="#SafeDict-54"><span class="linenos"> 54</span></a>
-</span><span id="SafeDict-55"><a href="#SafeDict-55"><span class="linenos"> 55</span></a><span class="sd">            tuple: The last key-value pair removed from the dictionary.</span>
-</span><span id="SafeDict-56"><a href="#SafeDict-56"><span class="linenos"> 56</span></a>
-</span><span id="SafeDict-57"><a href="#SafeDict-57"><span class="linenos"> 57</span></a><span class="sd">        Raises:</span>
-</span><span id="SafeDict-58"><a href="#SafeDict-58"><span class="linenos"> 58</span></a>
-</span><span id="SafeDict-59"><a href="#SafeDict-59"><span class="linenos"> 59</span></a><span class="sd">            KeyError: If the dictionary is empty.</span>
-</span><span id="SafeDict-60"><a href="#SafeDict-60"><span class="linenos"> 60</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict-61"><a href="#SafeDict-61"><span class="linenos"> 61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-62"><a href="#SafeDict-62"><span class="linenos"> 62</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
-</span><span id="SafeDict-63"><a href="#SafeDict-63"><span class="linenos"> 63</span></a>
-</span><span id="SafeDict-64"><a href="#SafeDict-64"><span class="linenos"> 64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict-65"><a href="#SafeDict-65"><span class="linenos"> 65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict-66"><a href="#SafeDict-66"><span class="linenos"> 66</span></a><span class="sd">        Retrieves the value for a given key if it exists; otherwise, inserts the key with the provided default value </span>
-</span><span id="SafeDict-67"><a href="#SafeDict-67"><span class="linenos"> 67</span></a><span class="sd">        in a thread-safe manner.</span>
-</span><span id="SafeDict-68"><a href="#SafeDict-68"><span class="linenos"> 68</span></a>
-</span><span id="SafeDict-69"><a href="#SafeDict-69"><span class="linenos"> 69</span></a><span class="sd">        Args:</span>
-</span><span id="SafeDict-70"><a href="#SafeDict-70"><span class="linenos"> 70</span></a>
-</span><span id="SafeDict-71"><a href="#SafeDict-71"><span class="linenos"> 71</span></a><span class="sd">            key: The key to look up in the dictionary.</span>
-</span><span id="SafeDict-72"><a href="#SafeDict-72"><span class="linenos"> 72</span></a>
-</span><span id="SafeDict-73"><a href="#SafeDict-73"><span class="linenos"> 73</span></a><span class="sd">            default (optional): The value to set if the key is not found. Defaults to None.</span>
-</span><span id="SafeDict-74"><a href="#SafeDict-74"><span class="linenos"> 74</span></a>
-</span><span id="SafeDict-75"><a href="#SafeDict-75"><span class="linenos"> 75</span></a><span class="sd">        Returns:</span>
-</span><span id="SafeDict-76"><a href="#SafeDict-76"><span class="linenos"> 76</span></a>
-</span><span id="SafeDict-77"><a href="#SafeDict-77"><span class="linenos"> 77</span></a><span class="sd">            The value associated with the key if it exists; otherwise, the default value that was set.</span>
-</span><span id="SafeDict-78"><a href="#SafeDict-78"><span class="linenos"> 78</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict-79"><a href="#SafeDict-79"><span class="linenos"> 79</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-80"><a href="#SafeDict-80"><span class="linenos"> 80</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-</span><span id="SafeDict-81"><a href="#SafeDict-81"><span class="linenos"> 81</span></a>
-</span><span id="SafeDict-82"><a href="#SafeDict-82"><span class="linenos"> 82</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="SafeDict-83"><a href="#SafeDict-83"><span class="linenos"> 83</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict-84"><a href="#SafeDict-84"><span class="linenos"> 84</span></a><span class="sd">        Updates the dictionary with key-value pairs from another dictionary or iterable of key-value pairs, </span>
-</span><span id="SafeDict-85"><a href="#SafeDict-85"><span class="linenos"> 85</span></a><span class="sd">        in a thread-safe manner.</span>
+</span><span id="SafeDict-19"><a href="#SafeDict-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict-20"><a href="#SafeDict-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-21"><a href="#SafeDict-21"><span class="linenos"> 21</span></a><span class="sd">        Safely clear the dictionary.</span>
+</span><span id="SafeDict-22"><a href="#SafeDict-22"><span class="linenos"> 22</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-23"><a href="#SafeDict-23"><span class="linenos"> 23</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-24"><a href="#SafeDict-24"><span class="linenos"> 24</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="SafeDict-25"><a href="#SafeDict-25"><span class="linenos"> 25</span></a>
+</span><span id="SafeDict-26"><a href="#SafeDict-26"><span class="linenos"> 26</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict-27"><a href="#SafeDict-27"><span class="linenos"> 27</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-28"><a href="#SafeDict-28"><span class="linenos"> 28</span></a><span class="sd">        Create a new dictionary with keys from an iterable and values set to a specified value.</span>
+</span><span id="SafeDict-29"><a href="#SafeDict-29"><span class="linenos"> 29</span></a>
+</span><span id="SafeDict-30"><a href="#SafeDict-30"><span class="linenos"> 30</span></a><span class="sd">        :param iterable: Iterable containing the keys for the new dictionary.</span>
+</span><span id="SafeDict-31"><a href="#SafeDict-31"><span class="linenos"> 31</span></a><span class="sd">        :type iterable: Iterable</span>
+</span><span id="SafeDict-32"><a href="#SafeDict-32"><span class="linenos"> 32</span></a><span class="sd">        :param value: Value assigned to each key. Defaults to None.</span>
+</span><span id="SafeDict-33"><a href="#SafeDict-33"><span class="linenos"> 33</span></a><span class="sd">        :type value: Any, optional</span>
+</span><span id="SafeDict-34"><a href="#SafeDict-34"><span class="linenos"> 34</span></a>
+</span><span id="SafeDict-35"><a href="#SafeDict-35"><span class="linenos"> 35</span></a><span class="sd">        :return: A new dictionary with the specified keys and values.</span>
+</span><span id="SafeDict-36"><a href="#SafeDict-36"><span class="linenos"> 36</span></a><span class="sd">        :rtype: dict</span>
+</span><span id="SafeDict-37"><a href="#SafeDict-37"><span class="linenos"> 37</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-38"><a href="#SafeDict-38"><span class="linenos"> 38</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-39"><a href="#SafeDict-39"><span class="linenos"> 39</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="SafeDict-40"><a href="#SafeDict-40"><span class="linenos"> 40</span></a>
+</span><span id="SafeDict-41"><a href="#SafeDict-41"><span class="linenos"> 41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict-42"><a href="#SafeDict-42"><span class="linenos"> 42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-43"><a href="#SafeDict-43"><span class="linenos"> 43</span></a><span class="sd">        Safely retrieve a value from the dictionary.</span>
+</span><span id="SafeDict-44"><a href="#SafeDict-44"><span class="linenos"> 44</span></a>
+</span><span id="SafeDict-45"><a href="#SafeDict-45"><span class="linenos"> 45</span></a><span class="sd">        :param key: The key to look up.</span>
+</span><span id="SafeDict-46"><a href="#SafeDict-46"><span class="linenos"> 46</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict-47"><a href="#SafeDict-47"><span class="linenos"> 47</span></a><span class="sd">        :param default: The default value if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict-48"><a href="#SafeDict-48"><span class="linenos"> 48</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict-49"><a href="#SafeDict-49"><span class="linenos"> 49</span></a>
+</span><span id="SafeDict-50"><a href="#SafeDict-50"><span class="linenos"> 50</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="SafeDict-51"><a href="#SafeDict-51"><span class="linenos"> 51</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict-52"><a href="#SafeDict-52"><span class="linenos"> 52</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-53"><a href="#SafeDict-53"><span class="linenos"> 53</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-54"><a href="#SafeDict-54"><span class="linenos"> 54</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span id="SafeDict-55"><a href="#SafeDict-55"><span class="linenos"> 55</span></a>
+</span><span id="SafeDict-56"><a href="#SafeDict-56"><span class="linenos"> 56</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict-57"><a href="#SafeDict-57"><span class="linenos"> 57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-58"><a href="#SafeDict-58"><span class="linenos"> 58</span></a><span class="sd">        Return a set-like view of dictionary items (key-value pairs).</span>
+</span><span id="SafeDict-59"><a href="#SafeDict-59"><span class="linenos"> 59</span></a>
+</span><span id="SafeDict-60"><a href="#SafeDict-60"><span class="linenos"> 60</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s items.</span>
+</span><span id="SafeDict-61"><a href="#SafeDict-61"><span class="linenos"> 61</span></a><span class="sd">        :rtype: dict_items</span>
+</span><span id="SafeDict-62"><a href="#SafeDict-62"><span class="linenos"> 62</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-63"><a href="#SafeDict-63"><span class="linenos"> 63</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-64"><a href="#SafeDict-64"><span class="linenos"> 64</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="SafeDict-65"><a href="#SafeDict-65"><span class="linenos"> 65</span></a>
+</span><span id="SafeDict-66"><a href="#SafeDict-66"><span class="linenos"> 66</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict-67"><a href="#SafeDict-67"><span class="linenos"> 67</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-68"><a href="#SafeDict-68"><span class="linenos"> 68</span></a><span class="sd">        Return a set-like view of dictionary keys.</span>
+</span><span id="SafeDict-69"><a href="#SafeDict-69"><span class="linenos"> 69</span></a>
+</span><span id="SafeDict-70"><a href="#SafeDict-70"><span class="linenos"> 70</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s keys.</span>
+</span><span id="SafeDict-71"><a href="#SafeDict-71"><span class="linenos"> 71</span></a><span class="sd">        :rtype: dict_keys</span>
+</span><span id="SafeDict-72"><a href="#SafeDict-72"><span class="linenos"> 72</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-73"><a href="#SafeDict-73"><span class="linenos"> 73</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-74"><a href="#SafeDict-74"><span class="linenos"> 74</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</span><span id="SafeDict-75"><a href="#SafeDict-75"><span class="linenos"> 75</span></a>
+</span><span id="SafeDict-76"><a href="#SafeDict-76"><span class="linenos"> 76</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict-77"><a href="#SafeDict-77"><span class="linenos"> 77</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-78"><a href="#SafeDict-78"><span class="linenos"> 78</span></a><span class="sd">        Remove the specified key and return the corresponding value.</span>
+</span><span id="SafeDict-79"><a href="#SafeDict-79"><span class="linenos"> 79</span></a>
+</span><span id="SafeDict-80"><a href="#SafeDict-80"><span class="linenos"> 80</span></a><span class="sd">        :param key: The key to remove.</span>
+</span><span id="SafeDict-81"><a href="#SafeDict-81"><span class="linenos"> 81</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict-82"><a href="#SafeDict-82"><span class="linenos"> 82</span></a><span class="sd">        :param default: The default value to return if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict-83"><a href="#SafeDict-83"><span class="linenos"> 83</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict-84"><a href="#SafeDict-84"><span class="linenos"> 84</span></a>
+</span><span id="SafeDict-85"><a href="#SafeDict-85"><span class="linenos"> 85</span></a><span class="sd">        :raises KeyError: If the key is not found and no default value is provided.</span>
 </span><span id="SafeDict-86"><a href="#SafeDict-86"><span class="linenos"> 86</span></a>
-</span><span id="SafeDict-87"><a href="#SafeDict-87"><span class="linenos"> 87</span></a><span class="sd">        Args:</span>
-</span><span id="SafeDict-88"><a href="#SafeDict-88"><span class="linenos"> 88</span></a>
-</span><span id="SafeDict-89"><a href="#SafeDict-89"><span class="linenos"> 89</span></a><span class="sd">            m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
-</span><span id="SafeDict-90"><a href="#SafeDict-90"><span class="linenos"> 90</span></a>
-</span><span id="SafeDict-91"><a href="#SafeDict-91"><span class="linenos"> 91</span></a><span class="sd">            **kwargs: Additional key-value pairs to update the dictionary.</span>
+</span><span id="SafeDict-87"><a href="#SafeDict-87"><span class="linenos"> 87</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="SafeDict-88"><a href="#SafeDict-88"><span class="linenos"> 88</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict-89"><a href="#SafeDict-89"><span class="linenos"> 89</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-90"><a href="#SafeDict-90"><span class="linenos"> 90</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-91"><a href="#SafeDict-91"><span class="linenos"> 91</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </span><span id="SafeDict-92"><a href="#SafeDict-92"><span class="linenos"> 92</span></a>
-</span><span id="SafeDict-93"><a href="#SafeDict-93"><span class="linenos"> 93</span></a><span class="sd">        Example:</span>
-</span><span id="SafeDict-94"><a href="#SafeDict-94"><span class="linenos"> 94</span></a>
-</span><span id="SafeDict-95"><a href="#SafeDict-95"><span class="linenos"> 95</span></a><span class="sd">            ```python</span>
-</span><span id="SafeDict-96"><a href="#SafeDict-96"><span class="linenos"> 96</span></a><span class="sd">            safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
-</span><span id="SafeDict-97"><a href="#SafeDict-97"><span class="linenos"> 97</span></a><span class="sd">            safe_dict.update(a=3, c=4)</span>
-</span><span id="SafeDict-98"><a href="#SafeDict-98"><span class="linenos"> 98</span></a><span class="sd">            ```</span>
-</span><span id="SafeDict-99"><a href="#SafeDict-99"><span class="linenos"> 99</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict-100"><a href="#SafeDict-100"><span class="linenos">100</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-101"><a href="#SafeDict-101"><span class="linenos">101</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-</span><span id="SafeDict-102"><a href="#SafeDict-102"><span class="linenos">102</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="SafeDict-103"><a href="#SafeDict-103"><span class="linenos">103</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="SafeDict-104"><a href="#SafeDict-104"><span class="linenos">104</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="SafeDict-105"><a href="#SafeDict-105"><span class="linenos">105</span></a>
-</span><span id="SafeDict-106"><a href="#SafeDict-106"><span class="linenos">106</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict-107"><a href="#SafeDict-107"><span class="linenos">107</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary values.&quot;&quot;&quot;</span>
-</span><span id="SafeDict-108"><a href="#SafeDict-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict-109"><a href="#SafeDict-109"><span class="linenos">109</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span id="SafeDict-93"><a href="#SafeDict-93"><span class="linenos"> 93</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict-94"><a href="#SafeDict-94"><span class="linenos"> 94</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-95"><a href="#SafeDict-95"><span class="linenos"> 95</span></a><span class="sd">        Remove and return the last key-value pair from the dictionary in a thread-safe manner.</span>
+</span><span id="SafeDict-96"><a href="#SafeDict-96"><span class="linenos"> 96</span></a>
+</span><span id="SafeDict-97"><a href="#SafeDict-97"><span class="linenos"> 97</span></a><span class="sd">        :raises KeyError: If the dictionary is empty.</span>
+</span><span id="SafeDict-98"><a href="#SafeDict-98"><span class="linenos"> 98</span></a>
+</span><span id="SafeDict-99"><a href="#SafeDict-99"><span class="linenos"> 99</span></a><span class="sd">        :return: The last key-value pair removed from the dictionary.</span>
+</span><span id="SafeDict-100"><a href="#SafeDict-100"><span class="linenos">100</span></a><span class="sd">        :rtype: tuple</span>
+</span><span id="SafeDict-101"><a href="#SafeDict-101"><span class="linenos">101</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-102"><a href="#SafeDict-102"><span class="linenos">102</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-103"><a href="#SafeDict-103"><span class="linenos">103</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+</span><span id="SafeDict-104"><a href="#SafeDict-104"><span class="linenos">104</span></a>
+</span><span id="SafeDict-105"><a href="#SafeDict-105"><span class="linenos">105</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict-106"><a href="#SafeDict-106"><span class="linenos">106</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-107"><a href="#SafeDict-107"><span class="linenos">107</span></a><span class="sd">        Retrieve the value for a given key if it exists; otherwise, insert the key with the provided default value.</span>
+</span><span id="SafeDict-108"><a href="#SafeDict-108"><span class="linenos">108</span></a>
+</span><span id="SafeDict-109"><a href="#SafeDict-109"><span class="linenos">109</span></a><span class="sd">        :param key: The key to look up in the dictionary.</span>
+</span><span id="SafeDict-110"><a href="#SafeDict-110"><span class="linenos">110</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict-111"><a href="#SafeDict-111"><span class="linenos">111</span></a><span class="sd">        :param default: The value to set if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict-112"><a href="#SafeDict-112"><span class="linenos">112</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict-113"><a href="#SafeDict-113"><span class="linenos">113</span></a>
+</span><span id="SafeDict-114"><a href="#SafeDict-114"><span class="linenos">114</span></a><span class="sd">        :return: The value associated with the key if it exists; otherwise, the default value that was set.</span>
+</span><span id="SafeDict-115"><a href="#SafeDict-115"><span class="linenos">115</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict-116"><a href="#SafeDict-116"><span class="linenos">116</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-117"><a href="#SafeDict-117"><span class="linenos">117</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-118"><a href="#SafeDict-118"><span class="linenos">118</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+</span><span id="SafeDict-119"><a href="#SafeDict-119"><span class="linenos">119</span></a>
+</span><span id="SafeDict-120"><a href="#SafeDict-120"><span class="linenos">120</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="SafeDict-121"><a href="#SafeDict-121"><span class="linenos">121</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-122"><a href="#SafeDict-122"><span class="linenos">122</span></a><span class="sd">        Update the dictionary with key-value pairs from another dictionary or iterable of key-value pairs.</span>
+</span><span id="SafeDict-123"><a href="#SafeDict-123"><span class="linenos">123</span></a>
+</span><span id="SafeDict-124"><a href="#SafeDict-124"><span class="linenos">124</span></a><span class="sd">        :param m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
+</span><span id="SafeDict-125"><a href="#SafeDict-125"><span class="linenos">125</span></a><span class="sd">        :type m: dict or Iterable, optional</span>
+</span><span id="SafeDict-126"><a href="#SafeDict-126"><span class="linenos">126</span></a><span class="sd">        :param kwargs: Additional key-value pairs to update the dictionary.</span>
+</span><span id="SafeDict-127"><a href="#SafeDict-127"><span class="linenos">127</span></a><span class="sd">        :type kwargs: dict</span>
+</span><span id="SafeDict-128"><a href="#SafeDict-128"><span class="linenos">128</span></a>
+</span><span id="SafeDict-129"><a href="#SafeDict-129"><span class="linenos">129</span></a><span class="sd">        **Example:**</span>
+</span><span id="SafeDict-130"><a href="#SafeDict-130"><span class="linenos">130</span></a>
+</span><span id="SafeDict-131"><a href="#SafeDict-131"><span class="linenos">131</span></a><span class="sd">        ```python</span>
+</span><span id="SafeDict-132"><a href="#SafeDict-132"><span class="linenos">132</span></a><span class="sd">        safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
+</span><span id="SafeDict-133"><a href="#SafeDict-133"><span class="linenos">133</span></a><span class="sd">        safe_dict.update(a=3, c=4)</span>
+</span><span id="SafeDict-134"><a href="#SafeDict-134"><span class="linenos">134</span></a><span class="sd">        ```</span>
+</span><span id="SafeDict-135"><a href="#SafeDict-135"><span class="linenos">135</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-136"><a href="#SafeDict-136"><span class="linenos">136</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-137"><a href="#SafeDict-137"><span class="linenos">137</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+</span><span id="SafeDict-138"><a href="#SafeDict-138"><span class="linenos">138</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="SafeDict-139"><a href="#SafeDict-139"><span class="linenos">139</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="SafeDict-140"><a href="#SafeDict-140"><span class="linenos">140</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="SafeDict-141"><a href="#SafeDict-141"><span class="linenos">141</span></a>
+</span><span id="SafeDict-142"><a href="#SafeDict-142"><span class="linenos">142</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict-143"><a href="#SafeDict-143"><span class="linenos">143</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict-144"><a href="#SafeDict-144"><span class="linenos">144</span></a><span class="sd">        Return a set-like view of dictionary values.</span>
+</span><span id="SafeDict-145"><a href="#SafeDict-145"><span class="linenos">145</span></a>
+</span><span id="SafeDict-146"><a href="#SafeDict-146"><span class="linenos">146</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s values.</span>
+</span><span id="SafeDict-147"><a href="#SafeDict-147"><span class="linenos">147</span></a><span class="sd">        :rtype: dict_values</span>
+</span><span id="SafeDict-148"><a href="#SafeDict-148"><span class="linenos">148</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict-149"><a href="#SafeDict-149"><span class="linenos">149</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict-150"><a href="#SafeDict-150"><span class="linenos">150</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access 
+            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access
 in multithreaded environments using locking mechanisms.</p>
 </div>
 
@@ -334,14 +416,25 @@ in multithreaded environments using locking mechanisms.</p>
     </div>
     <a class="headerlink" href="#SafeDict.__init__"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.__init__-8"><a href="#SafeDict.__init__-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict.__init__-9"><a href="#SafeDict.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared dictionary with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.__init__-10"><a href="#SafeDict.__init__-10"><span class="linenos">10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
-</span><span id="SafeDict.__init__-11"><a href="#SafeDict.__init__-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeDict.__init__-12"><a href="#SafeDict.__init__-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
+</span><span id="SafeDict.__init__-9"><a href="#SafeDict.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.__init__-10"><a href="#SafeDict.__init__-10"><span class="linenos">10</span></a><span class="sd">        Initialize a shared dictionary with a Lock for thread safety.</span>
+</span><span id="SafeDict.__init__-11"><a href="#SafeDict.__init__-11"><span class="linenos">11</span></a>
+</span><span id="SafeDict.__init__-12"><a href="#SafeDict.__init__-12"><span class="linenos">12</span></a><span class="sd">        :param data: Initial data to populate the dictionary. Defaults to None.</span>
+</span><span id="SafeDict.__init__-13"><a href="#SafeDict.__init__-13"><span class="linenos">13</span></a><span class="sd">        :type data: dict or Iterable, optional</span>
+</span><span id="SafeDict.__init__-14"><a href="#SafeDict.__init__-14"><span class="linenos">14</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.__init__-15"><a href="#SafeDict.__init__-15"><span class="linenos">15</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">{})</span>
+</span><span id="SafeDict.__init__-16"><a href="#SafeDict.__init__-16"><span class="linenos">16</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeDict.__init__-17"><a href="#SafeDict.__init__-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">dict</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Initialize a shared dictionary with a Lock for thread safety.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>data</strong>:  Initial data to populate the dictionary. Defaults to None.</li>
+</ul>
 </div>
 
 
@@ -357,10 +450,12 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.clear"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.clear-14"><a href="#SafeDict.clear-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict.clear-15"><a href="#SafeDict.clear-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely clear the dictionary.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.clear-16"><a href="#SafeDict.clear-16"><span class="linenos">16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.clear-17"><a href="#SafeDict.clear-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.clear-19"><a href="#SafeDict.clear-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict.clear-20"><a href="#SafeDict.clear-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.clear-21"><a href="#SafeDict.clear-21"><span class="linenos">21</span></a><span class="sd">        Safely clear the dictionary.</span>
+</span><span id="SafeDict.clear-22"><a href="#SafeDict.clear-22"><span class="linenos">22</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.clear-23"><a href="#SafeDict.clear-23"><span class="linenos">23</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.clear-24"><a href="#SafeDict.clear-24"><span class="linenos">24</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -380,14 +475,37 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.fromkeys"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.fromkeys-19"><a href="#SafeDict.fromkeys-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict.fromkeys-20"><a href="#SafeDict.fromkeys-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new dictionary with keys from iterable and values set to value.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.fromkeys-21"><a href="#SafeDict.fromkeys-21"><span class="linenos">21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.fromkeys-22"><a href="#SafeDict.fromkeys-22"><span class="linenos">22</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.fromkeys-26"><a href="#SafeDict.fromkeys-26"><span class="linenos">26</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict.fromkeys-27"><a href="#SafeDict.fromkeys-27"><span class="linenos">27</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.fromkeys-28"><a href="#SafeDict.fromkeys-28"><span class="linenos">28</span></a><span class="sd">        Create a new dictionary with keys from an iterable and values set to a specified value.</span>
+</span><span id="SafeDict.fromkeys-29"><a href="#SafeDict.fromkeys-29"><span class="linenos">29</span></a>
+</span><span id="SafeDict.fromkeys-30"><a href="#SafeDict.fromkeys-30"><span class="linenos">30</span></a><span class="sd">        :param iterable: Iterable containing the keys for the new dictionary.</span>
+</span><span id="SafeDict.fromkeys-31"><a href="#SafeDict.fromkeys-31"><span class="linenos">31</span></a><span class="sd">        :type iterable: Iterable</span>
+</span><span id="SafeDict.fromkeys-32"><a href="#SafeDict.fromkeys-32"><span class="linenos">32</span></a><span class="sd">        :param value: Value assigned to each key. Defaults to None.</span>
+</span><span id="SafeDict.fromkeys-33"><a href="#SafeDict.fromkeys-33"><span class="linenos">33</span></a><span class="sd">        :type value: Any, optional</span>
+</span><span id="SafeDict.fromkeys-34"><a href="#SafeDict.fromkeys-34"><span class="linenos">34</span></a>
+</span><span id="SafeDict.fromkeys-35"><a href="#SafeDict.fromkeys-35"><span class="linenos">35</span></a><span class="sd">        :return: A new dictionary with the specified keys and values.</span>
+</span><span id="SafeDict.fromkeys-36"><a href="#SafeDict.fromkeys-36"><span class="linenos">36</span></a><span class="sd">        :rtype: dict</span>
+</span><span id="SafeDict.fromkeys-37"><a href="#SafeDict.fromkeys-37"><span class="linenos">37</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.fromkeys-38"><a href="#SafeDict.fromkeys-38"><span class="linenos">38</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.fromkeys-39"><a href="#SafeDict.fromkeys-39"><span class="linenos">39</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Create a new dictionary with keys from iterable and values set to value.</p>
+            <div class="docstring"><p>Create a new dictionary with keys from an iterable and values set to a specified value.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>iterable</strong>:  Iterable containing the keys for the new dictionary.</li>
+<li><strong>value</strong>:  Value assigned to each key. Defaults to None.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A new dictionary with the specified keys and values.</p>
+</blockquote>
 </div>
 
 
@@ -403,14 +521,37 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.get"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.get-24"><a href="#SafeDict.get-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict.get-25"><a href="#SafeDict.get-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Safely retrieve a value from the dictionary.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.get-26"><a href="#SafeDict.get-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.get-27"><a href="#SafeDict.get-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.get-41"><a href="#SafeDict.get-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict.get-42"><a href="#SafeDict.get-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.get-43"><a href="#SafeDict.get-43"><span class="linenos">43</span></a><span class="sd">        Safely retrieve a value from the dictionary.</span>
+</span><span id="SafeDict.get-44"><a href="#SafeDict.get-44"><span class="linenos">44</span></a>
+</span><span id="SafeDict.get-45"><a href="#SafeDict.get-45"><span class="linenos">45</span></a><span class="sd">        :param key: The key to look up.</span>
+</span><span id="SafeDict.get-46"><a href="#SafeDict.get-46"><span class="linenos">46</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict.get-47"><a href="#SafeDict.get-47"><span class="linenos">47</span></a><span class="sd">        :param default: The default value if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict.get-48"><a href="#SafeDict.get-48"><span class="linenos">48</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict.get-49"><a href="#SafeDict.get-49"><span class="linenos">49</span></a>
+</span><span id="SafeDict.get-50"><a href="#SafeDict.get-50"><span class="linenos">50</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="SafeDict.get-51"><a href="#SafeDict.get-51"><span class="linenos">51</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict.get-52"><a href="#SafeDict.get-52"><span class="linenos">52</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.get-53"><a href="#SafeDict.get-53"><span class="linenos">53</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.get-54"><a href="#SafeDict.get-54"><span class="linenos">54</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Safely retrieve a value from the dictionary.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>key</strong>:  The key to look up.</li>
+<li><strong>default</strong>:  The default value if the key is not found. Defaults to None.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>The value associated with the key, or the default value.</p>
+</blockquote>
 </div>
 
 
@@ -426,14 +567,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.items"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.items-29"><a href="#SafeDict.items-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict.items-30"><a href="#SafeDict.items-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary items (key-value pairs).&quot;&quot;&quot;</span>
-</span><span id="SafeDict.items-31"><a href="#SafeDict.items-31"><span class="linenos">31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.items-32"><a href="#SafeDict.items-32"><span class="linenos">32</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.items-56"><a href="#SafeDict.items-56"><span class="linenos">56</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict.items-57"><a href="#SafeDict.items-57"><span class="linenos">57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.items-58"><a href="#SafeDict.items-58"><span class="linenos">58</span></a><span class="sd">        Return a set-like view of dictionary items (key-value pairs).</span>
+</span><span id="SafeDict.items-59"><a href="#SafeDict.items-59"><span class="linenos">59</span></a>
+</span><span id="SafeDict.items-60"><a href="#SafeDict.items-60"><span class="linenos">60</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s items.</span>
+</span><span id="SafeDict.items-61"><a href="#SafeDict.items-61"><span class="linenos">61</span></a><span class="sd">        :rtype: dict_items</span>
+</span><span id="SafeDict.items-62"><a href="#SafeDict.items-62"><span class="linenos">62</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.items-63"><a href="#SafeDict.items-63"><span class="linenos">63</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.items-64"><a href="#SafeDict.items-64"><span class="linenos">64</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Return a set-like of dictionary items (key-value pairs).</p>
+            <div class="docstring"><p>Return a set-like view of dictionary items (key-value pairs).</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A view object displaying the dictionary's items.</p>
+</blockquote>
 </div>
 
 
@@ -449,14 +601,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.keys"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.keys-34"><a href="#SafeDict.keys-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict.keys-35"><a href="#SafeDict.keys-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary keys.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.keys-36"><a href="#SafeDict.keys-36"><span class="linenos">36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.keys-37"><a href="#SafeDict.keys-37"><span class="linenos">37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.keys-66"><a href="#SafeDict.keys-66"><span class="linenos">66</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict.keys-67"><a href="#SafeDict.keys-67"><span class="linenos">67</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.keys-68"><a href="#SafeDict.keys-68"><span class="linenos">68</span></a><span class="sd">        Return a set-like view of dictionary keys.</span>
+</span><span id="SafeDict.keys-69"><a href="#SafeDict.keys-69"><span class="linenos">69</span></a>
+</span><span id="SafeDict.keys-70"><a href="#SafeDict.keys-70"><span class="linenos">70</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s keys.</span>
+</span><span id="SafeDict.keys-71"><a href="#SafeDict.keys-71"><span class="linenos">71</span></a><span class="sd">        :rtype: dict_keys</span>
+</span><span id="SafeDict.keys-72"><a href="#SafeDict.keys-72"><span class="linenos">72</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.keys-73"><a href="#SafeDict.keys-73"><span class="linenos">73</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.keys-74"><a href="#SafeDict.keys-74"><span class="linenos">74</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Return a set-like of dictionary keys.</p>
+            <div class="docstring"><p>Return a set-like view of dictionary keys.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A view object displaying the dictionary's keys.</p>
+</blockquote>
 </div>
 
 
@@ -472,22 +635,45 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.pop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.pop-39"><a href="#SafeDict.pop-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict.pop-40"><a href="#SafeDict.pop-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict.pop-41"><a href="#SafeDict.pop-41"><span class="linenos">41</span></a><span class="sd">        D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.</span>
-</span><span id="SafeDict.pop-42"><a href="#SafeDict.pop-42"><span class="linenos">42</span></a>
-</span><span id="SafeDict.pop-43"><a href="#SafeDict.pop-43"><span class="linenos">43</span></a><span class="sd">        If the key is not found, return the default if given; otherwise,</span>
-</span><span id="SafeDict.pop-44"><a href="#SafeDict.pop-44"><span class="linenos">44</span></a><span class="sd">        raise a KeyError.</span>
-</span><span id="SafeDict.pop-45"><a href="#SafeDict.pop-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict.pop-46"><a href="#SafeDict.pop-46"><span class="linenos">46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.pop-47"><a href="#SafeDict.pop-47"><span class="linenos">47</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.pop-76"><a href="#SafeDict.pop-76"><span class="linenos">76</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict.pop-77"><a href="#SafeDict.pop-77"><span class="linenos">77</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.pop-78"><a href="#SafeDict.pop-78"><span class="linenos">78</span></a><span class="sd">        Remove the specified key and return the corresponding value.</span>
+</span><span id="SafeDict.pop-79"><a href="#SafeDict.pop-79"><span class="linenos">79</span></a>
+</span><span id="SafeDict.pop-80"><a href="#SafeDict.pop-80"><span class="linenos">80</span></a><span class="sd">        :param key: The key to remove.</span>
+</span><span id="SafeDict.pop-81"><a href="#SafeDict.pop-81"><span class="linenos">81</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict.pop-82"><a href="#SafeDict.pop-82"><span class="linenos">82</span></a><span class="sd">        :param default: The default value to return if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict.pop-83"><a href="#SafeDict.pop-83"><span class="linenos">83</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict.pop-84"><a href="#SafeDict.pop-84"><span class="linenos">84</span></a>
+</span><span id="SafeDict.pop-85"><a href="#SafeDict.pop-85"><span class="linenos">85</span></a><span class="sd">        :raises KeyError: If the key is not found and no default value is provided.</span>
+</span><span id="SafeDict.pop-86"><a href="#SafeDict.pop-86"><span class="linenos">86</span></a>
+</span><span id="SafeDict.pop-87"><a href="#SafeDict.pop-87"><span class="linenos">87</span></a><span class="sd">        :return: The value associated with the key, or the default value.</span>
+</span><span id="SafeDict.pop-88"><a href="#SafeDict.pop-88"><span class="linenos">88</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict.pop-89"><a href="#SafeDict.pop-89"><span class="linenos">89</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.pop-90"><a href="#SafeDict.pop-90"><span class="linenos">90</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.pop-91"><a href="#SafeDict.pop-91"><span class="linenos">91</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>D.pop(k[,d]) -> v, remove specified key and return the corresponding value.</p>
+            <div class="docstring"><p>Remove the specified key and return the corresponding value.</p>
 
-<p>If the key is not found, return the default if given; otherwise,
-raise a KeyError.</p>
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>key</strong>:  The key to remove.</li>
+<li><strong>default</strong>:  The default value to return if the key is not found. Defaults to None.</li>
+</ul>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>KeyError</strong>:  If the key is not found and no default value is provided.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>The value associated with the key, or the default value.</p>
+</blockquote>
 </div>
 
 
@@ -503,34 +689,33 @@ raise a KeyError.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.popitem"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.popitem-49"><a href="#SafeDict.popitem-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict.popitem-50"><a href="#SafeDict.popitem-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict.popitem-51"><a href="#SafeDict.popitem-51"><span class="linenos">51</span></a><span class="sd">        Removes and returns the last key-value pair from the dictionary in a thread-safe manner.</span>
-</span><span id="SafeDict.popitem-52"><a href="#SafeDict.popitem-52"><span class="linenos">52</span></a>
-</span><span id="SafeDict.popitem-53"><a href="#SafeDict.popitem-53"><span class="linenos">53</span></a><span class="sd">        Returns:</span>
-</span><span id="SafeDict.popitem-54"><a href="#SafeDict.popitem-54"><span class="linenos">54</span></a>
-</span><span id="SafeDict.popitem-55"><a href="#SafeDict.popitem-55"><span class="linenos">55</span></a><span class="sd">            tuple: The last key-value pair removed from the dictionary.</span>
-</span><span id="SafeDict.popitem-56"><a href="#SafeDict.popitem-56"><span class="linenos">56</span></a>
-</span><span id="SafeDict.popitem-57"><a href="#SafeDict.popitem-57"><span class="linenos">57</span></a><span class="sd">        Raises:</span>
-</span><span id="SafeDict.popitem-58"><a href="#SafeDict.popitem-58"><span class="linenos">58</span></a>
-</span><span id="SafeDict.popitem-59"><a href="#SafeDict.popitem-59"><span class="linenos">59</span></a><span class="sd">            KeyError: If the dictionary is empty.</span>
-</span><span id="SafeDict.popitem-60"><a href="#SafeDict.popitem-60"><span class="linenos">60</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict.popitem-61"><a href="#SafeDict.popitem-61"><span class="linenos">61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.popitem-62"><a href="#SafeDict.popitem-62"><span class="linenos">62</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.popitem-93"><a href="#SafeDict.popitem-93"><span class="linenos"> 93</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict.popitem-94"><a href="#SafeDict.popitem-94"><span class="linenos"> 94</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.popitem-95"><a href="#SafeDict.popitem-95"><span class="linenos"> 95</span></a><span class="sd">        Remove and return the last key-value pair from the dictionary in a thread-safe manner.</span>
+</span><span id="SafeDict.popitem-96"><a href="#SafeDict.popitem-96"><span class="linenos"> 96</span></a>
+</span><span id="SafeDict.popitem-97"><a href="#SafeDict.popitem-97"><span class="linenos"> 97</span></a><span class="sd">        :raises KeyError: If the dictionary is empty.</span>
+</span><span id="SafeDict.popitem-98"><a href="#SafeDict.popitem-98"><span class="linenos"> 98</span></a>
+</span><span id="SafeDict.popitem-99"><a href="#SafeDict.popitem-99"><span class="linenos"> 99</span></a><span class="sd">        :return: The last key-value pair removed from the dictionary.</span>
+</span><span id="SafeDict.popitem-100"><a href="#SafeDict.popitem-100"><span class="linenos">100</span></a><span class="sd">        :rtype: tuple</span>
+</span><span id="SafeDict.popitem-101"><a href="#SafeDict.popitem-101"><span class="linenos">101</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.popitem-102"><a href="#SafeDict.popitem-102"><span class="linenos">102</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.popitem-103"><a href="#SafeDict.popitem-103"><span class="linenos">103</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Removes and returns the last key-value pair from the dictionary in a thread-safe manner.</p>
+            <div class="docstring"><p>Remove and return the last key-value pair from the dictionary in a thread-safe manner.</p>
 
-<p>Returns:</p>
+<h6 id="raises">Raises</h6>
 
-<pre><code>tuple: The last key-value pair removed from the dictionary.
-</code></pre>
+<ul>
+<li><strong>KeyError</strong>:  If the dictionary is empty.</li>
+</ul>
 
-<p>Raises:</p>
+<h6 id="returns">Returns</h6>
 
-<pre><code>KeyError: If the dictionary is empty.
-</code></pre>
+<blockquote>
+  <p>The last key-value pair removed from the dictionary.</p>
+</blockquote>
 </div>
 
 
@@ -546,40 +731,37 @@ raise a KeyError.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.setdefault"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.setdefault-64"><a href="#SafeDict.setdefault-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeDict.setdefault-65"><a href="#SafeDict.setdefault-65"><span class="linenos">65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict.setdefault-66"><a href="#SafeDict.setdefault-66"><span class="linenos">66</span></a><span class="sd">        Retrieves the value for a given key if it exists; otherwise, inserts the key with the provided default value </span>
-</span><span id="SafeDict.setdefault-67"><a href="#SafeDict.setdefault-67"><span class="linenos">67</span></a><span class="sd">        in a thread-safe manner.</span>
-</span><span id="SafeDict.setdefault-68"><a href="#SafeDict.setdefault-68"><span class="linenos">68</span></a>
-</span><span id="SafeDict.setdefault-69"><a href="#SafeDict.setdefault-69"><span class="linenos">69</span></a><span class="sd">        Args:</span>
-</span><span id="SafeDict.setdefault-70"><a href="#SafeDict.setdefault-70"><span class="linenos">70</span></a>
-</span><span id="SafeDict.setdefault-71"><a href="#SafeDict.setdefault-71"><span class="linenos">71</span></a><span class="sd">            key: The key to look up in the dictionary.</span>
-</span><span id="SafeDict.setdefault-72"><a href="#SafeDict.setdefault-72"><span class="linenos">72</span></a>
-</span><span id="SafeDict.setdefault-73"><a href="#SafeDict.setdefault-73"><span class="linenos">73</span></a><span class="sd">            default (optional): The value to set if the key is not found. Defaults to None.</span>
-</span><span id="SafeDict.setdefault-74"><a href="#SafeDict.setdefault-74"><span class="linenos">74</span></a>
-</span><span id="SafeDict.setdefault-75"><a href="#SafeDict.setdefault-75"><span class="linenos">75</span></a><span class="sd">        Returns:</span>
-</span><span id="SafeDict.setdefault-76"><a href="#SafeDict.setdefault-76"><span class="linenos">76</span></a>
-</span><span id="SafeDict.setdefault-77"><a href="#SafeDict.setdefault-77"><span class="linenos">77</span></a><span class="sd">            The value associated with the key if it exists; otherwise, the default value that was set.</span>
-</span><span id="SafeDict.setdefault-78"><a href="#SafeDict.setdefault-78"><span class="linenos">78</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict.setdefault-79"><a href="#SafeDict.setdefault-79"><span class="linenos">79</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.setdefault-80"><a href="#SafeDict.setdefault-80"><span class="linenos">80</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.setdefault-105"><a href="#SafeDict.setdefault-105"><span class="linenos">105</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeDict.setdefault-106"><a href="#SafeDict.setdefault-106"><span class="linenos">106</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.setdefault-107"><a href="#SafeDict.setdefault-107"><span class="linenos">107</span></a><span class="sd">        Retrieve the value for a given key if it exists; otherwise, insert the key with the provided default value.</span>
+</span><span id="SafeDict.setdefault-108"><a href="#SafeDict.setdefault-108"><span class="linenos">108</span></a>
+</span><span id="SafeDict.setdefault-109"><a href="#SafeDict.setdefault-109"><span class="linenos">109</span></a><span class="sd">        :param key: The key to look up in the dictionary.</span>
+</span><span id="SafeDict.setdefault-110"><a href="#SafeDict.setdefault-110"><span class="linenos">110</span></a><span class="sd">        :type key: Any</span>
+</span><span id="SafeDict.setdefault-111"><a href="#SafeDict.setdefault-111"><span class="linenos">111</span></a><span class="sd">        :param default: The value to set if the key is not found. Defaults to None.</span>
+</span><span id="SafeDict.setdefault-112"><a href="#SafeDict.setdefault-112"><span class="linenos">112</span></a><span class="sd">        :type default: Any, optional</span>
+</span><span id="SafeDict.setdefault-113"><a href="#SafeDict.setdefault-113"><span class="linenos">113</span></a>
+</span><span id="SafeDict.setdefault-114"><a href="#SafeDict.setdefault-114"><span class="linenos">114</span></a><span class="sd">        :return: The value associated with the key if it exists; otherwise, the default value that was set.</span>
+</span><span id="SafeDict.setdefault-115"><a href="#SafeDict.setdefault-115"><span class="linenos">115</span></a><span class="sd">        :rtype: Any</span>
+</span><span id="SafeDict.setdefault-116"><a href="#SafeDict.setdefault-116"><span class="linenos">116</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.setdefault-117"><a href="#SafeDict.setdefault-117"><span class="linenos">117</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.setdefault-118"><a href="#SafeDict.setdefault-118"><span class="linenos">118</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Retrieves the value for a given key if it exists; otherwise, inserts the key with the provided default value 
-in a thread-safe manner.</p>
+            <div class="docstring"><p>Retrieve the value for a given key if it exists; otherwise, insert the key with the provided default value.</p>
 
-<p>Args:</p>
+<h6 id="parameters">Parameters</h6>
 
-<pre><code>key: The key to look up in the dictionary.
+<ul>
+<li><strong>key</strong>:  The key to look up in the dictionary.</li>
+<li><strong>default</strong>:  The value to set if the key is not found. Defaults to None.</li>
+</ul>
 
-default (optional): The value to set if the key is not found. Defaults to None.
-</code></pre>
+<h6 id="returns">Returns</h6>
 
-<p>Returns:</p>
-
-<pre><code>The value associated with the key if it exists; otherwise, the default value that was set.
-</code></pre>
+<blockquote>
+  <p>The value associated with the key if it exists; otherwise, the default value that was set.</p>
+</blockquote>
 </div>
 
 
@@ -595,50 +777,46 @@ default (optional): The value to set if the key is not found. Defaults to None.
 
     </div>
     <a class="headerlink" href="#SafeDict.update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.update-82"><a href="#SafeDict.update-82"><span class="linenos"> 82</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="SafeDict.update-83"><a href="#SafeDict.update-83"><span class="linenos"> 83</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="SafeDict.update-84"><a href="#SafeDict.update-84"><span class="linenos"> 84</span></a><span class="sd">        Updates the dictionary with key-value pairs from another dictionary or iterable of key-value pairs, </span>
-</span><span id="SafeDict.update-85"><a href="#SafeDict.update-85"><span class="linenos"> 85</span></a><span class="sd">        in a thread-safe manner.</span>
-</span><span id="SafeDict.update-86"><a href="#SafeDict.update-86"><span class="linenos"> 86</span></a>
-</span><span id="SafeDict.update-87"><a href="#SafeDict.update-87"><span class="linenos"> 87</span></a><span class="sd">        Args:</span>
-</span><span id="SafeDict.update-88"><a href="#SafeDict.update-88"><span class="linenos"> 88</span></a>
-</span><span id="SafeDict.update-89"><a href="#SafeDict.update-89"><span class="linenos"> 89</span></a><span class="sd">            m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
-</span><span id="SafeDict.update-90"><a href="#SafeDict.update-90"><span class="linenos"> 90</span></a>
-</span><span id="SafeDict.update-91"><a href="#SafeDict.update-91"><span class="linenos"> 91</span></a><span class="sd">            **kwargs: Additional key-value pairs to update the dictionary.</span>
-</span><span id="SafeDict.update-92"><a href="#SafeDict.update-92"><span class="linenos"> 92</span></a>
-</span><span id="SafeDict.update-93"><a href="#SafeDict.update-93"><span class="linenos"> 93</span></a><span class="sd">        Example:</span>
-</span><span id="SafeDict.update-94"><a href="#SafeDict.update-94"><span class="linenos"> 94</span></a>
-</span><span id="SafeDict.update-95"><a href="#SafeDict.update-95"><span class="linenos"> 95</span></a><span class="sd">            ```python</span>
-</span><span id="SafeDict.update-96"><a href="#SafeDict.update-96"><span class="linenos"> 96</span></a><span class="sd">            safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
-</span><span id="SafeDict.update-97"><a href="#SafeDict.update-97"><span class="linenos"> 97</span></a><span class="sd">            safe_dict.update(a=3, c=4)</span>
-</span><span id="SafeDict.update-98"><a href="#SafeDict.update-98"><span class="linenos"> 98</span></a><span class="sd">            ```</span>
-</span><span id="SafeDict.update-99"><a href="#SafeDict.update-99"><span class="linenos"> 99</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="SafeDict.update-100"><a href="#SafeDict.update-100"><span class="linenos">100</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.update-101"><a href="#SafeDict.update-101"><span class="linenos">101</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-</span><span id="SafeDict.update-102"><a href="#SafeDict.update-102"><span class="linenos">102</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="SafeDict.update-103"><a href="#SafeDict.update-103"><span class="linenos">103</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="SafeDict.update-104"><a href="#SafeDict.update-104"><span class="linenos">104</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.update-120"><a href="#SafeDict.update-120"><span class="linenos">120</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="SafeDict.update-121"><a href="#SafeDict.update-121"><span class="linenos">121</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.update-122"><a href="#SafeDict.update-122"><span class="linenos">122</span></a><span class="sd">        Update the dictionary with key-value pairs from another dictionary or iterable of key-value pairs.</span>
+</span><span id="SafeDict.update-123"><a href="#SafeDict.update-123"><span class="linenos">123</span></a>
+</span><span id="SafeDict.update-124"><a href="#SafeDict.update-124"><span class="linenos">124</span></a><span class="sd">        :param m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</span>
+</span><span id="SafeDict.update-125"><a href="#SafeDict.update-125"><span class="linenos">125</span></a><span class="sd">        :type m: dict or Iterable, optional</span>
+</span><span id="SafeDict.update-126"><a href="#SafeDict.update-126"><span class="linenos">126</span></a><span class="sd">        :param kwargs: Additional key-value pairs to update the dictionary.</span>
+</span><span id="SafeDict.update-127"><a href="#SafeDict.update-127"><span class="linenos">127</span></a><span class="sd">        :type kwargs: dict</span>
+</span><span id="SafeDict.update-128"><a href="#SafeDict.update-128"><span class="linenos">128</span></a>
+</span><span id="SafeDict.update-129"><a href="#SafeDict.update-129"><span class="linenos">129</span></a><span class="sd">        **Example:**</span>
+</span><span id="SafeDict.update-130"><a href="#SafeDict.update-130"><span class="linenos">130</span></a>
+</span><span id="SafeDict.update-131"><a href="#SafeDict.update-131"><span class="linenos">131</span></a><span class="sd">        ```python</span>
+</span><span id="SafeDict.update-132"><a href="#SafeDict.update-132"><span class="linenos">132</span></a><span class="sd">        safe_dict.update({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
+</span><span id="SafeDict.update-133"><a href="#SafeDict.update-133"><span class="linenos">133</span></a><span class="sd">        safe_dict.update(a=3, c=4)</span>
+</span><span id="SafeDict.update-134"><a href="#SafeDict.update-134"><span class="linenos">134</span></a><span class="sd">        ```</span>
+</span><span id="SafeDict.update-135"><a href="#SafeDict.update-135"><span class="linenos">135</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.update-136"><a href="#SafeDict.update-136"><span class="linenos">136</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.update-137"><a href="#SafeDict.update-137"><span class="linenos">137</span></a>            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+</span><span id="SafeDict.update-138"><a href="#SafeDict.update-138"><span class="linenos">138</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="SafeDict.update-139"><a href="#SafeDict.update-139"><span class="linenos">139</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="SafeDict.update-140"><a href="#SafeDict.update-140"><span class="linenos">140</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Updates the dictionary with key-value pairs from another dictionary or iterable of key-value pairs, 
-in a thread-safe manner.</p>
+            <div class="docstring"><p>Update the dictionary with key-value pairs from another dictionary or iterable of key-value pairs.</p>
 
-<p>Args:</p>
+<h6 id="parameters">Parameters</h6>
 
-<pre><code>m: A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.
+<ul>
+<li><strong>m</strong>:  A dictionary or an iterable of key-value pairs (e.g., list of tuples) to update the dictionary with.</li>
+<li><strong>kwargs</strong>:  Additional key-value pairs to update the dictionary.</li>
+</ul>
 
-**kwargs: Additional key-value pairs to update the dictionary.
-</code></pre>
+<p><strong>Example:</strong></p>
 
-<p>Example:</p>
-
-<pre><code><div class="pdoc-code codehilite">
+<div class="pdoc-code codehilite">
 <pre><span></span><code><span class="n">safe_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 <span class="n">safe_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </code></pre>
 </div>
-</code></pre>
 </div>
 
 
@@ -654,14 +832,25 @@ in a thread-safe manner.</p>
 
     </div>
     <a class="headerlink" href="#SafeDict.values"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.values-106"><a href="#SafeDict.values-106"><span class="linenos">106</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeDict.values-107"><a href="#SafeDict.values-107"><span class="linenos">107</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a set-like of dictionary values.&quot;&quot;&quot;</span>
-</span><span id="SafeDict.values-108"><a href="#SafeDict.values-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeDict.values-109"><a href="#SafeDict.values-109"><span class="linenos">109</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeDict.values-142"><a href="#SafeDict.values-142"><span class="linenos">142</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeDict.values-143"><a href="#SafeDict.values-143"><span class="linenos">143</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeDict.values-144"><a href="#SafeDict.values-144"><span class="linenos">144</span></a><span class="sd">        Return a set-like view of dictionary values.</span>
+</span><span id="SafeDict.values-145"><a href="#SafeDict.values-145"><span class="linenos">145</span></a>
+</span><span id="SafeDict.values-146"><a href="#SafeDict.values-146"><span class="linenos">146</span></a><span class="sd">        :return: A view object displaying the dictionary&#39;s values.</span>
+</span><span id="SafeDict.values-147"><a href="#SafeDict.values-147"><span class="linenos">147</span></a><span class="sd">        :rtype: dict_values</span>
+</span><span id="SafeDict.values-148"><a href="#SafeDict.values-148"><span class="linenos">148</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeDict.values-149"><a href="#SafeDict.values-149"><span class="linenos">149</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeDict.values-150"><a href="#SafeDict.values-150"><span class="linenos">150</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Return a set-like of dictionary values.</p>
+            <div class="docstring"><p>Return a set-like view of dictionary values.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A view object displaying the dictionary's values.</p>
+</blockquote>
 </div>
 
 

@@ -67,9 +67,18 @@
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeTuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">SafeBaseObj</span><span class="p">):</span>
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared tuple with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">        Initialize a shared tuple with a Lock for thread safety.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">        If a `tuple` is provided, it is used as the initial data.</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">        If an iterable is provided, it is converted into a tuple.</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">        If no argument is provided, an empty tuple is used.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        :param data: The initial data to populate the tuple with.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        :type data: tuple, Iterable, or None</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -85,11 +94,20 @@
 
     </div>
     <a class="headerlink" href="#SafeTuple"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeTuple-8"><a href="#SafeTuple-8"><span class="linenos"> 8</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeTuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">SafeBaseObj</span><span class="p">):</span>
-</span><span id="SafeTuple-9"><a href="#SafeTuple-9"><span class="linenos"> 9</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeTuple-10"><a href="#SafeTuple-10"><span class="linenos">10</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared tuple with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeTuple-11"><a href="#SafeTuple-11"><span class="linenos">11</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeTuple-12"><a href="#SafeTuple-12"><span class="linenos">12</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeTuple-7"><a href="#SafeTuple-7"><span class="linenos"> 7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeTuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">SafeBaseObj</span><span class="p">):</span>
+</span><span id="SafeTuple-8"><a href="#SafeTuple-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeTuple-9"><a href="#SafeTuple-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeTuple-10"><a href="#SafeTuple-10"><span class="linenos">10</span></a><span class="sd">        Initialize a shared tuple with a Lock for thread safety.</span>
+</span><span id="SafeTuple-11"><a href="#SafeTuple-11"><span class="linenos">11</span></a>
+</span><span id="SafeTuple-12"><a href="#SafeTuple-12"><span class="linenos">12</span></a><span class="sd">        If a `tuple` is provided, it is used as the initial data.</span>
+</span><span id="SafeTuple-13"><a href="#SafeTuple-13"><span class="linenos">13</span></a><span class="sd">        If an iterable is provided, it is converted into a tuple.</span>
+</span><span id="SafeTuple-14"><a href="#SafeTuple-14"><span class="linenos">14</span></a><span class="sd">        If no argument is provided, an empty tuple is used.</span>
+</span><span id="SafeTuple-15"><a href="#SafeTuple-15"><span class="linenos">15</span></a>
+</span><span id="SafeTuple-16"><a href="#SafeTuple-16"><span class="linenos">16</span></a><span class="sd">        :param data: The initial data to populate the tuple with.</span>
+</span><span id="SafeTuple-17"><a href="#SafeTuple-17"><span class="linenos">17</span></a><span class="sd">        :type data: tuple, Iterable, or None</span>
+</span><span id="SafeTuple-18"><a href="#SafeTuple-18"><span class="linenos">18</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeTuple-19"><a href="#SafeTuple-19"><span class="linenos">19</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeTuple-20"><a href="#SafeTuple-20"><span class="linenos">20</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -112,14 +130,33 @@ If iterable is specified the tuple is initialized from iterable's items.</p>
 
     </div>
     <a class="headerlink" href="#SafeTuple.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeTuple.__init__-9"><a href="#SafeTuple.__init__-9"><span class="linenos"> 9</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeTuple.__init__-10"><a href="#SafeTuple.__init__-10"><span class="linenos">10</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared tuple with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeTuple.__init__-11"><a href="#SafeTuple.__init__-11"><span class="linenos">11</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeTuple.__init__-12"><a href="#SafeTuple.__init__-12"><span class="linenos">12</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeTuple.__init__-8"><a href="#SafeTuple.__init__-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeTuple.__init__-9"><a href="#SafeTuple.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeTuple.__init__-10"><a href="#SafeTuple.__init__-10"><span class="linenos">10</span></a><span class="sd">        Initialize a shared tuple with a Lock for thread safety.</span>
+</span><span id="SafeTuple.__init__-11"><a href="#SafeTuple.__init__-11"><span class="linenos">11</span></a>
+</span><span id="SafeTuple.__init__-12"><a href="#SafeTuple.__init__-12"><span class="linenos">12</span></a><span class="sd">        If a `tuple` is provided, it is used as the initial data.</span>
+</span><span id="SafeTuple.__init__-13"><a href="#SafeTuple.__init__-13"><span class="linenos">13</span></a><span class="sd">        If an iterable is provided, it is converted into a tuple.</span>
+</span><span id="SafeTuple.__init__-14"><a href="#SafeTuple.__init__-14"><span class="linenos">14</span></a><span class="sd">        If no argument is provided, an empty tuple is used.</span>
+</span><span id="SafeTuple.__init__-15"><a href="#SafeTuple.__init__-15"><span class="linenos">15</span></a>
+</span><span id="SafeTuple.__init__-16"><a href="#SafeTuple.__init__-16"><span class="linenos">16</span></a><span class="sd">        :param data: The initial data to populate the tuple with.</span>
+</span><span id="SafeTuple.__init__-17"><a href="#SafeTuple.__init__-17"><span class="linenos">17</span></a><span class="sd">        :type data: tuple, Iterable, or None</span>
+</span><span id="SafeTuple.__init__-18"><a href="#SafeTuple.__init__-18"><span class="linenos">18</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeTuple.__init__-19"><a href="#SafeTuple.__init__-19"><span class="linenos">19</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeTuple.__init__-20"><a href="#SafeTuple.__init__-20"><span class="linenos">20</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Initialize a shared tuple with a Lock for thread safety.</p>
+
+<p>If a <code>tuple</code> is provided, it is used as the initial data.
+If an iterable is provided, it is converted into a tuple.
+If no argument is provided, an empty tuple is used.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>data</strong>:  The initial data to populate the tuple with.</li>
+</ul>
 </div>
 
 

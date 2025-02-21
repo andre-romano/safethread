@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.3.1 (2025-02-20 17:57:46 -0300)
+
+- 104cf20 release version v1.3.1
+- 9688c75 bug fix
+- f14c7f3 improved docs, added img/ for docs/, added SVG images for docs
+- b8e39c4 fix docs
+- a3b6c55 fix docs
+- 270cb73 release version v1.3.0
+
 ## v1.3.0 (2025-02-20 16:42:53 -0300)
 
 - 270cb73 release version v1.3.0

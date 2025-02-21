@@ -18,21 +18,17 @@ class PipelineStage:
     queue. This can be useful for concurrent processing of tasks in a pipeline
     fashion.
 
-    The pipeline runs indefinetely, until .stop() is called.
+    The pipeline runs indefinitely until :meth:`stop()` is called.
+
+    :param callback: The function (or callable) that processes input data and 
+                     produces output. The callback should accept one argument 
+                     and return the processed result.
+    :type callback: Callable
+
+    :raises ThreadBase.CallableException: If the provided callback is not callable.
+    :raises ValueError: If `n_threads` is less than 1.
 
     <img src="../../../img/utils/PipelineStage.svg" alt="" width="100%">
-
-    Args:
-
-        callback (Callable): The function (or callable) that processes input data
-                              and produces output. The callback should accept one
-                              argument and return the processed result.
-
-    Raises:
-
-        ThreadBase.CallableException: If the provided callback is not callable.
-
-        ValueError: If `n_threads` < 1.
     """
 
     EmptyException = queue.Empty
@@ -55,19 +51,15 @@ class PipelineStage:
     @staticmethod
     def is_instance(obj: Any):
         """
-        Checks if obj is an instance of PipelineStage
+        Checks if the object is an instance of PipelineStage.
 
-        Args:
+        :param obj: The object to check.
+        :type obj: Any
 
-            obj (Any): Object to check
+        :raises TypeError: If the object is not an instance of PipelineStage.
 
-        Raises:
-
-            TypeError: if obj is not an instance of PipelineStage
-
-        Returns:
-
-            PipelineStage: object
+        :return: The PipelineStage object if it is an instance.
+        :rtype: PipelineStage
         """
         if not isinstance(obj, PipelineStage):
             raise TypeError("Object is not a Pipeline Stage.")
@@ -77,15 +69,14 @@ class PipelineStage:
         """
         Initializes the pipeline stage with a callback function.
 
-        Args:
+        :param callback: The function to process data through the pipeline stage.
+        :type callback: Callable
+        :param n_threads: Number of threads that will read the input queue, and 
+                          store result in the output queue. Defaults to 1.
+        :type n_threads: int
 
-            callback (Callable): The function to process data through the pipeline stage.
-            n_threads (int): Number of threads that will read the input queue, and store result in output queue.
-
-        Raises:
-
-            ThreadBase.CallableException: If the callback argument is not callable.
-            ValueError: If `n_threads` < 1.
+        :raises ThreadBase.CallableException: If the callback argument is not callable.
+        :raises ValueError: If `n_threads` is less than 1.
         """
 
         self.__callback: Callable = ThreadBase.is_callable(callback)
@@ -109,10 +100,7 @@ class PipelineStage:
         processes it through the callback function, and puts the result into
         the output queue.
 
-        Raises:
-
-            queue.Full: If the output queue is full (no available slot to store output)
-
+        :raises PipelineStage.FullException: If the output queue is full (no available slot to store output).
         """
         try:
             input_data = self.__input_queue.get()
@@ -125,9 +113,8 @@ class PipelineStage:
         """
         Checks if the pipeline stage has started.
 
-        Returns:
-
-            bool: True if pipeline stage has started, otherwise False.
+        :return: True if the pipeline stage has started, otherwise False.
+        :rtype: bool
         """
         return self.__started
 
@@ -135,9 +122,8 @@ class PipelineStage:
         """
         Checks if the pipeline stage is alive.
 
-        Returns:
-
-            bool: True if any thread of pipeline stage is still alive, otherwise False.
+        :return: True if any thread of the pipeline stage is still alive, otherwise False.
+        :rtype: bool
         """
         result = False
         for thread in self.__threads:
@@ -148,9 +134,8 @@ class PipelineStage:
         """
         Checks if the pipeline stage has terminated.
 
-        Returns:
-
-            bool: True if pipeline stage HAS started and is NOT alive, otherwise False.
+        :return: True if the pipeline stage has started and is not alive, otherwise False.
+        :rtype: bool
         """
         return self.has_started() and not self.is_alive()
 
@@ -158,20 +143,16 @@ class PipelineStage:
         """
         Puts data into the input queue for processing.
 
-        Args:
+        :param value: The data to be processed by the pipeline.
+        :type value: Any
+        :param block: If True, block until data can be inserted into the queue. Defaults to True.
+        :type block: bool, optional
+        :param timeout: Timeout for the put operation. Defaults to None.
+        :type timeout: float or None, optional
 
-            value (Any): The data to be processed by the pipeline.
-
-            block (true): Block until data can be inserted in queue
-
-            timeout (float, optional): Timeout for the put operation.
-
-        Raises:
-
-            FullException: if block = True and timeout is exceeded, or
-                if block = False and there is no available space in the IN queue
-
-            StoppedException: if pipeline has stopped
+        :raises FullException: If block is True and the timeout is exceeded, or if block is False and 
+                               there is no available space in the input queue.
+        :raises StoppedException: If the pipeline has stopped.
         """
         self.__input_queue.put(value, block, timeout)
 
@@ -179,39 +160,33 @@ class PipelineStage:
         """
         Retrieves the processed data from the output queue.
 
-        Args:
+        :param block: If True, block until data can be retrieved from the queue. Defaults to True.
+        :type block: bool, optional
+        :param timeout: Timeout for the get operation. Defaults to None.
+        :type timeout: float or None, optional
 
-            block (true): Block until data can be get from queue
+        :return: The processed data after passing through the callback function.
+        :rtype: Any
 
-            timeout (float, optional): Timeout for the get operation.
-
-        Returns:
-
-            Any: The processed data after passing through the callback function.
-
-        Raises:
-
-            EmptyException: if block = True and timeout is exceeded, or
-                if block = False and no output is available in the OUT queue
+        :raises EmptyException: If block is True and the timeout is exceeded, or if block is False and 
+                                no output is available in the output queue.
         """
         return self.__output_queue.get(block, timeout)
 
     def connect_output(self, other_pipeline: Self):
         """
-        Connects this Pipeline Stage output to the input of other_pipeline
+        Connects this Pipeline Stage output to the input of another pipeline.
 
-        Args:
-
-            other_pipeline (Self): other pipeline stage
+        :param other_pipeline: Another pipeline stage.
+        :type other_pipeline: Self
         """
         self.__output_queue = other_pipeline.__input_queue
 
     def start(self):
         """
-        Starts the pipeline stage threads
+        Starts the pipeline stage threads.
 
-        Raises:
-            RuntimeError: if start() is called more than once on the same thread object.
+        :raises RuntimeError: If start() is called more than once on the same thread object.
         """
         for thread in self.__threads:
             thread.start()
@@ -236,28 +211,24 @@ class PipelineStage:
         """
         Joins the pipeline stages' threads, waiting for them to finish.
 
-        Args:
+        :param timeout: The maximum time to wait for threads to finish. Defaults to None.
+        :type timeout: float or None, optional
 
-            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        :raises RuntimeError: If an attempt is made to join the current thread (main thread), 
+                               or if join() is called before start().
         """
         for thread in self.__threads:
             thread.join(timeout)
 
     def stop_join(self, timeout: float | None = None):
         """
-        Calls stop() and join() to stop the PipelineStage and waiting for its threads to finish.
+        Calls stop() and join() to stop the pipeline stage and wait for its threads to finish.
 
-        Args:
+        :param timeout: The maximum time to wait for threads to finish. Defaults to None.
+        :type timeout: float or None, optional
 
-            timeout (float, optional): The maximum time to wait for threads to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        :raises RuntimeError: If an attempt is made to join the current thread (main thread), 
+                               or if join() is called before start().
         """
         self.stop()
         self.join(timeout=timeout)

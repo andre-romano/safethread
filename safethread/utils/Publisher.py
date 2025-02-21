@@ -1,52 +1,54 @@
-
 from typing import Any, Callable
 
-from ..datatype import SafeSet
+from ..datatype import SafeList
 
 from .Subscriber import Subscriber
 
 
 class Publisher:
     """
-    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    
+    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.
+
+    This class allows subscribers to be added or removed from a list, and will notify them whenever
+    new data is published. It is designed to be thread-safe.
     """
 
     def __init__(self):
-        self.__subscribers = SafeSet()
-        self.__data: Any = None
+        """
+        Initializes a new Publisher instance.
+        """
+        self.__subscribers = SafeList()
 
     def subscribe(self, subscriber: Subscriber):
         """
-        Adds a subscriber to receive notifications.
+        Adds a subscriber to receive notifications when new data is published.
 
-        Args:
-            subscriber (Subscriber): The subscriber instance.
+        :param subscriber: The subscriber instance to be added.
+        :type subscriber: Subscriber
 
-        Raises:
-            TypeError: if subscriber is not an instance of Subscriber class
+        :raises TypeError: If the subscriber is not an instance of the Subscriber class.
         """
         if not isinstance(subscriber, Subscriber):
             raise TypeError("Expected an instance of Subscriber.")
-        self.__subscribers.add(subscriber)
+        self.__subscribers.append(subscriber)
 
     def unsubscribe(self, subscriber: Subscriber):
         """
-        Removes a subscriber from notifications.
+        Removes a subscriber from the list of subscribers, preventing further notifications.
 
-        Args:
-            subscriber (Subscriber): The subscriber instance.
+        :param subscriber: The subscriber instance to be removed.
+        :type subscriber: Subscriber
         """
         self.__subscribers.remove(subscriber)
 
     def publish(self, data: Any):
         """
-        Publishes new data and notifies all subscribers.
+        Publishes new data and notifies all subscribed listeners.
 
-        Args:
-            data (Any): The new data to be published.
+        :param data: The new data to be published to subscribers.
+        :type data: Any
         """
-        self.__data = data
-        # notify subscribers
+        # Notify all subscribers with the new data
         for subscriber in self.__subscribers:
             subscriber: Subscriber
-            subscriber._notify(self.__data)
+            subscriber._notify(data)

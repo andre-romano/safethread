@@ -1,4 +1,3 @@
-
 import subprocess
 
 from typing import Any, Callable, Iterable
@@ -9,12 +8,23 @@ from .ThreadBase import ThreadBase
 class Subprocess(ThreadBase):
 
     class NotTerminatedException(Exception):
-        def __init__(self, *args: object) -> None:
-            super().__init__(*args)
+        """Raised when trying to get return data about an unfinished subprocess"""
 
     class Finished:
+        """Stores information about the finished subprocess"""
+
         def __init__(self, args: list[str], returncode: int, stderr: str, stdout: str):
-            """Stores information about the finished subprocess"""
+            """Creates a Finished structure for a recently finished subprocess
+
+            :param args: Command arguments of subprocess
+            :type args: list[str]
+            :param returncode: Return code of subprocess
+            :type returncode: int
+            :param stderr: STDERR output of subprocess
+            :type stderr: str
+            :param stdout: STDOUT output of subprocess
+            :type stdout: str
+            """
             self.returncode = returncode
             self.args = args
             self.stderr = stderr
@@ -27,21 +37,22 @@ class Subprocess(ThreadBase):
         """
         Initializes the thread-safe Subprocess object with the command to run.
 
-        Args:
+        :param command: The command to run as an iterable or a string.
+        :type command: Iterable[str] | str
+        :param daemon: Whether the thread should be a daemon thread. Defaults to True.
+        :type daemon: bool, optional
+        :param timeout: Timeout of the subprocess. Defaults to no timeout (None).
+        :type timeout: float, optional
+        :param env: Environment to run the subprocess. Defaults to current ENV (None).
+        :type env: dict, optional
+        :param cwd: Working directory to run the subprocess. Defaults to current directory (None).
+        :type cwd: str, optional
+        :param callback: Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.
+        :type callback: Callable, optional
+        :param repeat: Whether the thread should execute subprocess repeatedly (until .stop() is called). Defaults to False.
+        :type repeat: bool, optional
 
-            command (Iterable[str] | str): The command to run as an iterable or a string.
-
-            daemon (bool, optional): Whether the thread should be a daemon thread. Defaults to True.
-
-            timeout (float, optional): Timeout of the subprocess. Defaults to no timeout (None).
-
-            env (dict, optional): Environment to run the subprocess. Defaults to current ENV (None).
-
-            cwd (str, optional): Working directory to run the subprocess. Defaults to current directory (None).
-
-            callback (Callable, optional): Callback to execute after subprocess terminates. Expected format: ``lambda result: some_code_here``, where `result: Subprocess.Finished`. Defaults to None.
-
-            repeat (bool, optional): Whether the thread should execute subprocess repeatedly (until .stop() is called). Defaults to False.
+        :raises TypeError: If `command` is not a string or an iterable of strings.
         """
         cmd: list[str] = []
         if isinstance(command, str):
@@ -66,17 +77,16 @@ class Subprocess(ThreadBase):
         """
         Runs the command in a subprocess and captures the output.
 
-        Args:
-
-            command (list[str]): The command to execute.
-
-            timeout (float, optional): Timeout of the command.
-
-            env (float, optional): Environment for the command.
-
-            cwd (str, optional): Current working directory for the command.
-
-            callback (Callable, optional): Callback to execute after subprocess terminates.
+        :param command: The command to execute.
+        :type command: list[str]
+        :param timeout: Timeout of the command.
+        :type timeout: float, optional
+        :param env: Environment for the command.
+        :type env: dict, optional
+        :param cwd: Current working directory for the command.
+        :type cwd: str, optional
+        :param callback: Callback to execute after subprocess terminates.
+        :type callback: Callable, optional
         """
         with self.__lock:
             try:
@@ -107,52 +117,43 @@ class Subprocess(ThreadBase):
         """
         Returns the return code of the subprocess.
 
-        Raises:
+        :raises NotTerminatedException: If the subprocess has not yet terminated.
 
-            NotTerminatedException: If the subprocess has not yet terminated.
-
-        Returns:
-
-            int: The return code of the subprocess.
+        :return: The return code of the subprocess.
+        :rtype: int
         """
         with self.__lock:
             if not self.is_terminated() or not self.__result:
                 raise Subprocess.NotTerminatedException(
-                    "Cannot acquire return code from subprocess")
+                    "Process not terminated. Cannot acquire return code from subprocess")
             return self.__result.returncode
 
     def get_stdout(self) -> str:
         """
         Returns the standard output of the subprocess.
 
-        Raises:
+        :raises NotTerminatedException: If the subprocess has not yet terminated.
 
-            NotTerminatedException: If the subprocess has not yet terminated.
-
-        Returns:
-
-            str: The standard output of the subprocess.
+        :return: The standard output of the subprocess.
+        :rtype: str
         """
         with self.__lock:
             if not self.is_terminated() or not self.__result:
                 raise Subprocess.NotTerminatedException(
-                    "Cannot acquire stdout from subprocess")
+                    "Process not terminated. Cannot acquire stdout from subprocess")
             return self.__result.stdout
 
     def get_stderr(self) -> str:
         """
         Returns the standard error output of the subprocess.
 
-        Raises:
+        :raises NotTerminatedException: If the subprocess has not yet terminated.
 
-            Exception: If the subprocess has not yet terminated.
-
-        Returns:
-
-            str: The standard error output of the subprocess.
+        :return: The standard error output of the subprocess.
+        :rtype: str
         """
         with self.__lock:
             if not self.is_terminated() or not self.__result:
                 raise Subprocess.NotTerminatedException(
-                    "Cannot acquire stderr from subprocess")
+                    "Process not terminated. Cannot acquire stderr from subprocess")
             return self.__result.stderr

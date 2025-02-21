@@ -90,66 +90,131 @@
 
                         <label class="view-source-button" for="mod-SafeList-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SafeBaseObj</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeBaseObj</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeList</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a shared list with a lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an item to the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts the occurrences of an item in the list.&quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple items to the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the index of the first matching item safely.&quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Inserts an item at the specified position safely.&quot;&quot;&quot;</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverses the order of the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sorts the list safely.&quot;&quot;&quot;</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SafeBaseObj</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeBaseObj</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeList</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="sd">        Initializes a shared list with a lock for thread safety.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">        :param data: The initial data to populate the list with.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">        :type data: list, Iterable, or None</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">        Adds an item to the list safely.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        :param value: The item to be added to the list.</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">        Clears the list safely.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">        Counts the occurrences of an item in the list.</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">        :param value: The item whose occurrences to count.</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">        :return: The number of occurrences of the item in the list.</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">        :rtype: int</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        Adds multiple items to the list safely.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        :param values: The items to be added to the list.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">        :type values: list or Iterable</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        Returns the index of the first matching item safely.</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        :param value: The item to find in the list.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">        :param start: The starting index for the search. Defaults to 0.</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">        :type start: int, optional</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">        :param end: The ending index for the search. Defaults to None.</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        :type end: int, optional</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">        :return: The index of the first matching item.</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">        :rtype: int</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a><span class="sd">        Inserts an item at the specified position safely.</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="sd">        :param index: The index at which to insert the item.</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        :type index: int</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        :param value: The item to insert.</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="sd">        Removes and returns an item from the list safely.</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">        :param index: The index of the item to remove. Defaults to -1 (last item).</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        :type index: int, optional</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        :return: The removed item.</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        :rtype: `type of item`</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">        :raises IndexError: If the list is empty or the index is out of range.</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a><span class="sd">        Removes an item from the list safely.</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        :param value: The item to remove from the list.</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">        Reverses the order of the list safely.</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        Sorts the list safely.</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        :param kwargs: Additional arguments to pass to the sort function.</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a><span class="sd">        :return: None</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="sd">        :rtype: None</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -165,66 +230,131 @@
 
     </div>
     <a class="headerlink" href="#SafeList"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList-7"><a href="#SafeList-7"><span class="linenos"> 7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeList</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
-</span><span id="SafeList-8"><a href="#SafeList-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeList-9"><a href="#SafeList-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a shared list with a lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeList-10"><a href="#SafeList-10"><span class="linenos">10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeList-11"><a href="#SafeList-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeList-12"><a href="#SafeList-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
-</span><span id="SafeList-13"><a href="#SafeList-13"><span class="linenos">13</span></a>
-</span><span id="SafeList-14"><a href="#SafeList-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList-15"><a href="#SafeList-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an item to the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-16"><a href="#SafeList-16"><span class="linenos">16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-17"><a href="#SafeList-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeList-18"><a href="#SafeList-18"><span class="linenos">18</span></a>
-</span><span id="SafeList-19"><a href="#SafeList-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeList-20"><a href="#SafeList-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-21"><a href="#SafeList-21"><span class="linenos">21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-22"><a href="#SafeList-22"><span class="linenos">22</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="SafeList-23"><a href="#SafeList-23"><span class="linenos">23</span></a>
-</span><span id="SafeList-24"><a href="#SafeList-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList-25"><a href="#SafeList-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts the occurrences of an item in the list.&quot;&quot;&quot;</span>
-</span><span id="SafeList-26"><a href="#SafeList-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-27"><a href="#SafeList-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeList-28"><a href="#SafeList-28"><span class="linenos">28</span></a>
-</span><span id="SafeList-29"><a href="#SafeList-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-</span><span id="SafeList-30"><a href="#SafeList-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple items to the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-31"><a href="#SafeList-31"><span class="linenos">31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-32"><a href="#SafeList-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-</span><span id="SafeList-33"><a href="#SafeList-33"><span class="linenos">33</span></a>
-</span><span id="SafeList-34"><a href="#SafeList-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeList-35"><a href="#SafeList-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the index of the first matching item safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-36"><a href="#SafeList-36"><span class="linenos">36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-37"><a href="#SafeList-37"><span class="linenos">37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
-</span><span id="SafeList-38"><a href="#SafeList-38"><span class="linenos">38</span></a>
-</span><span id="SafeList-39"><a href="#SafeList-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList-40"><a href="#SafeList-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Inserts an item at the specified position safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-41"><a href="#SafeList-41"><span class="linenos">41</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-42"><a href="#SafeList-42"><span class="linenos">42</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</span><span id="SafeList-43"><a href="#SafeList-43"><span class="linenos">43</span></a>
-</span><span id="SafeList-44"><a href="#SafeList-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-</span><span id="SafeList-45"><a href="#SafeList-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-46"><a href="#SafeList-46"><span class="linenos">46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-47"><a href="#SafeList-47"><span class="linenos">47</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-</span><span id="SafeList-48"><a href="#SafeList-48"><span class="linenos">48</span></a>
-</span><span id="SafeList-49"><a href="#SafeList-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList-50"><a href="#SafeList-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-51"><a href="#SafeList-51"><span class="linenos">51</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-52"><a href="#SafeList-52"><span class="linenos">52</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeList-53"><a href="#SafeList-53"><span class="linenos">53</span></a>
-</span><span id="SafeList-54"><a href="#SafeList-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeList-55"><a href="#SafeList-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverses the order of the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-56"><a href="#SafeList-56"><span class="linenos">56</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-57"><a href="#SafeList-57"><span class="linenos">57</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-</span><span id="SafeList-58"><a href="#SafeList-58"><span class="linenos">58</span></a>
-</span><span id="SafeList-59"><a href="#SafeList-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="SafeList-60"><a href="#SafeList-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sorts the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList-61"><a href="#SafeList-61"><span class="linenos">61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList-62"><a href="#SafeList-62"><span class="linenos">62</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList-7"><a href="#SafeList-7"><span class="linenos">  7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeList</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
+</span><span id="SafeList-8"><a href="#SafeList-8"><span class="linenos">  8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeList-9"><a href="#SafeList-9"><span class="linenos">  9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-10"><a href="#SafeList-10"><span class="linenos"> 10</span></a><span class="sd">        Initializes a shared list with a lock for thread safety.</span>
+</span><span id="SafeList-11"><a href="#SafeList-11"><span class="linenos"> 11</span></a>
+</span><span id="SafeList-12"><a href="#SafeList-12"><span class="linenos"> 12</span></a><span class="sd">        :param data: The initial data to populate the list with.</span>
+</span><span id="SafeList-13"><a href="#SafeList-13"><span class="linenos"> 13</span></a><span class="sd">        :type data: list, Iterable, or None</span>
+</span><span id="SafeList-14"><a href="#SafeList-14"><span class="linenos"> 14</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-15"><a href="#SafeList-15"><span class="linenos"> 15</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeList-16"><a href="#SafeList-16"><span class="linenos"> 16</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeList-17"><a href="#SafeList-17"><span class="linenos"> 17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
+</span><span id="SafeList-18"><a href="#SafeList-18"><span class="linenos"> 18</span></a>
+</span><span id="SafeList-19"><a href="#SafeList-19"><span class="linenos"> 19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList-20"><a href="#SafeList-20"><span class="linenos"> 20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-21"><a href="#SafeList-21"><span class="linenos"> 21</span></a><span class="sd">        Adds an item to the list safely.</span>
+</span><span id="SafeList-22"><a href="#SafeList-22"><span class="linenos"> 22</span></a>
+</span><span id="SafeList-23"><a href="#SafeList-23"><span class="linenos"> 23</span></a><span class="sd">        :param value: The item to be added to the list.</span>
+</span><span id="SafeList-24"><a href="#SafeList-24"><span class="linenos"> 24</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList-25"><a href="#SafeList-25"><span class="linenos"> 25</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-26"><a href="#SafeList-26"><span class="linenos"> 26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-27"><a href="#SafeList-27"><span class="linenos"> 27</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeList-28"><a href="#SafeList-28"><span class="linenos"> 28</span></a>
+</span><span id="SafeList-29"><a href="#SafeList-29"><span class="linenos"> 29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeList-30"><a href="#SafeList-30"><span class="linenos"> 30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-31"><a href="#SafeList-31"><span class="linenos"> 31</span></a><span class="sd">        Clears the list safely.</span>
+</span><span id="SafeList-32"><a href="#SafeList-32"><span class="linenos"> 32</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-33"><a href="#SafeList-33"><span class="linenos"> 33</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-34"><a href="#SafeList-34"><span class="linenos"> 34</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="SafeList-35"><a href="#SafeList-35"><span class="linenos"> 35</span></a>
+</span><span id="SafeList-36"><a href="#SafeList-36"><span class="linenos"> 36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList-37"><a href="#SafeList-37"><span class="linenos"> 37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-38"><a href="#SafeList-38"><span class="linenos"> 38</span></a><span class="sd">        Counts the occurrences of an item in the list.</span>
+</span><span id="SafeList-39"><a href="#SafeList-39"><span class="linenos"> 39</span></a>
+</span><span id="SafeList-40"><a href="#SafeList-40"><span class="linenos"> 40</span></a><span class="sd">        :param value: The item whose occurrences to count.</span>
+</span><span id="SafeList-41"><a href="#SafeList-41"><span class="linenos"> 41</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList-42"><a href="#SafeList-42"><span class="linenos"> 42</span></a><span class="sd">        :return: The number of occurrences of the item in the list.</span>
+</span><span id="SafeList-43"><a href="#SafeList-43"><span class="linenos"> 43</span></a><span class="sd">        :rtype: int</span>
+</span><span id="SafeList-44"><a href="#SafeList-44"><span class="linenos"> 44</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-45"><a href="#SafeList-45"><span class="linenos"> 45</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-46"><a href="#SafeList-46"><span class="linenos"> 46</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeList-47"><a href="#SafeList-47"><span class="linenos"> 47</span></a>
+</span><span id="SafeList-48"><a href="#SafeList-48"><span class="linenos"> 48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+</span><span id="SafeList-49"><a href="#SafeList-49"><span class="linenos"> 49</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-50"><a href="#SafeList-50"><span class="linenos"> 50</span></a><span class="sd">        Adds multiple items to the list safely.</span>
+</span><span id="SafeList-51"><a href="#SafeList-51"><span class="linenos"> 51</span></a>
+</span><span id="SafeList-52"><a href="#SafeList-52"><span class="linenos"> 52</span></a><span class="sd">        :param values: The items to be added to the list.</span>
+</span><span id="SafeList-53"><a href="#SafeList-53"><span class="linenos"> 53</span></a><span class="sd">        :type values: list or Iterable</span>
+</span><span id="SafeList-54"><a href="#SafeList-54"><span class="linenos"> 54</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-55"><a href="#SafeList-55"><span class="linenos"> 55</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-56"><a href="#SafeList-56"><span class="linenos"> 56</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</span><span id="SafeList-57"><a href="#SafeList-57"><span class="linenos"> 57</span></a>
+</span><span id="SafeList-58"><a href="#SafeList-58"><span class="linenos"> 58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeList-59"><a href="#SafeList-59"><span class="linenos"> 59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-60"><a href="#SafeList-60"><span class="linenos"> 60</span></a><span class="sd">        Returns the index of the first matching item safely.</span>
+</span><span id="SafeList-61"><a href="#SafeList-61"><span class="linenos"> 61</span></a>
+</span><span id="SafeList-62"><a href="#SafeList-62"><span class="linenos"> 62</span></a><span class="sd">        :param value: The item to find in the list.</span>
+</span><span id="SafeList-63"><a href="#SafeList-63"><span class="linenos"> 63</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList-64"><a href="#SafeList-64"><span class="linenos"> 64</span></a><span class="sd">        :param start: The starting index for the search. Defaults to 0.</span>
+</span><span id="SafeList-65"><a href="#SafeList-65"><span class="linenos"> 65</span></a><span class="sd">        :type start: int, optional</span>
+</span><span id="SafeList-66"><a href="#SafeList-66"><span class="linenos"> 66</span></a><span class="sd">        :param end: The ending index for the search. Defaults to None.</span>
+</span><span id="SafeList-67"><a href="#SafeList-67"><span class="linenos"> 67</span></a><span class="sd">        :type end: int, optional</span>
+</span><span id="SafeList-68"><a href="#SafeList-68"><span class="linenos"> 68</span></a><span class="sd">        :return: The index of the first matching item.</span>
+</span><span id="SafeList-69"><a href="#SafeList-69"><span class="linenos"> 69</span></a><span class="sd">        :rtype: int</span>
+</span><span id="SafeList-70"><a href="#SafeList-70"><span class="linenos"> 70</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="SafeList-71"><a href="#SafeList-71"><span class="linenos"> 71</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-72"><a href="#SafeList-72"><span class="linenos"> 72</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-73"><a href="#SafeList-73"><span class="linenos"> 73</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
+</span><span id="SafeList-74"><a href="#SafeList-74"><span class="linenos"> 74</span></a>
+</span><span id="SafeList-75"><a href="#SafeList-75"><span class="linenos"> 75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList-76"><a href="#SafeList-76"><span class="linenos"> 76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-77"><a href="#SafeList-77"><span class="linenos"> 77</span></a><span class="sd">        Inserts an item at the specified position safely.</span>
+</span><span id="SafeList-78"><a href="#SafeList-78"><span class="linenos"> 78</span></a>
+</span><span id="SafeList-79"><a href="#SafeList-79"><span class="linenos"> 79</span></a><span class="sd">        :param index: The index at which to insert the item.</span>
+</span><span id="SafeList-80"><a href="#SafeList-80"><span class="linenos"> 80</span></a><span class="sd">        :type index: int</span>
+</span><span id="SafeList-81"><a href="#SafeList-81"><span class="linenos"> 81</span></a><span class="sd">        :param value: The item to insert.</span>
+</span><span id="SafeList-82"><a href="#SafeList-82"><span class="linenos"> 82</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList-83"><a href="#SafeList-83"><span class="linenos"> 83</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-84"><a href="#SafeList-84"><span class="linenos"> 84</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-85"><a href="#SafeList-85"><span class="linenos"> 85</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+</span><span id="SafeList-86"><a href="#SafeList-86"><span class="linenos"> 86</span></a>
+</span><span id="SafeList-87"><a href="#SafeList-87"><span class="linenos"> 87</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="SafeList-88"><a href="#SafeList-88"><span class="linenos"> 88</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-89"><a href="#SafeList-89"><span class="linenos"> 89</span></a><span class="sd">        Removes and returns an item from the list safely.</span>
+</span><span id="SafeList-90"><a href="#SafeList-90"><span class="linenos"> 90</span></a>
+</span><span id="SafeList-91"><a href="#SafeList-91"><span class="linenos"> 91</span></a><span class="sd">        :param index: The index of the item to remove. Defaults to -1 (last item).</span>
+</span><span id="SafeList-92"><a href="#SafeList-92"><span class="linenos"> 92</span></a><span class="sd">        :type index: int, optional</span>
+</span><span id="SafeList-93"><a href="#SafeList-93"><span class="linenos"> 93</span></a><span class="sd">        :return: The removed item.</span>
+</span><span id="SafeList-94"><a href="#SafeList-94"><span class="linenos"> 94</span></a><span class="sd">        :rtype: `type of item`</span>
+</span><span id="SafeList-95"><a href="#SafeList-95"><span class="linenos"> 95</span></a><span class="sd">        :raises IndexError: If the list is empty or the index is out of range.</span>
+</span><span id="SafeList-96"><a href="#SafeList-96"><span class="linenos"> 96</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-97"><a href="#SafeList-97"><span class="linenos"> 97</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-98"><a href="#SafeList-98"><span class="linenos"> 98</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+</span><span id="SafeList-99"><a href="#SafeList-99"><span class="linenos"> 99</span></a>
+</span><span id="SafeList-100"><a href="#SafeList-100"><span class="linenos">100</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList-101"><a href="#SafeList-101"><span class="linenos">101</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-102"><a href="#SafeList-102"><span class="linenos">102</span></a><span class="sd">        Removes an item from the list safely.</span>
+</span><span id="SafeList-103"><a href="#SafeList-103"><span class="linenos">103</span></a>
+</span><span id="SafeList-104"><a href="#SafeList-104"><span class="linenos">104</span></a><span class="sd">        :param value: The item to remove from the list.</span>
+</span><span id="SafeList-105"><a href="#SafeList-105"><span class="linenos">105</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList-106"><a href="#SafeList-106"><span class="linenos">106</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="SafeList-107"><a href="#SafeList-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-108"><a href="#SafeList-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-109"><a href="#SafeList-109"><span class="linenos">109</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeList-110"><a href="#SafeList-110"><span class="linenos">110</span></a>
+</span><span id="SafeList-111"><a href="#SafeList-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeList-112"><a href="#SafeList-112"><span class="linenos">112</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-113"><a href="#SafeList-113"><span class="linenos">113</span></a><span class="sd">        Reverses the order of the list safely.</span>
+</span><span id="SafeList-114"><a href="#SafeList-114"><span class="linenos">114</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-115"><a href="#SafeList-115"><span class="linenos">115</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-116"><a href="#SafeList-116"><span class="linenos">116</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+</span><span id="SafeList-117"><a href="#SafeList-117"><span class="linenos">117</span></a>
+</span><span id="SafeList-118"><a href="#SafeList-118"><span class="linenos">118</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="SafeList-119"><a href="#SafeList-119"><span class="linenos">119</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList-120"><a href="#SafeList-120"><span class="linenos">120</span></a><span class="sd">        Sorts the list safely.</span>
+</span><span id="SafeList-121"><a href="#SafeList-121"><span class="linenos">121</span></a>
+</span><span id="SafeList-122"><a href="#SafeList-122"><span class="linenos">122</span></a><span class="sd">        :param kwargs: Additional arguments to pass to the sort function.</span>
+</span><span id="SafeList-123"><a href="#SafeList-123"><span class="linenos">123</span></a><span class="sd">        :return: None</span>
+</span><span id="SafeList-124"><a href="#SafeList-124"><span class="linenos">124</span></a><span class="sd">        :rtype: None</span>
+</span><span id="SafeList-125"><a href="#SafeList-125"><span class="linenos">125</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList-126"><a href="#SafeList-126"><span class="linenos">126</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList-127"><a href="#SafeList-127"><span class="linenos">127</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access 
+            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access
 in multithreaded environments using locking mechanisms.</p>
 </div>
 
@@ -240,14 +370,25 @@ in multithreaded environments using locking mechanisms.</p>
     </div>
     <a class="headerlink" href="#SafeList.__init__"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.__init__-8"><a href="#SafeList.__init__-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeList.__init__-9"><a href="#SafeList.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes a shared list with a lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeList.__init__-10"><a href="#SafeList.__init__-10"><span class="linenos">10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeList.__init__-11"><a href="#SafeList.__init__-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeList.__init__-12"><a href="#SafeList.__init__-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
+</span><span id="SafeList.__init__-9"><a href="#SafeList.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.__init__-10"><a href="#SafeList.__init__-10"><span class="linenos">10</span></a><span class="sd">        Initializes a shared list with a lock for thread safety.</span>
+</span><span id="SafeList.__init__-11"><a href="#SafeList.__init__-11"><span class="linenos">11</span></a>
+</span><span id="SafeList.__init__-12"><a href="#SafeList.__init__-12"><span class="linenos">12</span></a><span class="sd">        :param data: The initial data to populate the list with.</span>
+</span><span id="SafeList.__init__-13"><a href="#SafeList.__init__-13"><span class="linenos">13</span></a><span class="sd">        :type data: list, Iterable, or None</span>
+</span><span id="SafeList.__init__-14"><a href="#SafeList.__init__-14"><span class="linenos">14</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.__init__-15"><a href="#SafeList.__init__-15"><span class="linenos">15</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeList.__init__-16"><a href="#SafeList.__init__-16"><span class="linenos">16</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeList.__init__-17"><a href="#SafeList.__init__-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">list</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Initializes a shared list with a lock for thread safety.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>data</strong>:  The initial data to populate the list with.</li>
+</ul>
 </div>
 
 
@@ -263,14 +404,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.append"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.append-14"><a href="#SafeList.append-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList.append-15"><a href="#SafeList.append-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an item to the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.append-16"><a href="#SafeList.append-16"><span class="linenos">16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.append-17"><a href="#SafeList.append-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.append-19"><a href="#SafeList.append-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList.append-20"><a href="#SafeList.append-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.append-21"><a href="#SafeList.append-21"><span class="linenos">21</span></a><span class="sd">        Adds an item to the list safely.</span>
+</span><span id="SafeList.append-22"><a href="#SafeList.append-22"><span class="linenos">22</span></a>
+</span><span id="SafeList.append-23"><a href="#SafeList.append-23"><span class="linenos">23</span></a><span class="sd">        :param value: The item to be added to the list.</span>
+</span><span id="SafeList.append-24"><a href="#SafeList.append-24"><span class="linenos">24</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList.append-25"><a href="#SafeList.append-25"><span class="linenos">25</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.append-26"><a href="#SafeList.append-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.append-27"><a href="#SafeList.append-27"><span class="linenos">27</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Adds an item to the list safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The item to be added to the list.</li>
+</ul>
 </div>
 
 
@@ -286,10 +438,12 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.clear"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.clear-19"><a href="#SafeList.clear-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeList.clear-20"><a href="#SafeList.clear-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.clear-21"><a href="#SafeList.clear-21"><span class="linenos">21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.clear-22"><a href="#SafeList.clear-22"><span class="linenos">22</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.clear-29"><a href="#SafeList.clear-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeList.clear-30"><a href="#SafeList.clear-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.clear-31"><a href="#SafeList.clear-31"><span class="linenos">31</span></a><span class="sd">        Clears the list safely.</span>
+</span><span id="SafeList.clear-32"><a href="#SafeList.clear-32"><span class="linenos">32</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.clear-33"><a href="#SafeList.clear-33"><span class="linenos">33</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.clear-34"><a href="#SafeList.clear-34"><span class="linenos">34</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -309,14 +463,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.count"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.count-24"><a href="#SafeList.count-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList.count-25"><a href="#SafeList.count-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Counts the occurrences of an item in the list.&quot;&quot;&quot;</span>
-</span><span id="SafeList.count-26"><a href="#SafeList.count-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.count-27"><a href="#SafeList.count-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.count-36"><a href="#SafeList.count-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList.count-37"><a href="#SafeList.count-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.count-38"><a href="#SafeList.count-38"><span class="linenos">38</span></a><span class="sd">        Counts the occurrences of an item in the list.</span>
+</span><span id="SafeList.count-39"><a href="#SafeList.count-39"><span class="linenos">39</span></a>
+</span><span id="SafeList.count-40"><a href="#SafeList.count-40"><span class="linenos">40</span></a><span class="sd">        :param value: The item whose occurrences to count.</span>
+</span><span id="SafeList.count-41"><a href="#SafeList.count-41"><span class="linenos">41</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList.count-42"><a href="#SafeList.count-42"><span class="linenos">42</span></a><span class="sd">        :return: The number of occurrences of the item in the list.</span>
+</span><span id="SafeList.count-43"><a href="#SafeList.count-43"><span class="linenos">43</span></a><span class="sd">        :rtype: int</span>
+</span><span id="SafeList.count-44"><a href="#SafeList.count-44"><span class="linenos">44</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.count-45"><a href="#SafeList.count-45"><span class="linenos">45</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.count-46"><a href="#SafeList.count-46"><span class="linenos">46</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Counts the occurrences of an item in the list.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The item whose occurrences to count.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>The number of occurrences of the item in the list.</p>
+</blockquote>
 </div>
 
 
@@ -332,14 +505,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.extend"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.extend-29"><a href="#SafeList.extend-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-</span><span id="SafeList.extend-30"><a href="#SafeList.extend-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple items to the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.extend-31"><a href="#SafeList.extend-31"><span class="linenos">31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.extend-32"><a href="#SafeList.extend-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.extend-48"><a href="#SafeList.extend-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+</span><span id="SafeList.extend-49"><a href="#SafeList.extend-49"><span class="linenos">49</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.extend-50"><a href="#SafeList.extend-50"><span class="linenos">50</span></a><span class="sd">        Adds multiple items to the list safely.</span>
+</span><span id="SafeList.extend-51"><a href="#SafeList.extend-51"><span class="linenos">51</span></a>
+</span><span id="SafeList.extend-52"><a href="#SafeList.extend-52"><span class="linenos">52</span></a><span class="sd">        :param values: The items to be added to the list.</span>
+</span><span id="SafeList.extend-53"><a href="#SafeList.extend-53"><span class="linenos">53</span></a><span class="sd">        :type values: list or Iterable</span>
+</span><span id="SafeList.extend-54"><a href="#SafeList.extend-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.extend-55"><a href="#SafeList.extend-55"><span class="linenos">55</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.extend-56"><a href="#SafeList.extend-56"><span class="linenos">56</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Adds multiple items to the list safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>values</strong>:  The items to be added to the list.</li>
+</ul>
 </div>
 
 
@@ -355,14 +539,46 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.index"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.index-34"><a href="#SafeList.index-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeList.index-35"><a href="#SafeList.index-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the index of the first matching item safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.index-36"><a href="#SafeList.index-36"><span class="linenos">36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.index-37"><a href="#SafeList.index-37"><span class="linenos">37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.index-58"><a href="#SafeList.index-58"><span class="linenos">58</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeList.index-59"><a href="#SafeList.index-59"><span class="linenos">59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.index-60"><a href="#SafeList.index-60"><span class="linenos">60</span></a><span class="sd">        Returns the index of the first matching item safely.</span>
+</span><span id="SafeList.index-61"><a href="#SafeList.index-61"><span class="linenos">61</span></a>
+</span><span id="SafeList.index-62"><a href="#SafeList.index-62"><span class="linenos">62</span></a><span class="sd">        :param value: The item to find in the list.</span>
+</span><span id="SafeList.index-63"><a href="#SafeList.index-63"><span class="linenos">63</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList.index-64"><a href="#SafeList.index-64"><span class="linenos">64</span></a><span class="sd">        :param start: The starting index for the search. Defaults to 0.</span>
+</span><span id="SafeList.index-65"><a href="#SafeList.index-65"><span class="linenos">65</span></a><span class="sd">        :type start: int, optional</span>
+</span><span id="SafeList.index-66"><a href="#SafeList.index-66"><span class="linenos">66</span></a><span class="sd">        :param end: The ending index for the search. Defaults to None.</span>
+</span><span id="SafeList.index-67"><a href="#SafeList.index-67"><span class="linenos">67</span></a><span class="sd">        :type end: int, optional</span>
+</span><span id="SafeList.index-68"><a href="#SafeList.index-68"><span class="linenos">68</span></a><span class="sd">        :return: The index of the first matching item.</span>
+</span><span id="SafeList.index-69"><a href="#SafeList.index-69"><span class="linenos">69</span></a><span class="sd">        :rtype: int</span>
+</span><span id="SafeList.index-70"><a href="#SafeList.index-70"><span class="linenos">70</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="SafeList.index-71"><a href="#SafeList.index-71"><span class="linenos">71</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.index-72"><a href="#SafeList.index-72"><span class="linenos">72</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.index-73"><a href="#SafeList.index-73"><span class="linenos">73</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">))</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns the index of the first matching item safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The item to find in the list.</li>
+<li><strong>start</strong>:  The starting index for the search. Defaults to 0.</li>
+<li><strong>end</strong>:  The ending index for the search. Defaults to None.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>The index of the first matching item.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>ValueError</strong>:  If the item is not found in the list.</li>
+</ul>
 </div>
 
 
@@ -378,14 +594,28 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.insert"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.insert-39"><a href="#SafeList.insert-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList.insert-40"><a href="#SafeList.insert-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Inserts an item at the specified position safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.insert-41"><a href="#SafeList.insert-41"><span class="linenos">41</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.insert-42"><a href="#SafeList.insert-42"><span class="linenos">42</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.insert-75"><a href="#SafeList.insert-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList.insert-76"><a href="#SafeList.insert-76"><span class="linenos">76</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.insert-77"><a href="#SafeList.insert-77"><span class="linenos">77</span></a><span class="sd">        Inserts an item at the specified position safely.</span>
+</span><span id="SafeList.insert-78"><a href="#SafeList.insert-78"><span class="linenos">78</span></a>
+</span><span id="SafeList.insert-79"><a href="#SafeList.insert-79"><span class="linenos">79</span></a><span class="sd">        :param index: The index at which to insert the item.</span>
+</span><span id="SafeList.insert-80"><a href="#SafeList.insert-80"><span class="linenos">80</span></a><span class="sd">        :type index: int</span>
+</span><span id="SafeList.insert-81"><a href="#SafeList.insert-81"><span class="linenos">81</span></a><span class="sd">        :param value: The item to insert.</span>
+</span><span id="SafeList.insert-82"><a href="#SafeList.insert-82"><span class="linenos">82</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList.insert-83"><a href="#SafeList.insert-83"><span class="linenos">83</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.insert-84"><a href="#SafeList.insert-84"><span class="linenos">84</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.insert-85"><a href="#SafeList.insert-85"><span class="linenos">85</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Inserts an item at the specified position safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>index</strong>:  The index at which to insert the item.</li>
+<li><strong>value</strong>:  The item to insert.</li>
+</ul>
 </div>
 
 
@@ -401,14 +631,40 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.pop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.pop-44"><a href="#SafeList.pop-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-</span><span id="SafeList.pop-45"><a href="#SafeList.pop-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.pop-46"><a href="#SafeList.pop-46"><span class="linenos">46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.pop-47"><a href="#SafeList.pop-47"><span class="linenos">47</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.pop-87"><a href="#SafeList.pop-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+</span><span id="SafeList.pop-88"><a href="#SafeList.pop-88"><span class="linenos">88</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.pop-89"><a href="#SafeList.pop-89"><span class="linenos">89</span></a><span class="sd">        Removes and returns an item from the list safely.</span>
+</span><span id="SafeList.pop-90"><a href="#SafeList.pop-90"><span class="linenos">90</span></a>
+</span><span id="SafeList.pop-91"><a href="#SafeList.pop-91"><span class="linenos">91</span></a><span class="sd">        :param index: The index of the item to remove. Defaults to -1 (last item).</span>
+</span><span id="SafeList.pop-92"><a href="#SafeList.pop-92"><span class="linenos">92</span></a><span class="sd">        :type index: int, optional</span>
+</span><span id="SafeList.pop-93"><a href="#SafeList.pop-93"><span class="linenos">93</span></a><span class="sd">        :return: The removed item.</span>
+</span><span id="SafeList.pop-94"><a href="#SafeList.pop-94"><span class="linenos">94</span></a><span class="sd">        :rtype: `type of item`</span>
+</span><span id="SafeList.pop-95"><a href="#SafeList.pop-95"><span class="linenos">95</span></a><span class="sd">        :raises IndexError: If the list is empty or the index is out of range.</span>
+</span><span id="SafeList.pop-96"><a href="#SafeList.pop-96"><span class="linenos">96</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.pop-97"><a href="#SafeList.pop-97"><span class="linenos">97</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.pop-98"><a href="#SafeList.pop-98"><span class="linenos">98</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes and returns an item from the list safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>index</strong>:  The index of the item to remove. Defaults to -1 (last item).</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>The removed item.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>IndexError</strong>:  If the list is empty or the index is out of range.</li>
+</ul>
 </div>
 
 
@@ -424,14 +680,32 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.remove"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.remove-49"><a href="#SafeList.remove-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeList.remove-50"><a href="#SafeList.remove-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an item from the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.remove-51"><a href="#SafeList.remove-51"><span class="linenos">51</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.remove-52"><a href="#SafeList.remove-52"><span class="linenos">52</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.remove-100"><a href="#SafeList.remove-100"><span class="linenos">100</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeList.remove-101"><a href="#SafeList.remove-101"><span class="linenos">101</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.remove-102"><a href="#SafeList.remove-102"><span class="linenos">102</span></a><span class="sd">        Removes an item from the list safely.</span>
+</span><span id="SafeList.remove-103"><a href="#SafeList.remove-103"><span class="linenos">103</span></a>
+</span><span id="SafeList.remove-104"><a href="#SafeList.remove-104"><span class="linenos">104</span></a><span class="sd">        :param value: The item to remove from the list.</span>
+</span><span id="SafeList.remove-105"><a href="#SafeList.remove-105"><span class="linenos">105</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeList.remove-106"><a href="#SafeList.remove-106"><span class="linenos">106</span></a><span class="sd">        :raises ValueError: If the item is not found in the list.</span>
+</span><span id="SafeList.remove-107"><a href="#SafeList.remove-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.remove-108"><a href="#SafeList.remove-108"><span class="linenos">108</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.remove-109"><a href="#SafeList.remove-109"><span class="linenos">109</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes an item from the list safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The item to remove from the list.</li>
+</ul>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>ValueError</strong>:  If the item is not found in the list.</li>
+</ul>
 </div>
 
 
@@ -447,10 +721,12 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.reverse"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.reverse-54"><a href="#SafeList.reverse-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeList.reverse-55"><a href="#SafeList.reverse-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverses the order of the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.reverse-56"><a href="#SafeList.reverse-56"><span class="linenos">56</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.reverse-57"><a href="#SafeList.reverse-57"><span class="linenos">57</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.reverse-111"><a href="#SafeList.reverse-111"><span class="linenos">111</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeList.reverse-112"><a href="#SafeList.reverse-112"><span class="linenos">112</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.reverse-113"><a href="#SafeList.reverse-113"><span class="linenos">113</span></a><span class="sd">        Reverses the order of the list safely.</span>
+</span><span id="SafeList.reverse-114"><a href="#SafeList.reverse-114"><span class="linenos">114</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.reverse-115"><a href="#SafeList.reverse-115"><span class="linenos">115</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.reverse-116"><a href="#SafeList.reverse-116"><span class="linenos">116</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -470,14 +746,32 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeList.sort"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.sort-59"><a href="#SafeList.sort-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="SafeList.sort-60"><a href="#SafeList.sort-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sorts the list safely.&quot;&quot;&quot;</span>
-</span><span id="SafeList.sort-61"><a href="#SafeList.sort-61"><span class="linenos">61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
-</span><span id="SafeList.sort-62"><a href="#SafeList.sort-62"><span class="linenos">62</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeList.sort-118"><a href="#SafeList.sort-118"><span class="linenos">118</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="SafeList.sort-119"><a href="#SafeList.sort-119"><span class="linenos">119</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeList.sort-120"><a href="#SafeList.sort-120"><span class="linenos">120</span></a><span class="sd">        Sorts the list safely.</span>
+</span><span id="SafeList.sort-121"><a href="#SafeList.sort-121"><span class="linenos">121</span></a>
+</span><span id="SafeList.sort-122"><a href="#SafeList.sort-122"><span class="linenos">122</span></a><span class="sd">        :param kwargs: Additional arguments to pass to the sort function.</span>
+</span><span id="SafeList.sort-123"><a href="#SafeList.sort-123"><span class="linenos">123</span></a><span class="sd">        :return: None</span>
+</span><span id="SafeList.sort-124"><a href="#SafeList.sort-124"><span class="linenos">124</span></a><span class="sd">        :rtype: None</span>
+</span><span id="SafeList.sort-125"><a href="#SafeList.sort-125"><span class="linenos">125</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeList.sort-126"><a href="#SafeList.sort-126"><span class="linenos">126</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+</span><span id="SafeList.sort-127"><a href="#SafeList.sort-127"><span class="linenos">127</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Sorts the list safely.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>kwargs</strong>:  Additional arguments to pass to the sort function.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>None</p>
+</blockquote>
 </div>
 
 

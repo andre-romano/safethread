@@ -108,96 +108,194 @@
 
                         <label class="view-source-button" for="mod-SafeSet-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SafeBaseObj</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeBaseObj</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeSet</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared set with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an element to the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in the set but not in the others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements of another set from the current set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set if present, thread-safe. Does nothing if not present.&quot;&quot;&quot;</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements common to the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the intersection of itself and others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set has no elements in common with another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a subset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a superset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an arbitrary element from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set, thread-safe. Raises KeyError if not present.&quot;&quot;&quot;</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in either the set or other but not both, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the symmetric difference of itself and another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with all elements from the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with elements from all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SafeBaseObj</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeBaseObj</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeSet</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="sd">        Initialize a shared set with a Lock for thread safety.</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a><span class="sd">        :param data: The initial data to populate the set with.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="sd">        :type data: set, Iterable, or None</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a><span class="sd">        Adds an element to the set, thread-safe.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        :param value: The element to add to the set.</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a><span class="sd">        Removes all elements from the set, thread-safe.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a><span class="sd">        Returns a new set with elements in the set but not in the others, thread-safe.</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="sd">        :return: A new set with the difference.</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="sd">        :rtype: set</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        Removes all elements of another set from the current set, thread-safe.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">        Removes an element from the set if present, thread-safe. Does nothing if not present.</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a><span class="sd">        Returns a new set with elements common to the set and all others, thread-safe.</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">        :return: A new set with the intersection.</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">        :rtype: set</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        Updates the set with the intersection of itself and others, thread-safe.</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        Returns True if the set has no elements in common with another set, thread-safe.</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a><span class="sd">        :type other: set</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a><span class="sd">        :return: `True` if the sets are disjoint, otherwise `False`.</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a><span class="sd">        Returns True if the set is a subset of another set, thread-safe.</span>
+</span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        :type other: set</span>
+</span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">        :return: `True` if the set is a subset, otherwise `False`.</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">        Returns True if the set is a superset of another set, thread-safe.</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a><span class="sd">        :type other: set</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a><span class="sd">        :return: `True` if the set is a superset, otherwise `False`.</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a><span class="sd">        Removes and returns an arbitrary element from the set, thread-safe.</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="sd">        :return: An arbitrary element from the set.</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">        :rtype: `type of element`</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        :raises KeyError: If the set is empty.</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">        Removes an element from the set, thread-safe. Raises KeyError if not present.</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="sd">        :raises KeyError: If the element is not found in the set.</span>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="sd">        Returns a new set with elements in either the set or other but not both, thread-safe.</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">        :type other: set</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">        :return: A new set with the symmetric difference.</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a><span class="sd">        :rtype: set</span>
+</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a>
+</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a><span class="sd">        Updates the set with the symmetric difference of itself and another set, thread-safe.</span>
+</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="sd">        :type other: set</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a><span class="sd">        Returns a new set with all elements from the set and all others, thread-safe.</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="sd">        :param others: Sets to combine with the current set.</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">        :return: A new set with the union.</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">        :rtype: set</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>
+</span><span id="L-180"><a href="#L-180"><span class="linenos">180</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="L-181"><a href="#L-181"><span class="linenos">181</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-182"><a href="#L-182"><span class="linenos">182</span></a><span class="sd">        Updates the set with elements from all others, thread-safe.</span>
+</span><span id="L-183"><a href="#L-183"><span class="linenos">183</span></a>
+</span><span id="L-184"><a href="#L-184"><span class="linenos">184</span></a><span class="sd">        :param others: Sets to add to the current set.</span>
+</span><span id="L-185"><a href="#L-185"><span class="linenos">185</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="L-186"><a href="#L-186"><span class="linenos">186</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-187"><a href="#L-187"><span class="linenos">187</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="L-188"><a href="#L-188"><span class="linenos">188</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -213,96 +311,194 @@
 
     </div>
     <a class="headerlink" href="#SafeSet"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet-7"><a href="#SafeSet-7"><span class="linenos"> 7</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeSet</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
-</span><span id="SafeSet-8"><a href="#SafeSet-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeSet-9"><a href="#SafeSet-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared set with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-10"><a href="#SafeSet-10"><span class="linenos">10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeSet-11"><a href="#SafeSet-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeSet-12"><a href="#SafeSet-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
-</span><span id="SafeSet-13"><a href="#SafeSet-13"><span class="linenos">13</span></a>
-</span><span id="SafeSet-14"><a href="#SafeSet-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet-15"><a href="#SafeSet-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an element to the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-16"><a href="#SafeSet-16"><span class="linenos">16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-17"><a href="#SafeSet-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeSet-18"><a href="#SafeSet-18"><span class="linenos">18</span></a>
-</span><span id="SafeSet-19"><a href="#SafeSet-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeSet-20"><a href="#SafeSet-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-21"><a href="#SafeSet-21"><span class="linenos">21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-22"><a href="#SafeSet-22"><span class="linenos">22</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-</span><span id="SafeSet-23"><a href="#SafeSet-23"><span class="linenos">23</span></a>
-</span><span id="SafeSet-24"><a href="#SafeSet-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-25"><a href="#SafeSet-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in the set but not in the others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-26"><a href="#SafeSet-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-27"><a href="#SafeSet-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="SafeSet-28"><a href="#SafeSet-28"><span class="linenos">28</span></a>
-</span><span id="SafeSet-29"><a href="#SafeSet-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-30"><a href="#SafeSet-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements of another set from the current set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-31"><a href="#SafeSet-31"><span class="linenos">31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-32"><a href="#SafeSet-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="SafeSet-33"><a href="#SafeSet-33"><span class="linenos">33</span></a>
-</span><span id="SafeSet-34"><a href="#SafeSet-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet-35"><a href="#SafeSet-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set if present, thread-safe. Does nothing if not present.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-36"><a href="#SafeSet-36"><span class="linenos">36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-37"><a href="#SafeSet-37"><span class="linenos">37</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeSet-38"><a href="#SafeSet-38"><span class="linenos">38</span></a>
-</span><span id="SafeSet-39"><a href="#SafeSet-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-40"><a href="#SafeSet-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements common to the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-41"><a href="#SafeSet-41"><span class="linenos">41</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-42"><a href="#SafeSet-42"><span class="linenos">42</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="SafeSet-43"><a href="#SafeSet-43"><span class="linenos">43</span></a>
-</span><span id="SafeSet-44"><a href="#SafeSet-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-45"><a href="#SafeSet-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the intersection of itself and others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-46"><a href="#SafeSet-46"><span class="linenos">46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-47"><a href="#SafeSet-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="SafeSet-48"><a href="#SafeSet-48"><span class="linenos">48</span></a>
-</span><span id="SafeSet-49"><a href="#SafeSet-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet-50"><a href="#SafeSet-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set has no elements in common with another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-51"><a href="#SafeSet-51"><span class="linenos">51</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-52"><a href="#SafeSet-52"><span class="linenos">52</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="SafeSet-53"><a href="#SafeSet-53"><span class="linenos">53</span></a>
-</span><span id="SafeSet-54"><a href="#SafeSet-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet-55"><a href="#SafeSet-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a subset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-56"><a href="#SafeSet-56"><span class="linenos">56</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-57"><a href="#SafeSet-57"><span class="linenos">57</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="SafeSet-58"><a href="#SafeSet-58"><span class="linenos">58</span></a>
-</span><span id="SafeSet-59"><a href="#SafeSet-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet-60"><a href="#SafeSet-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a superset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-61"><a href="#SafeSet-61"><span class="linenos">61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-62"><a href="#SafeSet-62"><span class="linenos">62</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="SafeSet-63"><a href="#SafeSet-63"><span class="linenos">63</span></a>
-</span><span id="SafeSet-64"><a href="#SafeSet-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeSet-65"><a href="#SafeSet-65"><span class="linenos">65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an arbitrary element from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-66"><a href="#SafeSet-66"><span class="linenos">66</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-67"><a href="#SafeSet-67"><span class="linenos">67</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-</span><span id="SafeSet-68"><a href="#SafeSet-68"><span class="linenos">68</span></a>
-</span><span id="SafeSet-69"><a href="#SafeSet-69"><span class="linenos">69</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet-70"><a href="#SafeSet-70"><span class="linenos">70</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set, thread-safe. Raises KeyError if not present.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-71"><a href="#SafeSet-71"><span class="linenos">71</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-72"><a href="#SafeSet-72"><span class="linenos">72</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-</span><span id="SafeSet-73"><a href="#SafeSet-73"><span class="linenos">73</span></a>
-</span><span id="SafeSet-74"><a href="#SafeSet-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet-75"><a href="#SafeSet-75"><span class="linenos">75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in either the set or other but not both, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-76"><a href="#SafeSet-76"><span class="linenos">76</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-77"><a href="#SafeSet-77"><span class="linenos">77</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="SafeSet-78"><a href="#SafeSet-78"><span class="linenos">78</span></a>
-</span><span id="SafeSet-79"><a href="#SafeSet-79"><span class="linenos">79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet-80"><a href="#SafeSet-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the symmetric difference of itself and another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-81"><a href="#SafeSet-81"><span class="linenos">81</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-82"><a href="#SafeSet-82"><span class="linenos">82</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-</span><span id="SafeSet-83"><a href="#SafeSet-83"><span class="linenos">83</span></a>
-</span><span id="SafeSet-84"><a href="#SafeSet-84"><span class="linenos">84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-85"><a href="#SafeSet-85"><span class="linenos">85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with all elements from the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-86"><a href="#SafeSet-86"><span class="linenos">86</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-87"><a href="#SafeSet-87"><span class="linenos">87</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
-</span><span id="SafeSet-88"><a href="#SafeSet-88"><span class="linenos">88</span></a>
-</span><span id="SafeSet-89"><a href="#SafeSet-89"><span class="linenos">89</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet-90"><a href="#SafeSet-90"><span class="linenos">90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with elements from all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet-91"><a href="#SafeSet-91"><span class="linenos">91</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet-92"><a href="#SafeSet-92"><span class="linenos">92</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet-6"><a href="#SafeSet-6"><span class="linenos">  6</span></a><span class="k">class</span><span class="w"> </span><span class="nc">SafeSet</span><span class="p">(</span><span class="n">SafeBaseObj</span><span class="p">):</span>
+</span><span id="SafeSet-7"><a href="#SafeSet-7"><span class="linenos">  7</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeSet-8"><a href="#SafeSet-8"><span class="linenos">  8</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-9"><a href="#SafeSet-9"><span class="linenos">  9</span></a><span class="sd">        Initialize a shared set with a Lock for thread safety.</span>
+</span><span id="SafeSet-10"><a href="#SafeSet-10"><span class="linenos"> 10</span></a>
+</span><span id="SafeSet-11"><a href="#SafeSet-11"><span class="linenos"> 11</span></a><span class="sd">        :param data: The initial data to populate the set with.</span>
+</span><span id="SafeSet-12"><a href="#SafeSet-12"><span class="linenos"> 12</span></a><span class="sd">        :type data: set, Iterable, or None</span>
+</span><span id="SafeSet-13"><a href="#SafeSet-13"><span class="linenos"> 13</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-14"><a href="#SafeSet-14"><span class="linenos"> 14</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeSet-15"><a href="#SafeSet-15"><span class="linenos"> 15</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeSet-16"><a href="#SafeSet-16"><span class="linenos"> 16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
+</span><span id="SafeSet-17"><a href="#SafeSet-17"><span class="linenos"> 17</span></a>
+</span><span id="SafeSet-18"><a href="#SafeSet-18"><span class="linenos"> 18</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet-19"><a href="#SafeSet-19"><span class="linenos"> 19</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-20"><a href="#SafeSet-20"><span class="linenos"> 20</span></a><span class="sd">        Adds an element to the set, thread-safe.</span>
+</span><span id="SafeSet-21"><a href="#SafeSet-21"><span class="linenos"> 21</span></a>
+</span><span id="SafeSet-22"><a href="#SafeSet-22"><span class="linenos"> 22</span></a><span class="sd">        :param value: The element to add to the set.</span>
+</span><span id="SafeSet-23"><a href="#SafeSet-23"><span class="linenos"> 23</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet-24"><a href="#SafeSet-24"><span class="linenos"> 24</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-25"><a href="#SafeSet-25"><span class="linenos"> 25</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-26"><a href="#SafeSet-26"><span class="linenos"> 26</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeSet-27"><a href="#SafeSet-27"><span class="linenos"> 27</span></a>
+</span><span id="SafeSet-28"><a href="#SafeSet-28"><span class="linenos"> 28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeSet-29"><a href="#SafeSet-29"><span class="linenos"> 29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-30"><a href="#SafeSet-30"><span class="linenos"> 30</span></a><span class="sd">        Removes all elements from the set, thread-safe.</span>
+</span><span id="SafeSet-31"><a href="#SafeSet-31"><span class="linenos"> 31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-32"><a href="#SafeSet-32"><span class="linenos"> 32</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-33"><a href="#SafeSet-33"><span class="linenos"> 33</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+</span><span id="SafeSet-34"><a href="#SafeSet-34"><span class="linenos"> 34</span></a>
+</span><span id="SafeSet-35"><a href="#SafeSet-35"><span class="linenos"> 35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-36"><a href="#SafeSet-36"><span class="linenos"> 36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-37"><a href="#SafeSet-37"><span class="linenos"> 37</span></a><span class="sd">        Returns a new set with elements in the set but not in the others, thread-safe.</span>
+</span><span id="SafeSet-38"><a href="#SafeSet-38"><span class="linenos"> 38</span></a>
+</span><span id="SafeSet-39"><a href="#SafeSet-39"><span class="linenos"> 39</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="SafeSet-40"><a href="#SafeSet-40"><span class="linenos"> 40</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-41"><a href="#SafeSet-41"><span class="linenos"> 41</span></a><span class="sd">        :return: A new set with the difference.</span>
+</span><span id="SafeSet-42"><a href="#SafeSet-42"><span class="linenos"> 42</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet-43"><a href="#SafeSet-43"><span class="linenos"> 43</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-44"><a href="#SafeSet-44"><span class="linenos"> 44</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-45"><a href="#SafeSet-45"><span class="linenos"> 45</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="SafeSet-46"><a href="#SafeSet-46"><span class="linenos"> 46</span></a>
+</span><span id="SafeSet-47"><a href="#SafeSet-47"><span class="linenos"> 47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-48"><a href="#SafeSet-48"><span class="linenos"> 48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-49"><a href="#SafeSet-49"><span class="linenos"> 49</span></a><span class="sd">        Removes all elements of another set from the current set, thread-safe.</span>
+</span><span id="SafeSet-50"><a href="#SafeSet-50"><span class="linenos"> 50</span></a>
+</span><span id="SafeSet-51"><a href="#SafeSet-51"><span class="linenos"> 51</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="SafeSet-52"><a href="#SafeSet-52"><span class="linenos"> 52</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-53"><a href="#SafeSet-53"><span class="linenos"> 53</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-54"><a href="#SafeSet-54"><span class="linenos"> 54</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-55"><a href="#SafeSet-55"><span class="linenos"> 55</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="SafeSet-56"><a href="#SafeSet-56"><span class="linenos"> 56</span></a>
+</span><span id="SafeSet-57"><a href="#SafeSet-57"><span class="linenos"> 57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet-58"><a href="#SafeSet-58"><span class="linenos"> 58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-59"><a href="#SafeSet-59"><span class="linenos"> 59</span></a><span class="sd">        Removes an element from the set if present, thread-safe. Does nothing if not present.</span>
+</span><span id="SafeSet-60"><a href="#SafeSet-60"><span class="linenos"> 60</span></a>
+</span><span id="SafeSet-61"><a href="#SafeSet-61"><span class="linenos"> 61</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="SafeSet-62"><a href="#SafeSet-62"><span class="linenos"> 62</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet-63"><a href="#SafeSet-63"><span class="linenos"> 63</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-64"><a href="#SafeSet-64"><span class="linenos"> 64</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-65"><a href="#SafeSet-65"><span class="linenos"> 65</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeSet-66"><a href="#SafeSet-66"><span class="linenos"> 66</span></a>
+</span><span id="SafeSet-67"><a href="#SafeSet-67"><span class="linenos"> 67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-68"><a href="#SafeSet-68"><span class="linenos"> 68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-69"><a href="#SafeSet-69"><span class="linenos"> 69</span></a><span class="sd">        Returns a new set with elements common to the set and all others, thread-safe.</span>
+</span><span id="SafeSet-70"><a href="#SafeSet-70"><span class="linenos"> 70</span></a>
+</span><span id="SafeSet-71"><a href="#SafeSet-71"><span class="linenos"> 71</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="SafeSet-72"><a href="#SafeSet-72"><span class="linenos"> 72</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-73"><a href="#SafeSet-73"><span class="linenos"> 73</span></a><span class="sd">        :return: A new set with the intersection.</span>
+</span><span id="SafeSet-74"><a href="#SafeSet-74"><span class="linenos"> 74</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet-75"><a href="#SafeSet-75"><span class="linenos"> 75</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-76"><a href="#SafeSet-76"><span class="linenos"> 76</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-77"><a href="#SafeSet-77"><span class="linenos"> 77</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="SafeSet-78"><a href="#SafeSet-78"><span class="linenos"> 78</span></a>
+</span><span id="SafeSet-79"><a href="#SafeSet-79"><span class="linenos"> 79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-80"><a href="#SafeSet-80"><span class="linenos"> 80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-81"><a href="#SafeSet-81"><span class="linenos"> 81</span></a><span class="sd">        Updates the set with the intersection of itself and others, thread-safe.</span>
+</span><span id="SafeSet-82"><a href="#SafeSet-82"><span class="linenos"> 82</span></a>
+</span><span id="SafeSet-83"><a href="#SafeSet-83"><span class="linenos"> 83</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="SafeSet-84"><a href="#SafeSet-84"><span class="linenos"> 84</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-85"><a href="#SafeSet-85"><span class="linenos"> 85</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-86"><a href="#SafeSet-86"><span class="linenos"> 86</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-87"><a href="#SafeSet-87"><span class="linenos"> 87</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="SafeSet-88"><a href="#SafeSet-88"><span class="linenos"> 88</span></a>
+</span><span id="SafeSet-89"><a href="#SafeSet-89"><span class="linenos"> 89</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet-90"><a href="#SafeSet-90"><span class="linenos"> 90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-91"><a href="#SafeSet-91"><span class="linenos"> 91</span></a><span class="sd">        Returns True if the set has no elements in common with another set, thread-safe.</span>
+</span><span id="SafeSet-92"><a href="#SafeSet-92"><span class="linenos"> 92</span></a>
+</span><span id="SafeSet-93"><a href="#SafeSet-93"><span class="linenos"> 93</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet-94"><a href="#SafeSet-94"><span class="linenos"> 94</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet-95"><a href="#SafeSet-95"><span class="linenos"> 95</span></a><span class="sd">        :return: `True` if the sets are disjoint, otherwise `False`.</span>
+</span><span id="SafeSet-96"><a href="#SafeSet-96"><span class="linenos"> 96</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet-97"><a href="#SafeSet-97"><span class="linenos"> 97</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-98"><a href="#SafeSet-98"><span class="linenos"> 98</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-99"><a href="#SafeSet-99"><span class="linenos"> 99</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="SafeSet-100"><a href="#SafeSet-100"><span class="linenos">100</span></a>
+</span><span id="SafeSet-101"><a href="#SafeSet-101"><span class="linenos">101</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet-102"><a href="#SafeSet-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-103"><a href="#SafeSet-103"><span class="linenos">103</span></a><span class="sd">        Returns True if the set is a subset of another set, thread-safe.</span>
+</span><span id="SafeSet-104"><a href="#SafeSet-104"><span class="linenos">104</span></a>
+</span><span id="SafeSet-105"><a href="#SafeSet-105"><span class="linenos">105</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet-106"><a href="#SafeSet-106"><span class="linenos">106</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet-107"><a href="#SafeSet-107"><span class="linenos">107</span></a><span class="sd">        :return: `True` if the set is a subset, otherwise `False`.</span>
+</span><span id="SafeSet-108"><a href="#SafeSet-108"><span class="linenos">108</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet-109"><a href="#SafeSet-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-110"><a href="#SafeSet-110"><span class="linenos">110</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-111"><a href="#SafeSet-111"><span class="linenos">111</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="SafeSet-112"><a href="#SafeSet-112"><span class="linenos">112</span></a>
+</span><span id="SafeSet-113"><a href="#SafeSet-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet-114"><a href="#SafeSet-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-115"><a href="#SafeSet-115"><span class="linenos">115</span></a><span class="sd">        Returns True if the set is a superset of another set, thread-safe.</span>
+</span><span id="SafeSet-116"><a href="#SafeSet-116"><span class="linenos">116</span></a>
+</span><span id="SafeSet-117"><a href="#SafeSet-117"><span class="linenos">117</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet-118"><a href="#SafeSet-118"><span class="linenos">118</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet-119"><a href="#SafeSet-119"><span class="linenos">119</span></a><span class="sd">        :return: `True` if the set is a superset, otherwise `False`.</span>
+</span><span id="SafeSet-120"><a href="#SafeSet-120"><span class="linenos">120</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet-121"><a href="#SafeSet-121"><span class="linenos">121</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-122"><a href="#SafeSet-122"><span class="linenos">122</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-123"><a href="#SafeSet-123"><span class="linenos">123</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="SafeSet-124"><a href="#SafeSet-124"><span class="linenos">124</span></a>
+</span><span id="SafeSet-125"><a href="#SafeSet-125"><span class="linenos">125</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeSet-126"><a href="#SafeSet-126"><span class="linenos">126</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-127"><a href="#SafeSet-127"><span class="linenos">127</span></a><span class="sd">        Removes and returns an arbitrary element from the set, thread-safe.</span>
+</span><span id="SafeSet-128"><a href="#SafeSet-128"><span class="linenos">128</span></a>
+</span><span id="SafeSet-129"><a href="#SafeSet-129"><span class="linenos">129</span></a><span class="sd">        :return: An arbitrary element from the set.</span>
+</span><span id="SafeSet-130"><a href="#SafeSet-130"><span class="linenos">130</span></a><span class="sd">        :rtype: `type of element`</span>
+</span><span id="SafeSet-131"><a href="#SafeSet-131"><span class="linenos">131</span></a><span class="sd">        :raises KeyError: If the set is empty.</span>
+</span><span id="SafeSet-132"><a href="#SafeSet-132"><span class="linenos">132</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-133"><a href="#SafeSet-133"><span class="linenos">133</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-134"><a href="#SafeSet-134"><span class="linenos">134</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+</span><span id="SafeSet-135"><a href="#SafeSet-135"><span class="linenos">135</span></a>
+</span><span id="SafeSet-136"><a href="#SafeSet-136"><span class="linenos">136</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet-137"><a href="#SafeSet-137"><span class="linenos">137</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-138"><a href="#SafeSet-138"><span class="linenos">138</span></a><span class="sd">        Removes an element from the set, thread-safe. Raises KeyError if not present.</span>
+</span><span id="SafeSet-139"><a href="#SafeSet-139"><span class="linenos">139</span></a>
+</span><span id="SafeSet-140"><a href="#SafeSet-140"><span class="linenos">140</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="SafeSet-141"><a href="#SafeSet-141"><span class="linenos">141</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet-142"><a href="#SafeSet-142"><span class="linenos">142</span></a><span class="sd">        :raises KeyError: If the element is not found in the set.</span>
+</span><span id="SafeSet-143"><a href="#SafeSet-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-144"><a href="#SafeSet-144"><span class="linenos">144</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-145"><a href="#SafeSet-145"><span class="linenos">145</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</span><span id="SafeSet-146"><a href="#SafeSet-146"><span class="linenos">146</span></a>
+</span><span id="SafeSet-147"><a href="#SafeSet-147"><span class="linenos">147</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet-148"><a href="#SafeSet-148"><span class="linenos">148</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-149"><a href="#SafeSet-149"><span class="linenos">149</span></a><span class="sd">        Returns a new set with elements in either the set or other but not both, thread-safe.</span>
+</span><span id="SafeSet-150"><a href="#SafeSet-150"><span class="linenos">150</span></a>
+</span><span id="SafeSet-151"><a href="#SafeSet-151"><span class="linenos">151</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="SafeSet-152"><a href="#SafeSet-152"><span class="linenos">152</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet-153"><a href="#SafeSet-153"><span class="linenos">153</span></a><span class="sd">        :return: A new set with the symmetric difference.</span>
+</span><span id="SafeSet-154"><a href="#SafeSet-154"><span class="linenos">154</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet-155"><a href="#SafeSet-155"><span class="linenos">155</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-156"><a href="#SafeSet-156"><span class="linenos">156</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-157"><a href="#SafeSet-157"><span class="linenos">157</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="SafeSet-158"><a href="#SafeSet-158"><span class="linenos">158</span></a>
+</span><span id="SafeSet-159"><a href="#SafeSet-159"><span class="linenos">159</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet-160"><a href="#SafeSet-160"><span class="linenos">160</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-161"><a href="#SafeSet-161"><span class="linenos">161</span></a><span class="sd">        Updates the set with the symmetric difference of itself and another set, thread-safe.</span>
+</span><span id="SafeSet-162"><a href="#SafeSet-162"><span class="linenos">162</span></a>
+</span><span id="SafeSet-163"><a href="#SafeSet-163"><span class="linenos">163</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="SafeSet-164"><a href="#SafeSet-164"><span class="linenos">164</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet-165"><a href="#SafeSet-165"><span class="linenos">165</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-166"><a href="#SafeSet-166"><span class="linenos">166</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-167"><a href="#SafeSet-167"><span class="linenos">167</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span id="SafeSet-168"><a href="#SafeSet-168"><span class="linenos">168</span></a>
+</span><span id="SafeSet-169"><a href="#SafeSet-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-170"><a href="#SafeSet-170"><span class="linenos">170</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-171"><a href="#SafeSet-171"><span class="linenos">171</span></a><span class="sd">        Returns a new set with all elements from the set and all others, thread-safe.</span>
+</span><span id="SafeSet-172"><a href="#SafeSet-172"><span class="linenos">172</span></a>
+</span><span id="SafeSet-173"><a href="#SafeSet-173"><span class="linenos">173</span></a><span class="sd">        :param others: Sets to combine with the current set.</span>
+</span><span id="SafeSet-174"><a href="#SafeSet-174"><span class="linenos">174</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-175"><a href="#SafeSet-175"><span class="linenos">175</span></a><span class="sd">        :return: A new set with the union.</span>
+</span><span id="SafeSet-176"><a href="#SafeSet-176"><span class="linenos">176</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet-177"><a href="#SafeSet-177"><span class="linenos">177</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-178"><a href="#SafeSet-178"><span class="linenos">178</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-179"><a href="#SafeSet-179"><span class="linenos">179</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+</span><span id="SafeSet-180"><a href="#SafeSet-180"><span class="linenos">180</span></a>
+</span><span id="SafeSet-181"><a href="#SafeSet-181"><span class="linenos">181</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet-182"><a href="#SafeSet-182"><span class="linenos">182</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet-183"><a href="#SafeSet-183"><span class="linenos">183</span></a><span class="sd">        Updates the set with elements from all others, thread-safe.</span>
+</span><span id="SafeSet-184"><a href="#SafeSet-184"><span class="linenos">184</span></a>
+</span><span id="SafeSet-185"><a href="#SafeSet-185"><span class="linenos">185</span></a><span class="sd">        :param others: Sets to add to the current set.</span>
+</span><span id="SafeSet-186"><a href="#SafeSet-186"><span class="linenos">186</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet-187"><a href="#SafeSet-187"><span class="linenos">187</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet-188"><a href="#SafeSet-188"><span class="linenos">188</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet-189"><a href="#SafeSet-189"><span class="linenos">189</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access 
+            <div class="docstring"><p>A thread-safe wrapper around a data object, ensuring safe access
 in multithreaded environments using locking mechanisms.</p>
 </div>
 
@@ -317,15 +513,26 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.__init__-8"><a href="#SafeSet.__init__-8"><span class="linenos"> 8</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-</span><span id="SafeSet.__init__-9"><a href="#SafeSet.__init__-9"><span class="linenos"> 9</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a shared set with a Lock for thread safety.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.__init__-10"><a href="#SafeSet.__init__-10"><span class="linenos">10</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
-</span><span id="SafeSet.__init__-11"><a href="#SafeSet.__init__-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</span><span id="SafeSet.__init__-12"><a href="#SafeSet.__init__-12"><span class="linenos">12</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.__init__-7"><a href="#SafeSet.__init__-7"><span class="linenos"> 7</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">set</span> <span class="o">|</span> <span class="n">Iterable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="SafeSet.__init__-8"><a href="#SafeSet.__init__-8"><span class="linenos"> 8</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.__init__-9"><a href="#SafeSet.__init__-9"><span class="linenos"> 9</span></a><span class="sd">        Initialize a shared set with a Lock for thread safety.</span>
+</span><span id="SafeSet.__init__-10"><a href="#SafeSet.__init__-10"><span class="linenos">10</span></a>
+</span><span id="SafeSet.__init__-11"><a href="#SafeSet.__init__-11"><span class="linenos">11</span></a><span class="sd">        :param data: The initial data to populate the set with.</span>
+</span><span id="SafeSet.__init__-12"><a href="#SafeSet.__init__-12"><span class="linenos">12</span></a><span class="sd">        :type data: set, Iterable, or None</span>
+</span><span id="SafeSet.__init__-13"><a href="#SafeSet.__init__-13"><span class="linenos">13</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.__init__-14"><a href="#SafeSet.__init__-14"><span class="linenos">14</span></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span> <span class="ow">or</span> <span class="p">[])</span>
+</span><span id="SafeSet.__init__-15"><a href="#SafeSet.__init__-15"><span class="linenos">15</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="SafeSet.__init__-16"><a href="#SafeSet.__init__-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="nb">set</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Initialize a shared set with a Lock for thread safety.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>data</strong>:  The initial data to populate the set with.</li>
+</ul>
 </div>
 
 
@@ -341,14 +548,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.add"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.add-14"><a href="#SafeSet.add-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet.add-15"><a href="#SafeSet.add-15"><span class="linenos">15</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds an element to the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.add-16"><a href="#SafeSet.add-16"><span class="linenos">16</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.add-17"><a href="#SafeSet.add-17"><span class="linenos">17</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.add-18"><a href="#SafeSet.add-18"><span class="linenos">18</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet.add-19"><a href="#SafeSet.add-19"><span class="linenos">19</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.add-20"><a href="#SafeSet.add-20"><span class="linenos">20</span></a><span class="sd">        Adds an element to the set, thread-safe.</span>
+</span><span id="SafeSet.add-21"><a href="#SafeSet.add-21"><span class="linenos">21</span></a>
+</span><span id="SafeSet.add-22"><a href="#SafeSet.add-22"><span class="linenos">22</span></a><span class="sd">        :param value: The element to add to the set.</span>
+</span><span id="SafeSet.add-23"><a href="#SafeSet.add-23"><span class="linenos">23</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet.add-24"><a href="#SafeSet.add-24"><span class="linenos">24</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.add-25"><a href="#SafeSet.add-25"><span class="linenos">25</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.add-26"><a href="#SafeSet.add-26"><span class="linenos">26</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Adds an element to the set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The element to add to the set.</li>
+</ul>
 </div>
 
 
@@ -364,10 +582,12 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.clear"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.clear-19"><a href="#SafeSet.clear-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeSet.clear-20"><a href="#SafeSet.clear-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.clear-21"><a href="#SafeSet.clear-21"><span class="linenos">21</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.clear-22"><a href="#SafeSet.clear-22"><span class="linenos">22</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.clear-28"><a href="#SafeSet.clear-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeSet.clear-29"><a href="#SafeSet.clear-29"><span class="linenos">29</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.clear-30"><a href="#SafeSet.clear-30"><span class="linenos">30</span></a><span class="sd">        Removes all elements from the set, thread-safe.</span>
+</span><span id="SafeSet.clear-31"><a href="#SafeSet.clear-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.clear-32"><a href="#SafeSet.clear-32"><span class="linenos">32</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.clear-33"><a href="#SafeSet.clear-33"><span class="linenos">33</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -387,14 +607,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.difference"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.difference-24"><a href="#SafeSet.difference-24"><span class="linenos">24</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.difference-25"><a href="#SafeSet.difference-25"><span class="linenos">25</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in the set but not in the others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.difference-26"><a href="#SafeSet.difference-26"><span class="linenos">26</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.difference-27"><a href="#SafeSet.difference-27"><span class="linenos">27</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.difference-35"><a href="#SafeSet.difference-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.difference-36"><a href="#SafeSet.difference-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.difference-37"><a href="#SafeSet.difference-37"><span class="linenos">37</span></a><span class="sd">        Returns a new set with elements in the set but not in the others, thread-safe.</span>
+</span><span id="SafeSet.difference-38"><a href="#SafeSet.difference-38"><span class="linenos">38</span></a>
+</span><span id="SafeSet.difference-39"><a href="#SafeSet.difference-39"><span class="linenos">39</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="SafeSet.difference-40"><a href="#SafeSet.difference-40"><span class="linenos">40</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.difference-41"><a href="#SafeSet.difference-41"><span class="linenos">41</span></a><span class="sd">        :return: A new set with the difference.</span>
+</span><span id="SafeSet.difference-42"><a href="#SafeSet.difference-42"><span class="linenos">42</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet.difference-43"><a href="#SafeSet.difference-43"><span class="linenos">43</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.difference-44"><a href="#SafeSet.difference-44"><span class="linenos">44</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.difference-45"><a href="#SafeSet.difference-45"><span class="linenos">45</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns a new set with elements in the set but not in the others, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to subtract from the current set.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A new set with the difference.</p>
+</blockquote>
 </div>
 
 
@@ -410,14 +649,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.difference_update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.difference_update-29"><a href="#SafeSet.difference_update-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.difference_update-30"><a href="#SafeSet.difference_update-30"><span class="linenos">30</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes all elements of another set from the current set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.difference_update-31"><a href="#SafeSet.difference_update-31"><span class="linenos">31</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.difference_update-32"><a href="#SafeSet.difference_update-32"><span class="linenos">32</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.difference_update-47"><a href="#SafeSet.difference_update-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.difference_update-48"><a href="#SafeSet.difference_update-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.difference_update-49"><a href="#SafeSet.difference_update-49"><span class="linenos">49</span></a><span class="sd">        Removes all elements of another set from the current set, thread-safe.</span>
+</span><span id="SafeSet.difference_update-50"><a href="#SafeSet.difference_update-50"><span class="linenos">50</span></a>
+</span><span id="SafeSet.difference_update-51"><a href="#SafeSet.difference_update-51"><span class="linenos">51</span></a><span class="sd">        :param others: Sets to subtract from the current set.</span>
+</span><span id="SafeSet.difference_update-52"><a href="#SafeSet.difference_update-52"><span class="linenos">52</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.difference_update-53"><a href="#SafeSet.difference_update-53"><span class="linenos">53</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.difference_update-54"><a href="#SafeSet.difference_update-54"><span class="linenos">54</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.difference_update-55"><a href="#SafeSet.difference_update-55"><span class="linenos">55</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes all elements of another set from the current set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to subtract from the current set.</li>
+</ul>
 </div>
 
 
@@ -433,14 +683,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.discard"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.discard-34"><a href="#SafeSet.discard-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet.discard-35"><a href="#SafeSet.discard-35"><span class="linenos">35</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set if present, thread-safe. Does nothing if not present.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.discard-36"><a href="#SafeSet.discard-36"><span class="linenos">36</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.discard-37"><a href="#SafeSet.discard-37"><span class="linenos">37</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.discard-57"><a href="#SafeSet.discard-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet.discard-58"><a href="#SafeSet.discard-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.discard-59"><a href="#SafeSet.discard-59"><span class="linenos">59</span></a><span class="sd">        Removes an element from the set if present, thread-safe. Does nothing if not present.</span>
+</span><span id="SafeSet.discard-60"><a href="#SafeSet.discard-60"><span class="linenos">60</span></a>
+</span><span id="SafeSet.discard-61"><a href="#SafeSet.discard-61"><span class="linenos">61</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="SafeSet.discard-62"><a href="#SafeSet.discard-62"><span class="linenos">62</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet.discard-63"><a href="#SafeSet.discard-63"><span class="linenos">63</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.discard-64"><a href="#SafeSet.discard-64"><span class="linenos">64</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.discard-65"><a href="#SafeSet.discard-65"><span class="linenos">65</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes an element from the set if present, thread-safe. Does nothing if not present.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The element to remove from the set.</li>
+</ul>
 </div>
 
 
@@ -456,14 +717,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.intersection"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.intersection-39"><a href="#SafeSet.intersection-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.intersection-40"><a href="#SafeSet.intersection-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements common to the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.intersection-41"><a href="#SafeSet.intersection-41"><span class="linenos">41</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.intersection-42"><a href="#SafeSet.intersection-42"><span class="linenos">42</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.intersection-67"><a href="#SafeSet.intersection-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.intersection-68"><a href="#SafeSet.intersection-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.intersection-69"><a href="#SafeSet.intersection-69"><span class="linenos">69</span></a><span class="sd">        Returns a new set with elements common to the set and all others, thread-safe.</span>
+</span><span id="SafeSet.intersection-70"><a href="#SafeSet.intersection-70"><span class="linenos">70</span></a>
+</span><span id="SafeSet.intersection-71"><a href="#SafeSet.intersection-71"><span class="linenos">71</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="SafeSet.intersection-72"><a href="#SafeSet.intersection-72"><span class="linenos">72</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.intersection-73"><a href="#SafeSet.intersection-73"><span class="linenos">73</span></a><span class="sd">        :return: A new set with the intersection.</span>
+</span><span id="SafeSet.intersection-74"><a href="#SafeSet.intersection-74"><span class="linenos">74</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet.intersection-75"><a href="#SafeSet.intersection-75"><span class="linenos">75</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.intersection-76"><a href="#SafeSet.intersection-76"><span class="linenos">76</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.intersection-77"><a href="#SafeSet.intersection-77"><span class="linenos">77</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns a new set with elements common to the set and all others, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to intersect with the current set.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A new set with the intersection.</p>
+</blockquote>
 </div>
 
 
@@ -479,14 +759,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.intersection_update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.intersection_update-44"><a href="#SafeSet.intersection_update-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.intersection_update-45"><a href="#SafeSet.intersection_update-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the intersection of itself and others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.intersection_update-46"><a href="#SafeSet.intersection_update-46"><span class="linenos">46</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.intersection_update-47"><a href="#SafeSet.intersection_update-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.intersection_update-79"><a href="#SafeSet.intersection_update-79"><span class="linenos">79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.intersection_update-80"><a href="#SafeSet.intersection_update-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.intersection_update-81"><a href="#SafeSet.intersection_update-81"><span class="linenos">81</span></a><span class="sd">        Updates the set with the intersection of itself and others, thread-safe.</span>
+</span><span id="SafeSet.intersection_update-82"><a href="#SafeSet.intersection_update-82"><span class="linenos">82</span></a>
+</span><span id="SafeSet.intersection_update-83"><a href="#SafeSet.intersection_update-83"><span class="linenos">83</span></a><span class="sd">        :param others: Sets to intersect with the current set.</span>
+</span><span id="SafeSet.intersection_update-84"><a href="#SafeSet.intersection_update-84"><span class="linenos">84</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.intersection_update-85"><a href="#SafeSet.intersection_update-85"><span class="linenos">85</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.intersection_update-86"><a href="#SafeSet.intersection_update-86"><span class="linenos">86</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.intersection_update-87"><a href="#SafeSet.intersection_update-87"><span class="linenos">87</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Updates the set with the intersection of itself and others, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to intersect with the current set.</li>
+</ul>
 </div>
 
 
@@ -502,14 +793,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.isdisjoint"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.isdisjoint-49"><a href="#SafeSet.isdisjoint-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet.isdisjoint-50"><a href="#SafeSet.isdisjoint-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set has no elements in common with another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.isdisjoint-51"><a href="#SafeSet.isdisjoint-51"><span class="linenos">51</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.isdisjoint-52"><a href="#SafeSet.isdisjoint-52"><span class="linenos">52</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.isdisjoint-89"><a href="#SafeSet.isdisjoint-89"><span class="linenos">89</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">isdisjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet.isdisjoint-90"><a href="#SafeSet.isdisjoint-90"><span class="linenos">90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.isdisjoint-91"><a href="#SafeSet.isdisjoint-91"><span class="linenos">91</span></a><span class="sd">        Returns True if the set has no elements in common with another set, thread-safe.</span>
+</span><span id="SafeSet.isdisjoint-92"><a href="#SafeSet.isdisjoint-92"><span class="linenos">92</span></a>
+</span><span id="SafeSet.isdisjoint-93"><a href="#SafeSet.isdisjoint-93"><span class="linenos">93</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet.isdisjoint-94"><a href="#SafeSet.isdisjoint-94"><span class="linenos">94</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet.isdisjoint-95"><a href="#SafeSet.isdisjoint-95"><span class="linenos">95</span></a><span class="sd">        :return: `True` if the sets are disjoint, otherwise `False`.</span>
+</span><span id="SafeSet.isdisjoint-96"><a href="#SafeSet.isdisjoint-96"><span class="linenos">96</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet.isdisjoint-97"><a href="#SafeSet.isdisjoint-97"><span class="linenos">97</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.isdisjoint-98"><a href="#SafeSet.isdisjoint-98"><span class="linenos">98</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.isdisjoint-99"><a href="#SafeSet.isdisjoint-99"><span class="linenos">99</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns True if the set has no elements in common with another set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>other</strong>:  The other set to compare.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code>True</code> if the sets are disjoint, otherwise <code>False</code>.</p>
+</blockquote>
 </div>
 
 
@@ -525,14 +835,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.issubset"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.issubset-54"><a href="#SafeSet.issubset-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet.issubset-55"><a href="#SafeSet.issubset-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a subset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.issubset-56"><a href="#SafeSet.issubset-56"><span class="linenos">56</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.issubset-57"><a href="#SafeSet.issubset-57"><span class="linenos">57</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.issubset-101"><a href="#SafeSet.issubset-101"><span class="linenos">101</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet.issubset-102"><a href="#SafeSet.issubset-102"><span class="linenos">102</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.issubset-103"><a href="#SafeSet.issubset-103"><span class="linenos">103</span></a><span class="sd">        Returns True if the set is a subset of another set, thread-safe.</span>
+</span><span id="SafeSet.issubset-104"><a href="#SafeSet.issubset-104"><span class="linenos">104</span></a>
+</span><span id="SafeSet.issubset-105"><a href="#SafeSet.issubset-105"><span class="linenos">105</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet.issubset-106"><a href="#SafeSet.issubset-106"><span class="linenos">106</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet.issubset-107"><a href="#SafeSet.issubset-107"><span class="linenos">107</span></a><span class="sd">        :return: `True` if the set is a subset, otherwise `False`.</span>
+</span><span id="SafeSet.issubset-108"><a href="#SafeSet.issubset-108"><span class="linenos">108</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet.issubset-109"><a href="#SafeSet.issubset-109"><span class="linenos">109</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.issubset-110"><a href="#SafeSet.issubset-110"><span class="linenos">110</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.issubset-111"><a href="#SafeSet.issubset-111"><span class="linenos">111</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns True if the set is a subset of another set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>other</strong>:  The other set to compare.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code>True</code> if the set is a subset, otherwise <code>False</code>.</p>
+</blockquote>
 </div>
 
 
@@ -548,14 +877,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.issuperset"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.issuperset-59"><a href="#SafeSet.issuperset-59"><span class="linenos">59</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet.issuperset-60"><a href="#SafeSet.issuperset-60"><span class="linenos">60</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the set is a superset of another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.issuperset-61"><a href="#SafeSet.issuperset-61"><span class="linenos">61</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.issuperset-62"><a href="#SafeSet.issuperset-62"><span class="linenos">62</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.issuperset-113"><a href="#SafeSet.issuperset-113"><span class="linenos">113</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">issuperset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet.issuperset-114"><a href="#SafeSet.issuperset-114"><span class="linenos">114</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.issuperset-115"><a href="#SafeSet.issuperset-115"><span class="linenos">115</span></a><span class="sd">        Returns True if the set is a superset of another set, thread-safe.</span>
+</span><span id="SafeSet.issuperset-116"><a href="#SafeSet.issuperset-116"><span class="linenos">116</span></a>
+</span><span id="SafeSet.issuperset-117"><a href="#SafeSet.issuperset-117"><span class="linenos">117</span></a><span class="sd">        :param other: The other set to compare.</span>
+</span><span id="SafeSet.issuperset-118"><a href="#SafeSet.issuperset-118"><span class="linenos">118</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet.issuperset-119"><a href="#SafeSet.issuperset-119"><span class="linenos">119</span></a><span class="sd">        :return: `True` if the set is a superset, otherwise `False`.</span>
+</span><span id="SafeSet.issuperset-120"><a href="#SafeSet.issuperset-120"><span class="linenos">120</span></a><span class="sd">        :rtype: bool</span>
+</span><span id="SafeSet.issuperset-121"><a href="#SafeSet.issuperset-121"><span class="linenos">121</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.issuperset-122"><a href="#SafeSet.issuperset-122"><span class="linenos">122</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.issuperset-123"><a href="#SafeSet.issuperset-123"><span class="linenos">123</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">issuperset</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns True if the set is a superset of another set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>other</strong>:  The other set to compare.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p><code>True</code> if the set is a superset, otherwise <code>False</code>.</p>
+</blockquote>
 </div>
 
 
@@ -571,14 +919,32 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.pop"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.pop-64"><a href="#SafeSet.pop-64"><span class="linenos">64</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="SafeSet.pop-65"><a href="#SafeSet.pop-65"><span class="linenos">65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes and returns an arbitrary element from the set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.pop-66"><a href="#SafeSet.pop-66"><span class="linenos">66</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.pop-67"><a href="#SafeSet.pop-67"><span class="linenos">67</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.pop-125"><a href="#SafeSet.pop-125"><span class="linenos">125</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="SafeSet.pop-126"><a href="#SafeSet.pop-126"><span class="linenos">126</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.pop-127"><a href="#SafeSet.pop-127"><span class="linenos">127</span></a><span class="sd">        Removes and returns an arbitrary element from the set, thread-safe.</span>
+</span><span id="SafeSet.pop-128"><a href="#SafeSet.pop-128"><span class="linenos">128</span></a>
+</span><span id="SafeSet.pop-129"><a href="#SafeSet.pop-129"><span class="linenos">129</span></a><span class="sd">        :return: An arbitrary element from the set.</span>
+</span><span id="SafeSet.pop-130"><a href="#SafeSet.pop-130"><span class="linenos">130</span></a><span class="sd">        :rtype: `type of element`</span>
+</span><span id="SafeSet.pop-131"><a href="#SafeSet.pop-131"><span class="linenos">131</span></a><span class="sd">        :raises KeyError: If the set is empty.</span>
+</span><span id="SafeSet.pop-132"><a href="#SafeSet.pop-132"><span class="linenos">132</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.pop-133"><a href="#SafeSet.pop-133"><span class="linenos">133</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.pop-134"><a href="#SafeSet.pop-134"><span class="linenos">134</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes and returns an arbitrary element from the set, thread-safe.</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>An arbitrary element from the set.</p>
+</blockquote>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>KeyError</strong>:  If the set is empty.</li>
+</ul>
 </div>
 
 
@@ -594,14 +960,32 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.remove"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.remove-69"><a href="#SafeSet.remove-69"><span class="linenos">69</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-</span><span id="SafeSet.remove-70"><a href="#SafeSet.remove-70"><span class="linenos">70</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes an element from the set, thread-safe. Raises KeyError if not present.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.remove-71"><a href="#SafeSet.remove-71"><span class="linenos">71</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.remove-72"><a href="#SafeSet.remove-72"><span class="linenos">72</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.remove-136"><a href="#SafeSet.remove-136"><span class="linenos">136</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+</span><span id="SafeSet.remove-137"><a href="#SafeSet.remove-137"><span class="linenos">137</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.remove-138"><a href="#SafeSet.remove-138"><span class="linenos">138</span></a><span class="sd">        Removes an element from the set, thread-safe. Raises KeyError if not present.</span>
+</span><span id="SafeSet.remove-139"><a href="#SafeSet.remove-139"><span class="linenos">139</span></a>
+</span><span id="SafeSet.remove-140"><a href="#SafeSet.remove-140"><span class="linenos">140</span></a><span class="sd">        :param value: The element to remove from the set.</span>
+</span><span id="SafeSet.remove-141"><a href="#SafeSet.remove-141"><span class="linenos">141</span></a><span class="sd">        :type value: `type of value`</span>
+</span><span id="SafeSet.remove-142"><a href="#SafeSet.remove-142"><span class="linenos">142</span></a><span class="sd">        :raises KeyError: If the element is not found in the set.</span>
+</span><span id="SafeSet.remove-143"><a href="#SafeSet.remove-143"><span class="linenos">143</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.remove-144"><a href="#SafeSet.remove-144"><span class="linenos">144</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.remove-145"><a href="#SafeSet.remove-145"><span class="linenos">145</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Removes an element from the set, thread-safe. Raises KeyError if not present.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>value</strong>:  The element to remove from the set.</li>
+</ul>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>KeyError</strong>:  If the element is not found in the set.</li>
+</ul>
 </div>
 
 
@@ -617,14 +1001,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.symmetric_difference"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.symmetric_difference-74"><a href="#SafeSet.symmetric_difference-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet.symmetric_difference-75"><a href="#SafeSet.symmetric_difference-75"><span class="linenos">75</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with elements in either the set or other but not both, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.symmetric_difference-76"><a href="#SafeSet.symmetric_difference-76"><span class="linenos">76</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.symmetric_difference-77"><a href="#SafeSet.symmetric_difference-77"><span class="linenos">77</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.symmetric_difference-147"><a href="#SafeSet.symmetric_difference-147"><span class="linenos">147</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet.symmetric_difference-148"><a href="#SafeSet.symmetric_difference-148"><span class="linenos">148</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.symmetric_difference-149"><a href="#SafeSet.symmetric_difference-149"><span class="linenos">149</span></a><span class="sd">        Returns a new set with elements in either the set or other but not both, thread-safe.</span>
+</span><span id="SafeSet.symmetric_difference-150"><a href="#SafeSet.symmetric_difference-150"><span class="linenos">150</span></a>
+</span><span id="SafeSet.symmetric_difference-151"><a href="#SafeSet.symmetric_difference-151"><span class="linenos">151</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="SafeSet.symmetric_difference-152"><a href="#SafeSet.symmetric_difference-152"><span class="linenos">152</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet.symmetric_difference-153"><a href="#SafeSet.symmetric_difference-153"><span class="linenos">153</span></a><span class="sd">        :return: A new set with the symmetric difference.</span>
+</span><span id="SafeSet.symmetric_difference-154"><a href="#SafeSet.symmetric_difference-154"><span class="linenos">154</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet.symmetric_difference-155"><a href="#SafeSet.symmetric_difference-155"><span class="linenos">155</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.symmetric_difference-156"><a href="#SafeSet.symmetric_difference-156"><span class="linenos">156</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.symmetric_difference-157"><a href="#SafeSet.symmetric_difference-157"><span class="linenos">157</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns a new set with elements in either the set or other but not both, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>other</strong>:  The set to compare.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A new set with the symmetric difference.</p>
+</blockquote>
 </div>
 
 
@@ -640,14 +1043,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.symmetric_difference_update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.symmetric_difference_update-79"><a href="#SafeSet.symmetric_difference_update-79"><span class="linenos">79</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-</span><span id="SafeSet.symmetric_difference_update-80"><a href="#SafeSet.symmetric_difference_update-80"><span class="linenos">80</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with the symmetric difference of itself and another set, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.symmetric_difference_update-81"><a href="#SafeSet.symmetric_difference_update-81"><span class="linenos">81</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.symmetric_difference_update-82"><a href="#SafeSet.symmetric_difference_update-82"><span class="linenos">82</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.symmetric_difference_update-159"><a href="#SafeSet.symmetric_difference_update-159"><span class="linenos">159</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span><span id="SafeSet.symmetric_difference_update-160"><a href="#SafeSet.symmetric_difference_update-160"><span class="linenos">160</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.symmetric_difference_update-161"><a href="#SafeSet.symmetric_difference_update-161"><span class="linenos">161</span></a><span class="sd">        Updates the set with the symmetric difference of itself and another set, thread-safe.</span>
+</span><span id="SafeSet.symmetric_difference_update-162"><a href="#SafeSet.symmetric_difference_update-162"><span class="linenos">162</span></a>
+</span><span id="SafeSet.symmetric_difference_update-163"><a href="#SafeSet.symmetric_difference_update-163"><span class="linenos">163</span></a><span class="sd">        :param other: The set to compare.</span>
+</span><span id="SafeSet.symmetric_difference_update-164"><a href="#SafeSet.symmetric_difference_update-164"><span class="linenos">164</span></a><span class="sd">        :type other: set</span>
+</span><span id="SafeSet.symmetric_difference_update-165"><a href="#SafeSet.symmetric_difference_update-165"><span class="linenos">165</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.symmetric_difference_update-166"><a href="#SafeSet.symmetric_difference_update-166"><span class="linenos">166</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.symmetric_difference_update-167"><a href="#SafeSet.symmetric_difference_update-167"><span class="linenos">167</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Updates the set with the symmetric difference of itself and another set, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>other</strong>:  The set to compare.</li>
+</ul>
 </div>
 
 
@@ -663,14 +1077,33 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.union"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.union-84"><a href="#SafeSet.union-84"><span class="linenos">84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.union-85"><a href="#SafeSet.union-85"><span class="linenos">85</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a new set with all elements from the set and all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.union-86"><a href="#SafeSet.union-86"><span class="linenos">86</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.union-87"><a href="#SafeSet.union-87"><span class="linenos">87</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.union-169"><a href="#SafeSet.union-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.union-170"><a href="#SafeSet.union-170"><span class="linenos">170</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.union-171"><a href="#SafeSet.union-171"><span class="linenos">171</span></a><span class="sd">        Returns a new set with all elements from the set and all others, thread-safe.</span>
+</span><span id="SafeSet.union-172"><a href="#SafeSet.union-172"><span class="linenos">172</span></a>
+</span><span id="SafeSet.union-173"><a href="#SafeSet.union-173"><span class="linenos">173</span></a><span class="sd">        :param others: Sets to combine with the current set.</span>
+</span><span id="SafeSet.union-174"><a href="#SafeSet.union-174"><span class="linenos">174</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.union-175"><a href="#SafeSet.union-175"><span class="linenos">175</span></a><span class="sd">        :return: A new set with the union.</span>
+</span><span id="SafeSet.union-176"><a href="#SafeSet.union-176"><span class="linenos">176</span></a><span class="sd">        :rtype: set</span>
+</span><span id="SafeSet.union-177"><a href="#SafeSet.union-177"><span class="linenos">177</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.union-178"><a href="#SafeSet.union-178"><span class="linenos">178</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.union-179"><a href="#SafeSet.union-179"><span class="linenos">179</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Returns a new set with all elements from the set and all others, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to combine with the current set.</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>A new set with the union.</p>
+</blockquote>
 </div>
 
 
@@ -686,14 +1119,25 @@ in multithreaded environments using locking mechanisms.</p>
 
     </div>
     <a class="headerlink" href="#SafeSet.update"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.update-89"><a href="#SafeSet.update-89"><span class="linenos">89</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
-</span><span id="SafeSet.update-90"><a href="#SafeSet.update-90"><span class="linenos">90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the set with elements from all others, thread-safe.&quot;&quot;&quot;</span>
-</span><span id="SafeSet.update-91"><a href="#SafeSet.update-91"><span class="linenos">91</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
-</span><span id="SafeSet.update-92"><a href="#SafeSet.update-92"><span class="linenos">92</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="SafeSet.update-181"><a href="#SafeSet.update-181"><span class="linenos">181</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">):</span>
+</span><span id="SafeSet.update-182"><a href="#SafeSet.update-182"><span class="linenos">182</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="SafeSet.update-183"><a href="#SafeSet.update-183"><span class="linenos">183</span></a><span class="sd">        Updates the set with elements from all others, thread-safe.</span>
+</span><span id="SafeSet.update-184"><a href="#SafeSet.update-184"><span class="linenos">184</span></a>
+</span><span id="SafeSet.update-185"><a href="#SafeSet.update-185"><span class="linenos">185</span></a><span class="sd">        :param others: Sets to add to the current set.</span>
+</span><span id="SafeSet.update-186"><a href="#SafeSet.update-186"><span class="linenos">186</span></a><span class="sd">        :type others: set or Iterable</span>
+</span><span id="SafeSet.update-187"><a href="#SafeSet.update-187"><span class="linenos">187</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="SafeSet.update-188"><a href="#SafeSet.update-188"><span class="linenos">188</span></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>  <span class="c1"># Ensure thread safety</span>
+</span><span id="SafeSet.update-189"><a href="#SafeSet.update-189"><span class="linenos">189</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">others</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Updates the set with elements from all others, thread-safe.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>others</strong>:  Sets to add to the current set.</li>
+</ul>
 </div>
 
 

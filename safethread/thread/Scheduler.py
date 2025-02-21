@@ -1,4 +1,3 @@
-
 import time
 
 from typing import Any, Callable, Iterable
@@ -10,15 +9,14 @@ class Scheduler(ThreadBase):
     """
     A thread scheduler that runs a given callback at regular intervals with an optional repeat option.
 
-    Args:
-
-        timeout (float): Time interval in seconds between each callback execution.
-
-        callback (Callable): The function (or callable) to execute at each timeout.
-
-        args (Iterable, optional): Optional arguments to pass to the callback. Defaults to None.
-
-        repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.
+    :param timeout: Time interval in seconds between each callback execution.
+    :type timeout: float
+    :param callback: The function (or callable) to execute at each timeout.
+    :type callback: Callable
+    :param args: Optional arguments to pass to the callback. Defaults to None.
+    :type args: Iterable, optional
+    :param repeat: Whether the callback should be repeated indefinitely or just once. Defaults to True.
+    :type repeat: bool, optional
 
     <img src="../../../img/thread/Scheduler.svg" alt="" width="100%">
     """
@@ -27,19 +25,16 @@ class Scheduler(ThreadBase):
         """
         Initializes the scheduler with the given parameters.
 
-        Args:
+        :param timeout: Time interval in seconds between each callback execution.
+        :type timeout: float
+        :param callback: The function (or callable) to execute at each timeout.
+        :type callback: Callable
+        :param args: Optional arguments to pass to the callback. Defaults to None.
+        :type args: list, optional
+        :param repeat: Whether the callback should be repeated indefinitely or just once. Defaults to True.
+        :type repeat: bool, optional
 
-            timeout (float): Time interval in seconds between each callback execution.
-
-            callback (Callable): The function (or callable) to execute at each timeout.
-
-            args (list, optional): Optional arguments to pass to the callback. Defaults to None.
-
-            repeat (bool, optional): Whether the callback should be repeated indefinitely or just once. Defaults to True.
-
-        Raises:
-
-            ThreadBase.CallableException: If 'callback' is not callable.
+        :raises ThreadBase.CallableException: If 'callback' is not callable.
         """
         super().__init__(
             callback=self.__run_scheduler,
@@ -63,5 +58,5 @@ class Scheduler(ThreadBase):
         self.__callback(*self.__args)
 
     def get_timeout(self) -> float:
-        """Returns scheduler timeout"""
+        """Returns scheduler timeout."""
         return self.__timeout

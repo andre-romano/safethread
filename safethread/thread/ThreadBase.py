@@ -12,27 +12,18 @@ class ThreadBase:
     """
 
     class CallableException(Exception):
-        """"Raised if a callable argument is not a Callable class (e.g., lambda, function, etc)"""
-
-        def __init__(self, *args: object) -> None:
-            super().__init__(*args)
+        """Raised if a callable argument is not a Callable class (e.g., lambda, function, etc)"""
 
     @staticmethod
     def is_callable(callback: Callable) -> Callable:
         """
         Checks if callback is a Callable (function, lambda, etc).
 
-        Args:
-
-            callback (Callable): The Callable to check.
-
-        Raises:
-
-            ThreadBase.CallableException: If the callback argument is not callable.
-
-        Returns:
-
-            callback (Callable): The callback Callable
+        :param callback: The Callable to check.
+        :type callback: Callable
+        :raises ThreadBase.CallableException: If the callback argument is not callable.
+        :return: The callback Callable.
+        :rtype: Callable
         """
         if not isinstance(callback, Callable):
             raise ThreadBase.CallableException(
@@ -42,22 +33,21 @@ class ThreadBase:
 
     @staticmethod
     def get_lock():
-        """Get a new instance of RLock (reentrant lock)"""
+        """Get a new instance of RLock (reentrant lock)."""
         return threading.RLock()
 
     def __init__(self, callback: Callable, args: Iterable | None = None, daemon: bool = True, repeat: bool = False):
         """
-        Initializes the thread and the reentrant lock.
+        Initializes the thread.
 
-        Args:
-
-            callback (Callable): The Callable to check. Format: callback(*args)
-
-            args (Iterable, optional): The arguments to pass to the callback() method when the thread starts.
-
-            daemon (bool, optional): If True, the thread will be daemonized. Defaults to True.
-
-            repeat (bool, optional): If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
+        :param callback: The Callable to check. Format: callback(*args)
+        :type callback: Callable
+        :param args: The arguments to pass to the callback() method when the thread starts.
+        :type args: Iterable, optional
+        :param daemon: If True, the thread will be daemonized. Defaults to True.
+        :type daemon: bool, optional
+        :param repeat: If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
+        :type repeat: bool, optional
         """
         self.__callback: Callable = self.is_callable(callback)
         self.__args = tuple(args or [])
@@ -90,9 +80,8 @@ class ThreadBase:
         """
         Checks if the thread has started.
 
-        Returns:
-
-            bool: True if thread has started, otherwise False.
+        :return: True if thread has started, otherwise False.
+        :rtype: bool
         """
         return self.__thread_started
 
@@ -100,9 +89,8 @@ class ThreadBase:
         """
         Checks if the thread is alive.
 
-        Returns:
-
-            bool: True if thread is alive, otherwise False.
+        :return: True if thread is alive, otherwise False.
+        :rtype: bool
         """
         return self.__thread.is_alive()
 
@@ -110,9 +98,8 @@ class ThreadBase:
         """
         Checks if the thread has terminated.
 
-        Returns:
-
-            bool: True if thread HAS started and is NOT alive, otherwise False.
+        :return: True if thread HAS started and is NOT alive, otherwise False.
+        :rtype: bool
         """
         return self.has_started() and not self.is_alive()
 
@@ -125,6 +112,7 @@ class ThreadBase:
         return self.__thread.daemon
 
     def set_daemon(self, daemon: bool):
+        """Set whether this thread is a daemon."""
         self.__thread.daemon = daemon
 
     def start(self):
@@ -133,42 +121,39 @@ class ThreadBase:
 
         This method begins the execution of the thread by calling the __run method in the background.
 
-        Raises:
-
-            RuntimeError: if start() is called more than once on the same thread object.
+        :raises RuntimeError: if start() is called more than once on the same thread object.
         """
+        if self.__thread_started:
+            raise RuntimeError("ThreadBase has already been started.")
         self.__thread.start()
         self.__thread_started = True
 
     def stop(self):
-        """Stops the thread"""
+        """Stops the thread."""
         self.__thread_terminate = True
 
     def join(self, timeout: float | None = None):
         """
         Joins the thread, waiting for it to finish.
 
-        Args:
+        :param timeout: The maximum time to wait for the thread to finish. Defaults to None.
+        :type timeout: float, optional
 
-            timeout (float, optional): The maximum time to wait for the thread to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
+        if not self.__thread_started:
+            raise RuntimeError(
+                "Cannot join a thread that has not been started.")
         self.__thread.join(timeout)
 
     def stop_join(self, timeout: float | None = None):
         """
         Calls stop() and join() to stop the thread and wait for it to finish.
 
-        Args:
+        :param timeout: The maximum time to wait for thread to finish. Defaults to None.
+        :type timeout: float, optional
 
-            timeout (float, optional): The maximum time to wait for thread to finish. Defaults to None.
-
-        Raises:
-
-            RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
         self.stop()
         self.join(timeout=timeout)

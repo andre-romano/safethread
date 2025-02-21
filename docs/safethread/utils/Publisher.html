@@ -34,6 +34,9 @@
                     <a class="class" href="#Publisher">Publisher</a>
                             <ul class="memberlist">
                         <li>
+                                <a class="function" href="#Publisher.__init__">Publisher</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#Publisher.subscribe">subscribe</a>
                         </li>
                         <li>
@@ -68,55 +71,58 @@
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">..datatype</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeSet</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">..datatype</span><span class="w"> </span><span class="kn">import</span> <span class="n">SafeList</span>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscriber</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Publisher</span><span class="p">:</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    </span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span> <span class="o">=</span> <span class="n">SafeSet</span><span class="p">()</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">        Adds a subscriber to receive notifications.</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        Args:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">        Raises:</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">            TypeError: if subscriber is not an instance of Subscriber class</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">        Removes a subscriber from notifications.</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">    This class allows subscribers to be added or removed from a list, and will notify them whenever</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    new data is published. It is designed to be thread-safe.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">        Initializes a new Publisher instance.</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span> <span class="o">=</span> <span class="n">SafeList</span><span class="p">()</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">        Adds a subscriber to receive notifications when new data is published.</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">        :param subscriber: The subscriber instance to be added.</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        :raises TypeError: If the subscriber is not an instance of the Subscriber class.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
 </span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">        Args:</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        Publishes new data and notifies all subscribers.</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        Removes a subscriber from the list of subscribers, preventing further notifications.</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        :param subscriber: The subscriber instance to be removed.</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
 </span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        Args:</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">            data (Any): The new data to be published.</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="c1"># notify subscribers</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">)</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">        Publishes new data and notifies all subscribed listeners.</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">        :param data: The new data to be published to subscribers.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">        :type data: Any</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>        <span class="c1"># Notify all subscribers with the new data</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -132,57 +138,86 @@
 
     </div>
     <a class="headerlink" href="#Publisher"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher-10"><a href="#Publisher-10"><span class="linenos">10</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Publisher</span><span class="p">:</span>
-</span><span id="Publisher-11"><a href="#Publisher-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher-12"><a href="#Publisher-12"><span class="linenos">12</span></a><span class="sd">    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    </span>
-</span><span id="Publisher-13"><a href="#Publisher-13"><span class="linenos">13</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="Publisher-14"><a href="#Publisher-14"><span class="linenos">14</span></a>
-</span><span id="Publisher-15"><a href="#Publisher-15"><span class="linenos">15</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="Publisher-16"><a href="#Publisher-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span> <span class="o">=</span> <span class="n">SafeSet</span><span class="p">()</span>
-</span><span id="Publisher-17"><a href="#Publisher-17"><span class="linenos">17</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="Publisher-18"><a href="#Publisher-18"><span class="linenos">18</span></a>
-</span><span id="Publisher-19"><a href="#Publisher-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher-20"><a href="#Publisher-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher-21"><a href="#Publisher-21"><span class="linenos">21</span></a><span class="sd">        Adds a subscriber to receive notifications.</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher-9"><a href="#Publisher-9"><span class="linenos"> 9</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Publisher</span><span class="p">:</span>
+</span><span id="Publisher-10"><a href="#Publisher-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher-11"><a href="#Publisher-11"><span class="linenos">11</span></a><span class="sd">    A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.</span>
+</span><span id="Publisher-12"><a href="#Publisher-12"><span class="linenos">12</span></a>
+</span><span id="Publisher-13"><a href="#Publisher-13"><span class="linenos">13</span></a><span class="sd">    This class allows subscribers to be added or removed from a list, and will notify them whenever</span>
+</span><span id="Publisher-14"><a href="#Publisher-14"><span class="linenos">14</span></a><span class="sd">    new data is published. It is designed to be thread-safe.</span>
+</span><span id="Publisher-15"><a href="#Publisher-15"><span class="linenos">15</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="Publisher-16"><a href="#Publisher-16"><span class="linenos">16</span></a>
+</span><span id="Publisher-17"><a href="#Publisher-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Publisher-18"><a href="#Publisher-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher-19"><a href="#Publisher-19"><span class="linenos">19</span></a><span class="sd">        Initializes a new Publisher instance.</span>
+</span><span id="Publisher-20"><a href="#Publisher-20"><span class="linenos">20</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher-21"><a href="#Publisher-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span> <span class="o">=</span> <span class="n">SafeList</span><span class="p">()</span>
 </span><span id="Publisher-22"><a href="#Publisher-22"><span class="linenos">22</span></a>
-</span><span id="Publisher-23"><a href="#Publisher-23"><span class="linenos">23</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher-24"><a href="#Publisher-24"><span class="linenos">24</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="Publisher-25"><a href="#Publisher-25"><span class="linenos">25</span></a>
-</span><span id="Publisher-26"><a href="#Publisher-26"><span class="linenos">26</span></a><span class="sd">        Raises:</span>
-</span><span id="Publisher-27"><a href="#Publisher-27"><span class="linenos">27</span></a><span class="sd">            TypeError: if subscriber is not an instance of Subscriber class</span>
-</span><span id="Publisher-28"><a href="#Publisher-28"><span class="linenos">28</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher-29"><a href="#Publisher-29"><span class="linenos">29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher-30"><a href="#Publisher-30"><span class="linenos">30</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
-</span><span id="Publisher-31"><a href="#Publisher-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
-</span><span id="Publisher-32"><a href="#Publisher-32"><span class="linenos">32</span></a>
-</span><span id="Publisher-33"><a href="#Publisher-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher-34"><a href="#Publisher-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher-35"><a href="#Publisher-35"><span class="linenos">35</span></a><span class="sd">        Removes a subscriber from notifications.</span>
-</span><span id="Publisher-36"><a href="#Publisher-36"><span class="linenos">36</span></a>
-</span><span id="Publisher-37"><a href="#Publisher-37"><span class="linenos">37</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher-38"><a href="#Publisher-38"><span class="linenos">38</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="Publisher-39"><a href="#Publisher-39"><span class="linenos">39</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher-40"><a href="#Publisher-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
-</span><span id="Publisher-41"><a href="#Publisher-41"><span class="linenos">41</span></a>
-</span><span id="Publisher-42"><a href="#Publisher-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-</span><span id="Publisher-43"><a href="#Publisher-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher-44"><a href="#Publisher-44"><span class="linenos">44</span></a><span class="sd">        Publishes new data and notifies all subscribers.</span>
-</span><span id="Publisher-45"><a href="#Publisher-45"><span class="linenos">45</span></a>
-</span><span id="Publisher-46"><a href="#Publisher-46"><span class="linenos">46</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher-47"><a href="#Publisher-47"><span class="linenos">47</span></a><span class="sd">            data (Any): The new data to be published.</span>
-</span><span id="Publisher-48"><a href="#Publisher-48"><span class="linenos">48</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher-49"><a href="#Publisher-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
-</span><span id="Publisher-50"><a href="#Publisher-50"><span class="linenos">50</span></a>        <span class="c1"># notify subscribers</span>
-</span><span id="Publisher-51"><a href="#Publisher-51"><span class="linenos">51</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
-</span><span id="Publisher-52"><a href="#Publisher-52"><span class="linenos">52</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
-</span><span id="Publisher-53"><a href="#Publisher-53"><span class="linenos">53</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">)</span>
+</span><span id="Publisher-23"><a href="#Publisher-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher-24"><a href="#Publisher-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher-25"><a href="#Publisher-25"><span class="linenos">25</span></a><span class="sd">        Adds a subscriber to receive notifications when new data is published.</span>
+</span><span id="Publisher-26"><a href="#Publisher-26"><span class="linenos">26</span></a>
+</span><span id="Publisher-27"><a href="#Publisher-27"><span class="linenos">27</span></a><span class="sd">        :param subscriber: The subscriber instance to be added.</span>
+</span><span id="Publisher-28"><a href="#Publisher-28"><span class="linenos">28</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="Publisher-29"><a href="#Publisher-29"><span class="linenos">29</span></a>
+</span><span id="Publisher-30"><a href="#Publisher-30"><span class="linenos">30</span></a><span class="sd">        :raises TypeError: If the subscriber is not an instance of the Subscriber class.</span>
+</span><span id="Publisher-31"><a href="#Publisher-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher-32"><a href="#Publisher-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher-33"><a href="#Publisher-33"><span class="linenos">33</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
+</span><span id="Publisher-34"><a href="#Publisher-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+</span><span id="Publisher-35"><a href="#Publisher-35"><span class="linenos">35</span></a>
+</span><span id="Publisher-36"><a href="#Publisher-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher-37"><a href="#Publisher-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher-38"><a href="#Publisher-38"><span class="linenos">38</span></a><span class="sd">        Removes a subscriber from the list of subscribers, preventing further notifications.</span>
+</span><span id="Publisher-39"><a href="#Publisher-39"><span class="linenos">39</span></a>
+</span><span id="Publisher-40"><a href="#Publisher-40"><span class="linenos">40</span></a><span class="sd">        :param subscriber: The subscriber instance to be removed.</span>
+</span><span id="Publisher-41"><a href="#Publisher-41"><span class="linenos">41</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="Publisher-42"><a href="#Publisher-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher-43"><a href="#Publisher-43"><span class="linenos">43</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+</span><span id="Publisher-44"><a href="#Publisher-44"><span class="linenos">44</span></a>
+</span><span id="Publisher-45"><a href="#Publisher-45"><span class="linenos">45</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+</span><span id="Publisher-46"><a href="#Publisher-46"><span class="linenos">46</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher-47"><a href="#Publisher-47"><span class="linenos">47</span></a><span class="sd">        Publishes new data and notifies all subscribed listeners.</span>
+</span><span id="Publisher-48"><a href="#Publisher-48"><span class="linenos">48</span></a>
+</span><span id="Publisher-49"><a href="#Publisher-49"><span class="linenos">49</span></a><span class="sd">        :param data: The new data to be published to subscribers.</span>
+</span><span id="Publisher-50"><a href="#Publisher-50"><span class="linenos">50</span></a><span class="sd">        :type data: Any</span>
+</span><span id="Publisher-51"><a href="#Publisher-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher-52"><a href="#Publisher-52"><span class="linenos">52</span></a>        <span class="c1"># Notify all subscribers with the new data</span>
+</span><span id="Publisher-53"><a href="#Publisher-53"><span class="linenos">53</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
+</span><span id="Publisher-54"><a href="#Publisher-54"><span class="linenos">54</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
+</span><span id="Publisher-55"><a href="#Publisher-55"><span class="linenos">55</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.</p>
+
+<p>This class allows subscribers to be added or removed from a list, and will notify them whenever
+new data is published. It is designed to be thread-safe.</p>
 </div>
 
 
+                            <div id="Publisher.__init__" class="classattr">
+                                        <input id="Publisher.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">Publisher</span><span class="signature pdoc-code condensed">()</span>
+
+                <label class="view-source-button" for="Publisher.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#Publisher.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.__init__-17"><a href="#Publisher.__init__-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="Publisher.__init__-18"><a href="#Publisher.__init__-18"><span class="linenos">18</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher.__init__-19"><a href="#Publisher.__init__-19"><span class="linenos">19</span></a><span class="sd">        Initializes a new Publisher instance.</span>
+</span><span id="Publisher.__init__-20"><a href="#Publisher.__init__-20"><span class="linenos">20</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher.__init__-21"><a href="#Publisher.__init__-21"><span class="linenos">21</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span> <span class="o">=</span> <span class="n">SafeList</span><span class="p">()</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Initializes a new Publisher instance.</p>
+</div>
+
+
+                            </div>
                             <div id="Publisher.subscribe" class="classattr">
                                         <input id="Publisher.subscribe-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -194,29 +229,34 @@
 
     </div>
     <a class="headerlink" href="#Publisher.subscribe"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.subscribe-19"><a href="#Publisher.subscribe-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher.subscribe-20"><a href="#Publisher.subscribe-20"><span class="linenos">20</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher.subscribe-21"><a href="#Publisher.subscribe-21"><span class="linenos">21</span></a><span class="sd">        Adds a subscriber to receive notifications.</span>
-</span><span id="Publisher.subscribe-22"><a href="#Publisher.subscribe-22"><span class="linenos">22</span></a>
-</span><span id="Publisher.subscribe-23"><a href="#Publisher.subscribe-23"><span class="linenos">23</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher.subscribe-24"><a href="#Publisher.subscribe-24"><span class="linenos">24</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="Publisher.subscribe-25"><a href="#Publisher.subscribe-25"><span class="linenos">25</span></a>
-</span><span id="Publisher.subscribe-26"><a href="#Publisher.subscribe-26"><span class="linenos">26</span></a><span class="sd">        Raises:</span>
-</span><span id="Publisher.subscribe-27"><a href="#Publisher.subscribe-27"><span class="linenos">27</span></a><span class="sd">            TypeError: if subscriber is not an instance of Subscriber class</span>
-</span><span id="Publisher.subscribe-28"><a href="#Publisher.subscribe-28"><span class="linenos">28</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher.subscribe-29"><a href="#Publisher.subscribe-29"><span class="linenos">29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher.subscribe-30"><a href="#Publisher.subscribe-30"><span class="linenos">30</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
-</span><span id="Publisher.subscribe-31"><a href="#Publisher.subscribe-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.subscribe-23"><a href="#Publisher.subscribe-23"><span class="linenos">23</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher.subscribe-24"><a href="#Publisher.subscribe-24"><span class="linenos">24</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher.subscribe-25"><a href="#Publisher.subscribe-25"><span class="linenos">25</span></a><span class="sd">        Adds a subscriber to receive notifications when new data is published.</span>
+</span><span id="Publisher.subscribe-26"><a href="#Publisher.subscribe-26"><span class="linenos">26</span></a>
+</span><span id="Publisher.subscribe-27"><a href="#Publisher.subscribe-27"><span class="linenos">27</span></a><span class="sd">        :param subscriber: The subscriber instance to be added.</span>
+</span><span id="Publisher.subscribe-28"><a href="#Publisher.subscribe-28"><span class="linenos">28</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="Publisher.subscribe-29"><a href="#Publisher.subscribe-29"><span class="linenos">29</span></a>
+</span><span id="Publisher.subscribe-30"><a href="#Publisher.subscribe-30"><span class="linenos">30</span></a><span class="sd">        :raises TypeError: If the subscriber is not an instance of the Subscriber class.</span>
+</span><span id="Publisher.subscribe-31"><a href="#Publisher.subscribe-31"><span class="linenos">31</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher.subscribe-32"><a href="#Publisher.subscribe-32"><span class="linenos">32</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subscriber</span><span class="p">,</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher.subscribe-33"><a href="#Publisher.subscribe-33"><span class="linenos">33</span></a>            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Expected an instance of Subscriber.&quot;</span><span class="p">)</span>
+</span><span id="Publisher.subscribe-34"><a href="#Publisher.subscribe-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Adds a subscriber to receive notifications.</p>
+            <div class="docstring"><p>Adds a subscriber to receive notifications when new data is published.</p>
 
-<p>Args:
-    subscriber (Subscriber): The subscriber instance.</p>
+<h6 id="parameters">Parameters</h6>
 
-<p>Raises:
-    TypeError: if subscriber is not an instance of Subscriber class</p>
+<ul>
+<li><strong>subscriber</strong>:  The subscriber instance to be added.</li>
+</ul>
+
+<h6 id="raises">Raises</h6>
+
+<ul>
+<li><strong>TypeError</strong>:  If the subscriber is not an instance of the Subscriber class.</li>
+</ul>
 </div>
 
 
@@ -232,21 +272,24 @@
 
     </div>
     <a class="headerlink" href="#Publisher.unsubscribe"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.unsubscribe-33"><a href="#Publisher.unsubscribe-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
-</span><span id="Publisher.unsubscribe-34"><a href="#Publisher.unsubscribe-34"><span class="linenos">34</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher.unsubscribe-35"><a href="#Publisher.unsubscribe-35"><span class="linenos">35</span></a><span class="sd">        Removes a subscriber from notifications.</span>
-</span><span id="Publisher.unsubscribe-36"><a href="#Publisher.unsubscribe-36"><span class="linenos">36</span></a>
-</span><span id="Publisher.unsubscribe-37"><a href="#Publisher.unsubscribe-37"><span class="linenos">37</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher.unsubscribe-38"><a href="#Publisher.unsubscribe-38"><span class="linenos">38</span></a><span class="sd">            subscriber (Subscriber): The subscriber instance.</span>
-</span><span id="Publisher.unsubscribe-39"><a href="#Publisher.unsubscribe-39"><span class="linenos">39</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher.unsubscribe-40"><a href="#Publisher.unsubscribe-40"><span class="linenos">40</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.unsubscribe-36"><a href="#Publisher.unsubscribe-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span><span class="p">):</span>
+</span><span id="Publisher.unsubscribe-37"><a href="#Publisher.unsubscribe-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher.unsubscribe-38"><a href="#Publisher.unsubscribe-38"><span class="linenos">38</span></a><span class="sd">        Removes a subscriber from the list of subscribers, preventing further notifications.</span>
+</span><span id="Publisher.unsubscribe-39"><a href="#Publisher.unsubscribe-39"><span class="linenos">39</span></a>
+</span><span id="Publisher.unsubscribe-40"><a href="#Publisher.unsubscribe-40"><span class="linenos">40</span></a><span class="sd">        :param subscriber: The subscriber instance to be removed.</span>
+</span><span id="Publisher.unsubscribe-41"><a href="#Publisher.unsubscribe-41"><span class="linenos">41</span></a><span class="sd">        :type subscriber: Subscriber</span>
+</span><span id="Publisher.unsubscribe-42"><a href="#Publisher.unsubscribe-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher.unsubscribe-43"><a href="#Publisher.unsubscribe-43"><span class="linenos">43</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Removes a subscriber from notifications.</p>
+            <div class="docstring"><p>Removes a subscriber from the list of subscribers, preventing further notifications.</p>
 
-<p>Args:
-    subscriber (Subscriber): The subscriber instance.</p>
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>subscriber</strong>:  The subscriber instance to be removed.</li>
+</ul>
 </div>
 
 
@@ -262,25 +305,27 @@
 
     </div>
     <a class="headerlink" href="#Publisher.publish"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.publish-42"><a href="#Publisher.publish-42"><span class="linenos">42</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-</span><span id="Publisher.publish-43"><a href="#Publisher.publish-43"><span class="linenos">43</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="Publisher.publish-44"><a href="#Publisher.publish-44"><span class="linenos">44</span></a><span class="sd">        Publishes new data and notifies all subscribers.</span>
-</span><span id="Publisher.publish-45"><a href="#Publisher.publish-45"><span class="linenos">45</span></a>
-</span><span id="Publisher.publish-46"><a href="#Publisher.publish-46"><span class="linenos">46</span></a><span class="sd">        Args:</span>
-</span><span id="Publisher.publish-47"><a href="#Publisher.publish-47"><span class="linenos">47</span></a><span class="sd">            data (Any): The new data to be published.</span>
-</span><span id="Publisher.publish-48"><a href="#Publisher.publish-48"><span class="linenos">48</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="Publisher.publish-49"><a href="#Publisher.publish-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__data</span> <span class="o">=</span> <span class="n">data</span>
-</span><span id="Publisher.publish-50"><a href="#Publisher.publish-50"><span class="linenos">50</span></a>        <span class="c1"># notify subscribers</span>
-</span><span id="Publisher.publish-51"><a href="#Publisher.publish-51"><span class="linenos">51</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
-</span><span id="Publisher.publish-52"><a href="#Publisher.publish-52"><span class="linenos">52</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
-</span><span id="Publisher.publish-53"><a href="#Publisher.publish-53"><span class="linenos">53</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__data</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Publisher.publish-45"><a href="#Publisher.publish-45"><span class="linenos">45</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+</span><span id="Publisher.publish-46"><a href="#Publisher.publish-46"><span class="linenos">46</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="Publisher.publish-47"><a href="#Publisher.publish-47"><span class="linenos">47</span></a><span class="sd">        Publishes new data and notifies all subscribed listeners.</span>
+</span><span id="Publisher.publish-48"><a href="#Publisher.publish-48"><span class="linenos">48</span></a>
+</span><span id="Publisher.publish-49"><a href="#Publisher.publish-49"><span class="linenos">49</span></a><span class="sd">        :param data: The new data to be published to subscribers.</span>
+</span><span id="Publisher.publish-50"><a href="#Publisher.publish-50"><span class="linenos">50</span></a><span class="sd">        :type data: Any</span>
+</span><span id="Publisher.publish-51"><a href="#Publisher.publish-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="Publisher.publish-52"><a href="#Publisher.publish-52"><span class="linenos">52</span></a>        <span class="c1"># Notify all subscribers with the new data</span>
+</span><span id="Publisher.publish-53"><a href="#Publisher.publish-53"><span class="linenos">53</span></a>        <span class="k">for</span> <span class="n">subscriber</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__subscribers</span><span class="p">:</span>
+</span><span id="Publisher.publish-54"><a href="#Publisher.publish-54"><span class="linenos">54</span></a>            <span class="n">subscriber</span><span class="p">:</span> <span class="n">Subscriber</span>
+</span><span id="Publisher.publish-55"><a href="#Publisher.publish-55"><span class="linenos">55</span></a>            <span class="n">subscriber</span><span class="o">.</span><span class="n">_notify</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Publishes new data and notifies all subscribers.</p>
+            <div class="docstring"><p>Publishes new data and notifies all subscribed listeners.</p>
 
-<p>Args:
-    data (Any): The new data to be published.</p>
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>data</strong>:  The new data to be published to subscribers.</li>
+</ul>
 </div>
 
 

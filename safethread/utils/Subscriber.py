@@ -1,4 +1,3 @@
-
 from typing import Any, List, Callable
 
 
@@ -6,14 +5,24 @@ class Subscriber:
     """
     A class that subscribes to a Publisher and receives notifications when data changes.
 
-    Args:
-        callback (Callable[[Any], None]): A function that will be called whenever new data is published.
+    This class allows a subscriber to register a callback function that is called whenever
+    new data is published by a Publisher.
 
-    Raises:
-        TypeError: if callback is not a Callable class (lambda, function, etc)
+    :param callback: A function that will be called whenever new data is published.
+    :type callback: Callable[[Any], None]
+
+    :raises TypeError: If the `callback` argument is not a callable function or object.
     """
 
     def __init__(self, callback: Callable[[Any], None]):
+        """
+        Initializes the Subscriber with the provided callback function.
+
+        :param callback: The function to be called when new data is published.
+        :type callback: Callable[[Any], None]
+
+        :raises TypeError: If `callback` is not callable.
+        """
         if not callable(callback):
             raise TypeError("Subscriber callback must be a callable function.")
         self.__callback = callback
@@ -22,7 +31,10 @@ class Subscriber:
         """
         Called when new data is published.
 
-        Args:
-            data (Any): The updated data from the publisher.
+        This method triggers the callback function provided during initialization with
+        the new data.
+
+        :param data: The updated data from the publisher.
+        :type data: Any
         """
         self.__callback(data)
