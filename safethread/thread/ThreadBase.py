@@ -25,7 +25,7 @@ class ThreadBase:
         :return: The callback Callable.
         :rtype: Callable
         """
-        if not isinstance(callback, Callable):
+        if not callable(callback):
             raise ThreadBase.CallableException(
                 "'callback' must be a Callable (e.g., function, lambda, etc)"
             )

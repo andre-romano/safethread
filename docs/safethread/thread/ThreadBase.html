@@ -129,7 +129,7 @@
 </span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">        :return: The callback Callable.</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">        :rtype: Callable</span>
 </span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
 </span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
 </span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
 </span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>            <span class="p">)</span>
@@ -298,7 +298,7 @@
 </span><span id="ThreadBase-26"><a href="#ThreadBase-26"><span class="linenos"> 26</span></a><span class="sd">        :return: The callback Callable.</span>
 </span><span id="ThreadBase-27"><a href="#ThreadBase-27"><span class="linenos"> 27</span></a><span class="sd">        :rtype: Callable</span>
 </span><span id="ThreadBase-28"><a href="#ThreadBase-28"><span class="linenos"> 28</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase-29"><a href="#ThreadBase-29"><span class="linenos"> 29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase-29"><a href="#ThreadBase-29"><span class="linenos"> 29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
 </span><span id="ThreadBase-30"><a href="#ThreadBase-30"><span class="linenos"> 30</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
 </span><span id="ThreadBase-31"><a href="#ThreadBase-31"><span class="linenos"> 31</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
 </span><span id="ThreadBase-32"><a href="#ThreadBase-32"><span class="linenos"> 32</span></a>            <span class="p">)</span>
@@ -513,7 +513,7 @@ It also ensures that the thread's operations are protected by a reentrant lock (
 </span><span id="ThreadBase.is_callable-26"><a href="#ThreadBase.is_callable-26"><span class="linenos">26</span></a><span class="sd">        :return: The callback Callable.</span>
 </span><span id="ThreadBase.is_callable-27"><a href="#ThreadBase.is_callable-27"><span class="linenos">27</span></a><span class="sd">        :rtype: Callable</span>
 </span><span id="ThreadBase.is_callable-28"><a href="#ThreadBase.is_callable-28"><span class="linenos">28</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ThreadBase.is_callable-29"><a href="#ThreadBase.is_callable-29"><span class="linenos">29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">Callable</span><span class="p">):</span>
+</span><span id="ThreadBase.is_callable-29"><a href="#ThreadBase.is_callable-29"><span class="linenos">29</span></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
 </span><span id="ThreadBase.is_callable-30"><a href="#ThreadBase.is_callable-30"><span class="linenos">30</span></a>            <span class="k">raise</span> <span class="n">ThreadBase</span><span class="o">.</span><span class="n">CallableException</span><span class="p">(</span>
 </span><span id="ThreadBase.is_callable-31"><a href="#ThreadBase.is_callable-31"><span class="linenos">31</span></a>                <span class="s2">&quot;&#39;callback&#39; must be a Callable (e.g., function, lambda, etc)&quot;</span>
 </span><span id="ThreadBase.is_callable-32"><a href="#ThreadBase.is_callable-32"><span class="linenos">32</span></a>            <span class="p">)</span>

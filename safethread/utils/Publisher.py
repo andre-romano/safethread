@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Iterable, Self
 
 from ..datatype import SafeList
 
@@ -19,18 +19,26 @@ class Publisher:
         """
         self.__subscribers = SafeList()
 
-    def subscribe(self, subscriber: Subscriber):
+    def subscribe(self, subscribers: Subscriber | Iterable[Subscriber]) -> Self:
         """
-        Adds a subscriber to receive notifications when new data is published.
+        Adds a subscriber(s) to receive notifications when new data is published.
 
-        :param subscriber: The subscriber instance to be added.
-        :type subscriber: Subscriber
+        :param subscribers: The subscriber(s) instance(s) to be added.
+        :type subscribers: Subscriber | Iterable[Subscriber]
 
-        :raises TypeError: If the subscriber is not an instance of the Subscriber class.
+        :raises TypeError: If the subscribers is not an instance of the Subscriber
+            class or contains an Iterable[Subscriber].
+
+        :return: current object
         """
-        if not isinstance(subscriber, Subscriber):
-            raise TypeError("Expected an instance of Subscriber.")
-        self.__subscribers.append(subscriber)
+        if isinstance(subscribers, Subscriber):
+            subscribers = [subscribers]
+        if isinstance(subscribers, Iterable):
+            for subscriber in subscribers:
+                self.__subscribers.append(subscriber)
+            return self
+        raise TypeError(
+            "Expected an instance of Subscriber or Iterable[Subscriber].")
 
     def unsubscribe(self, subscriber: Subscriber):
         """
@@ -38,8 +46,11 @@ class Publisher:
 
         :param subscriber: The subscriber instance to be removed.
         :type subscriber: Subscriber
+
+        :return: current object
         """
         self.__subscribers.remove(subscriber)
+        return self
 
     def publish(self, data: Any):
         """
