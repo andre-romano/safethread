@@ -2,7 +2,7 @@
 import queue
 import threading
 
-from typing import Any, Iterable, Self
+from typing import Any, Callable, Iterable, Self
 
 from ..thread import ThreadBase
 
@@ -13,7 +13,14 @@ class FileHandler:
     using separate threads and queues to ensure non-blocking behavior.
     """
 
-    def __init__(self, filename: str, max_queue_read_size: int = 100, binary_mode: bool = False, encoding: str | None = 'utf-8') -> None:
+    def __init__(self,
+                 filename: str,
+                 max_queue_read_size: int = 100,
+                 binary_mode: bool = False,
+                 encoding: str | None = 'utf-8',
+                 on_read_error: Callable[[Exception], None] = lambda e: None,
+                 on_write_error: Callable[[Exception], None] = lambda e: None,
+                 ) -> None:
         """
         Initializes the AsyncFileHandler.
 
@@ -25,11 +32,19 @@ class FileHandler:
         :type binary_mode: bool
         :param encoding: File encoding to use. If None, locale.getencoding() is called to get the current locale encoding. Defaults to 'utf-8'.
         :type encoding: str
+        :param on_read_error: A callback function that is called when an error happens when file is being read.
+                                The function should accept one argument: the Exception.                                
+        :type on_read_error: Callable[[Exception], None]
+        :param on_write_error: A callback function that is called when an error happens when file is being read.
+                                The function should accept one argument: the Exception.                                
+        :type on_write_error: Callable[[Exception], None]
         """
         self.__filename = filename
         self.__file_lock = threading.RLock()
         self.__binary_mode = binary_mode
         self.__encoding = encoding
+        self.__on_read_error = on_read_error
+        self.__on_write_error = on_write_error
 
         # raw binary mode cannot have encoding
         if self.__binary_mode:
@@ -58,6 +73,7 @@ class FileHandler:
                         self.__queue_read.put(line)
         except Exception as e:
             self.__error = str(e)
+            self.__on_read_error(e)
         finally:
             self.__queue_read.shutdown()
 
@@ -77,6 +93,7 @@ class FileHandler:
             pass
         except Exception as e:
             self.__error = str(e)
+            self.__on_write_error(e)
         finally:
             self.__queue_write.shutdown(immediate=True)
 

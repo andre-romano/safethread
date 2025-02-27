@@ -1,5 +1,8 @@
 import os
+import stat
 import unittest
+
+from unittest.mock import Mock
 
 from safethread.utils import FileHandler
 
@@ -9,12 +12,16 @@ class TestAsyncFileHandler(unittest.TestCase):
 
     def setUp(self):
         """Creates a test file before each test."""
+        if os.path.exists(self.TEST_FILE):
+            os.chmod(self.TEST_FILE, stat.S_IRUSR | stat.S_IWUSR)
         with open(self.TEST_FILE, 'w', encoding='utf-8') as f:
             f.write("Line 1\nLine 2\nLine 3\n")
 
     def tearDown(self):
         """Removes the test file after each test."""
         if os.path.exists(self.TEST_FILE):
+            # Restore write permissions
+            os.chmod(self.TEST_FILE, stat.S_IRUSR | stat.S_IWUSR)
             os.remove(self.TEST_FILE)
 
     def test_read_functionality(self):
@@ -105,9 +112,15 @@ class TestAsyncFileHandler(unittest.TestCase):
         self.assertEqual(file_handler.get(), b"More binary data\n")
         self.assertIsNone(file_handler.get())  # Queue should be empty
 
-    def test_error_handling(self):
-        # Test error handling during file operations
-        file_handler = FileHandler("non_existent_file.txt")
+    def test_read_error(self):
+        # Mock the `on_read_error` callback
+        on_read_error_mock = Mock()
+
+        # Create a FileHandler instance with the mock callback
+        file_handler = FileHandler(
+            filename="non_existent_file.txt",  # Use a non-existent file to trigger an error
+            on_read_error=on_read_error_mock,
+        )
 
         # Attempt to read from a non-existent file
         file_handler.start_read()
@@ -117,6 +130,40 @@ class TestAsyncFileHandler(unittest.TestCase):
         status, error = file_handler.get_status()
         self.assertEqual(status, 1)
         self.assertIn("No such file or directory", error)
+
+        # Verify that the `on_read_error` callback was called
+        on_read_error_mock.assert_called_once()
+        self.assertIsInstance(on_read_error_mock.call_args[0][0], Exception)
+
+    def test_write_error(self):
+        """
+        Test that the `on_write_error` callback is called when an error occurs during writing.
+        """
+        # Mock the `on_write_error` callback
+        on_write_error_mock = Mock()
+
+        # Create a FileHandler instance with the mock callback
+        file_handler = FileHandler(
+            filename=self.TEST_FILE,
+            on_write_error=on_write_error_mock,
+        )
+
+        # Set the file permissions to read-only
+        os.chmod(self.TEST_FILE, stat.S_IRUSR)  # Read-only for the owner
+
+        # Start the write thread
+        file_handler.start_write()
+
+        # Add data to the write queue
+        file_handler.put("Test data")
+
+        # Wait for the write thread to finish
+        file_handler.join_write()
+
+        # Verify that the `on_write_error` callback was called
+        on_write_error_mock.assert_called_once()
+        self.assertIsInstance(
+            on_write_error_mock.call_args[0][0], Exception)
 
 
 if __name__ == "__main__":

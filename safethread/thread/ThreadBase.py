@@ -76,6 +76,10 @@ class ThreadBase:
             if not self.__repeat:
                 self.stop()
 
+    def get_args(self) -> tuple:
+        """Gets the callback args"""
+        return self.__args
+
     def has_started(self) -> bool:
         """
         Checks if the thread has started.
@@ -139,7 +143,7 @@ class ThreadBase:
         :param timeout: The maximum time to wait for the thread to finish. Defaults to None.
         :type timeout: float, optional
 
-        :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
+        :raises RuntimeError: if an attempt is made to join the current thread, or the join() is called before start()
         """
         if not self.__thread_started:
             raise RuntimeError(

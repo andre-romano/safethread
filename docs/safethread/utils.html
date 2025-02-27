@@ -35,6 +35,8 @@
                     <li><a href="utils/PipelineStage.html">PipelineStage</a></li>
                     <li><a href="utils/Publisher.html">Publisher</a></li>
                     <li><a href="utils/Singleton.html">Singleton</a></li>
+                    <li><a href="utils/SocketClient.html">SocketClient</a></li>
+                    <li><a href="utils/SocketServer.html">SocketServer</a></li>
                     <li><a href="utils/Subscriber.html">Subscriber</a></li>
                     <li><a href="utils/utils.html">utils</a></li>
             </ul>
@@ -64,6 +66,8 @@
 <li><strong>PipelineStage</strong>: A thread-safe class that runs threads to processes data (using a Callable) from an Input Queue and places its output in an Output Queue.</li>
 <li><strong>Publisher</strong>: A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    </li>
 <li><strong>Singleton</strong>: A thread-safe class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.    </li>
+<li><strong>SocketClient</strong>:  A thread-safe asynchronous socket client that manages client-side sockets.</li>
+<li><strong>SocketServer</strong>:  A thread-safe asynchronous socket server handler that manages server and client sockets.</li>
 <li><strong>Subscriber</strong>: A thread-safe class that subscribes to a Publisher and receives notifications when data changes.</li>
 </ul>
 </div>
@@ -84,17 +88,21 @@
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">- **PipelineStage**: A thread-safe class that runs threads to processes data (using a Callable) from an Input Queue and places its output in an Output Queue.</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">- **Publisher**: A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    </span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">- **Singleton**: A thread-safe class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.    </span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">- **Subscriber**: A thread-safe class that subscribes to a Publisher and receives notifications when data changes.</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.FileHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHandler</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Factory</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.PipelineStage</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineStage</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Publisher</span><span class="w"> </span><span class="kn">import</span> <span class="n">Publisher</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Singleton</span><span class="w"> </span><span class="kn">import</span> <span class="n">Singleton</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscriber</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">- **SocketClient**:  A thread-safe asynchronous socket client that manages client-side sockets.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">- **SocketServer**:  A thread-safe asynchronous socket server handler that manages server and client sockets.</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">- **Subscriber**: A thread-safe class that subscribes to a Publisher and receives notifications when data changes.</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.FileHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileHandler</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">Factory</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.PipelineStage</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineStage</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Publisher</span><span class="w"> </span><span class="kn">import</span> <span class="n">Publisher</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Singleton</span><span class="w"> </span><span class="kn">import</span> <span class="n">Singleton</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SocketClient</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocketClient</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.SocketServer</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocketServer</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.Subscriber</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subscriber</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </span></pre></div>
 
 
