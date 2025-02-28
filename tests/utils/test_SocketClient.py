@@ -1,13 +1,24 @@
 import logging
+import sys
+import time
 import unittest
 import socket
 import threading
 
-# Replace 'your_module' with the actual module name
 from safethread.utils import SocketClient
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Set logging level
+    # Log format
+    format="%(asctime)s - [%(levelname)s] - %(name)s() - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",  # Date format
+    handlers=[logging.StreamHandler(sys.stdout)]  # Log to stdout
+)
 
 
 class TestSocketClient(unittest.TestCase):
+
     def start_server(self):
         # Start a simple server for testing
         self.host = "127.0.0.1"
@@ -16,44 +27,55 @@ class TestSocketClient(unittest.TestCase):
         self.server_socket.bind((self.host, self.port))
         self.server_socket.listen(1)
 
+        # create a dummy client socket
+        self.client_socket = None
+        self.client_closed = False
+        self.__server_running = True
+
         # Start the server in a separate thread
-        self.server_thread = threading.Thread(target=self._run_server)
+        self.server_thread = threading.Thread(
+            target=self._run_server, daemon=True)
         self.server_thread.start()
 
         self.result = ""
 
     def stop_server(self):
         # Disconnect the client and stop the server
+        self.__server_running = False
+        if self.client_socket:
+            self.client_socket.close()
         self.server_socket.close()
         self.server_thread.join()
-
-    def on_msg_client(self, msg):
-        self.result = msg
-        return None
-
-    def on_msg_client_reply(self, msg):
-        self.result = msg
-        return msg
 
     def _run_server(self):
         """
         A simple server that echoes messages back to the client.
         """
-        while True:
+        while self.__server_running:
             try:
-                client_socket, client_address = self.server_socket.accept()
-                print(f"Server: Connected to {client_address}")
+                self.client_socket, self.client_address = self.server_socket.accept()
+                self.client_closed = False
+                print(f"Server: Connected to {self.client_address}")
 
-                while True:
-                    message = client_socket.recv(1024).decode("utf-8")
-                    if not message:
-                        break  # Client disconnected
-                    print(f"Server: Received '{message}'")
-                    client_socket.sendall(message.encode(
-                        "utf-8"))  # Echo the message back
+                while self.__server_running:
+                    try:
+                        message = self.client_socket.recv(1024).decode("utf-8")
+                        if not message:
+                            break  # Client disconnected
+                        print(f"Server: Received '{message}'")
+                        self.client_socket.sendall(message.encode(
+                            "utf-8"))  # Echo the message back
+                    except (
+                        ConnectionAbortedError,  # sock.close() from server
+                        ConnectionResetError  # TCP reset
+                    ) as e:
+                        break
+                    except Exception as e:
+                        logging.error(f"{e.__repr__()}")
 
-                client_socket.close()
-                print(f"Server: Disconnected from {client_address}")
+                self.client_socket.close()
+                self.client_closed = True
+                print(f"Server: Disconnected from {self.client_address}")
             except OSError:
                 # Server socket closed, stop the server
                 break
@@ -67,13 +89,23 @@ class TestSocketClient(unittest.TestCase):
         # Create a SocketClient instance for testing
         client = SocketClient(self.host, self.port)
 
+        def on_connect():
+            logging.debug("Connected -")
+            self.assertTrue(client.is_connected())
+            logging.debug("OK")
+
         # Connect to the server
-        client.connect()
-        self.assertTrue(client.is_connected())
+        client.connect(callback_succ=on_connect)
+        logging.debug("connecting ...")
+        time.sleep(0.1)
 
         # Disconnect from the server
         client.disconnect()
+        logging.debug("disconnecting...")
+
+        time.sleep(0.1)
         self.assertFalse(client.is_connected())
+        self.assertTrue(self.client_closed)
 
         self.stop_server()
 
@@ -87,117 +119,53 @@ class TestSocketClient(unittest.TestCase):
         client = SocketClient(
             self.host,
             self.port,
-            on_message_received=self.on_msg_client
         )
 
         # Connect to the server
         client.connect()
 
         # Send a message
-        client.send_message("Hello, Server!")
+        client.send("Hello, Server!")
 
-        threading.Event().wait(0.1)
-        self.assertEqual(self.result, "Hello, Server!")
+        message = client.receive()
+        logging.debug(f"Received msg {message}")
+        self.assertEqual(message, "Hello, Server!")
 
         client.disconnect()
         self.stop_server()
 
-    def test_receive_error(self):
-        """
-        Test handling errors during message reception.
-        """
+    def test_persistent_connection(self):
+        """Test persistent connection behavior."""
         self.start_server()
 
-        def on_error(e):
-            self.result = str(e)
+        client = SocketClient(self.host, self.port, persistent=True)
 
-        # Create a SocketClient instance for testing
-        client = SocketClient(
-            self.host,
-            self.port,
-            on_message_received=self.on_msg_client,
-            on_receive_error=on_error
-        )
+        def on_connect():
+            self.assertTrue(client.is_connected())
 
         # Connect to the server
-        client.connect()
-
-        threading.Event().wait(0.1)
-
-        # Simulate a server disconnection
-        self.server_socket.close()
-
-        threading.Event().wait(0.1)
+        client.connect(callback_succ=on_connect)
 
         # Send a message
-        client.send_message("Hello, Server!")
+        client.send("Hello again!")
+        message = client.receive()
+        self.assertEqual(message, "Hello again!")
 
-        threading.Event().wait(0.1)
-
-        self.assertNotEqual(self.result, "")
-
-        client.disconnect()
+        # Simulate server disconnection
         self.stop_server()
 
-    def test_get_status(self):
-        """
-        Test retrieving the connection status.
-        """
+        time.sleep(1)  # Wait for client to detect disconnection
+
+        # Restart the server
         self.start_server()
 
-        def on_error(e):
-            self.result = str(e)
+        # Send a message
+        client.send("Hello again!")
+        message = client.receive()
+        self.assertEqual(message, "Hello again!")
 
-        # Create a SocketClient instance for testing
-        client = SocketClient(
-            self.host,
-            self.port,
-            on_message_received=self.on_msg_client,
-            on_receive_error=on_error
-        )
-
-        # Connect to the server
-        client.connect()
-
-        # Check the status (should be success)
-        status, error = client.get_status()
-        self.assertEqual(status, 0)
-        self.assertEqual(error, "")
-
-        # Simulate an error
-        client._SocketClient__error = "Connection error"  # type: ignore
-        status, error = client.get_status()
-        self.assertEqual(status, 1)
-        self.assertEqual(error, "Connection error")
-
+        # Disconnect
         client.disconnect()
-        self.stop_server()
-
-    def test_is_connected(self):
-        """
-        Test checking if the client is connected to the server.
-        """
-        self.start_server()
-
-        def on_error(e):
-            self.result = str(e)
-
-        # Create a SocketClient instance for testing
-        client = SocketClient(
-            self.host,
-            self.port,
-            on_message_received=self.on_msg_client,
-            on_receive_error=on_error
-        )
-
-        # Connect to the server
-        client.connect()
-        self.assertTrue(client.is_connected())
-
-        # Disconnect from the server
-        client.disconnect()
-        self.assertFalse(client.is_connected())
-
         self.stop_server()
 
 
