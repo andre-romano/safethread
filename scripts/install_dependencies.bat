@@ -1,5 +1,5 @@
 @echo off
-call .\activate.bat
+call .\scripts\activate.bat
 
 echo "Upgrading pip ..."
 python.exe -m pip install --upgrade pip setuptools wheel

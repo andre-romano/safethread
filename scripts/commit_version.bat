@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-call .\activate.bat
+call .\scripts\activate.bat
 
 echo ---- GENERATING NEW VERSION ----
 
@@ -21,7 +21,7 @@ goto v_confirm
 
 :b_confirm
 echo 2) Building dist/ ...
-call ./build.bat
+call .\scripts\build.bat
 set /p "CONFIRM=Building finished correctly? (y/n/t): "
 if /i "%CONFIRM%"=="y" goto b_continue
 if /i "%CONFIRM%"=="n" goto b_confirm
@@ -32,10 +32,10 @@ goto b_confirm
 :b_continue
 
 echo 3) Generating CHANGELOG.md ...
-python ./gen_changelog.py
+python ./scripts/gen_changelog.py
 
 echo 4) Generating DOCS/ ...
-python ./gen_docs.py
+python ./scripts/gen_docs.py
 
 git status
 pause

@@ -4,7 +4,7 @@
 set SCRIPT_PATH=%~dp0
 
 :: Path to your virtual environment
-set VENV_PATH="%SCRIPT_PATH%venv"
+set VENV_PATH="%SCRIPT_PATH%..\venv"
 
 :: Check if the venv folder exists
 if not exist "%VENV_PATH%" (

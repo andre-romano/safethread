@@ -1,5 +1,5 @@
 @echo off
-call .\activate.bat
+call .\scripts\activate.bat
 
 setlocal enabledelayedexpansion
 

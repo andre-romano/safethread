@@ -1,5 +1,5 @@
 @echo off
-call .\activate.bat
+call .\scripts\activate.bat
 
 SET SCRIPT_DIR=%~dp0
 SET PYTHONPATH=%SCRIPT_DIR%

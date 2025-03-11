@@ -2,7 +2,7 @@
 import queue
 import threading
 
-from typing import Any, Callable, Iterable, Self
+from typing import Any, Callable, Self
 
 from ..thread import ThreadBase
 
@@ -10,52 +10,51 @@ from ..thread import ThreadBase
 class FileHandler:
     """
     A thread-safe asynchronous file handler that allows reading and writing operations 
-    using separate threads and queues to ensure non-blocking behavior.
+    using separate threads, to ensure non-blocking behavior.
     """
 
     def __init__(self,
                  filename: str,
-                 max_queue_read_size: int = 100,
                  binary_mode: bool = False,
                  encoding: str | None = 'utf-8',
-                 on_read_error: Callable[[Exception], None] = lambda e: None,
-                 on_write_error: Callable[[Exception], None] = lambda e: None,
+                 on_read: Callable[
+                     [Any | None, Exception | None], None
+                 ] = lambda data, e: None,
+                 on_write: Callable[
+                     [Any | None, Exception | None], None
+                 ] = lambda data, e: None,
                  ) -> None:
         """
         Initializes the AsyncFileHandler.
 
         :param filename: Name of the file to read and write.
-        :type filename: str
-        :param max_queue_read_size: Maximum number of lines stored in the read queue. Defaults to 100.
-        :type max_queue_read_size: int
+        :type filename: str        
         :param binary_mode: True, if files must be read/write using binary mode (non-text), False otherwise. Defaults to False (text-mode).
         :type binary_mode: bool
         :param encoding: File encoding to use. If None, locale.getencoding() is called to get the current locale encoding. Defaults to 'utf-8'.
         :type encoding: str
-        :param on_read_error: A callback function that is called when an error happens when file is being read.
-                                The function should accept one argument: the Exception.                                
-        :type on_read_error: Callable[[Exception], None]
-        :param on_write_error: A callback function that is called when an error happens when file is being read.
-                                The function should accept one argument: the Exception.                                
-        :type on_write_error: Callable[[Exception], None]
+        :param on_read: A callback function that is called when data is read from a file.
+                                The function should accept two arguments: data read, the Exception.                                
+                                In case of error, data will be None, and exception will be passed as the second argument. Otherwise, exception will be None.
+        :type on_read: Callable[[Any | None, Exception | None], None]
+        :param on_write: A callback function that is called when data is written to a file.
+                                The function should accept two argumenst: data written, the Exception.                                
+                                In case of error, data will be None, and exception will be passed as the second argument. Otherwise, exception will be None.
+        :type on_write: Callable[[Any | None, Exception | None], None]
         """
         self.__filename = filename
         self.__file_lock = threading.RLock()
         self.__binary_mode = binary_mode
         self.__encoding = encoding
-        self.__on_read_error = on_read_error
-        self.__on_write_error = on_write_error
+        self.__on_read = on_read
+        self.__on_write = on_write
+
+        # write queue
+        self.__queue_write = queue.Queue()
 
         # raw binary mode cannot have encoding
         if self.__binary_mode:
             self.__encoding = None
-
-        # queues
-        self.__queue_read = queue.Queue(maxsize=max_queue_read_size)
-        self.__queue_write = queue.Queue()
-
-        # error string
-        self.__error = ""
 
         # create threads
         self.__thread_read = ThreadBase(self.__read)
@@ -70,12 +69,9 @@ class FileHandler:
             with self.__file_lock:
                 with open(self.__filename, mode=mode, encoding=self.__encoding) as f:
                     for line in f:
-                        self.__queue_read.put(line)
+                        self.__on_read(line, None)
         except Exception as e:
-            self.__error = str(e)
-            self.__on_read_error(e)
-        finally:
-            self.__queue_read.shutdown()
+            self.__on_read(None, e)
 
     def __write(self):
         """
@@ -88,25 +84,14 @@ class FileHandler:
                     while True:
                         data = self.__queue_write.get_nowait()
                         f.write(data)
+                        self.__on_write(data, None)
         except queue.Empty:
             # file write terminated successfully
             pass
         except Exception as e:
-            self.__error = str(e)
-            self.__on_write_error(e)
+            self.__on_write(None, e)
         finally:
             self.__queue_write.shutdown(immediate=True)
-
-    def get(self) -> Any | None:
-        """
-        Retrieves a line from the read queue (buffer).
-
-        :return: A line from the file, or None if the queue is empty.
-        """
-        try:
-            return self.__queue_read.get()
-        except (queue.Empty, queue.ShutDown):
-            return None
 
     def put(self, data) -> Self:
         """
@@ -124,15 +109,6 @@ class FileHandler:
             raise RuntimeError(
                 "Cannot put data to write to file after async write() terminated")
         return self
-
-    def get_status(self):
-        """
-        Retrieves the current status of async read() / write() operations.
-
-        :return: A tuple containing a status code (0 for success, 1 for error) and an error message if any.
-        """
-        status = 0 if not self.__error else 1
-        return (status, self.__error)
 
     def start_read(self):
         """
