@@ -12,6 +12,7 @@ Classes:
 - **Pipeline**: A thread-safe class that connects multiple ``utils.PipelineStage`` objects together (input_queue => Pipe 1 => Pipe 2 => ... => output_queue).
 - **PipelineStage**: A thread-safe class that runs threads to processes data (using a Callable) from an Input Queue and places its output in an Output Queue.
 - **Publisher**: A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    
+- **Regex**: A thread-safe class that performs common regex operations such as matching, searching, and replacing patterns in strings, while ensuring thread safety.
 - **Singleton**: A thread-safe class that ensures a SINGLE INSTANCE of an object is created and shared throughout the application. This is useful for managing resources or configurations that need to be globally accessible and consistent across the system.    
 - **Subscriber**: A thread-safe class that subscribes to a Publisher and receives notifications when data changes.
 """
@@ -23,6 +24,7 @@ from .Log import Log
 from .Pipeline import Pipeline
 from .PipelineStage import PipelineStage
 from .Publisher import Publisher
+from .Regex import Regex
 from .Singleton import Singleton
 from .Subscriber import Subscriber
 from .utils import *
