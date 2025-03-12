@@ -2,7 +2,7 @@ import os
 import configparser
 import threading
 
-from typing import Callable
+from typing import Callable, Self
 
 from ..thread import ThreadBase
 
@@ -16,11 +16,11 @@ class INIFileHandler:
                  filename: str,
                  create_default: bool = False,
                  on_read: Callable[
-                     [Exception | None], None
-                 ] = lambda e: None,
+                     [Self, Exception | None], None
+                 ] = lambda ini, e: None,
                  on_write: Callable[
-                     [Exception | None], None
-                 ] = lambda e: None,
+                     [Self, Exception | None], None
+                 ] = lambda ini, e: None,
                  ):
         """
         Initialize the ConfigParser object.
@@ -28,10 +28,10 @@ class INIFileHandler:
         :type filename: str
         :param create_default: Flag to create default configuration if the file does not exist, defaults to False.
         :type create_default: bool, optional
-        :param on_read: Callback function to be called after reading the configuration file. It receives an Exception or None.
-        :type on_read: Callable[[Exception | None], None], optional
-        :param on_write: Callback function to be called after writing to the configuration file. It receives an Exception or None.
-        :type on_write: Callable[[Exception | None], None], optional
+        :param on_read: Callback function to be called after reading the configuration file. It receives this INI object and an Exception or None.
+        :type on_read: Callable[[Self, Exception | None], None], optional
+        :param on_write: Callback function to be called after writing to the configuration file. It receives this INI object and an Exception or None.
+        :type on_write: Callable[[Self, Exception | None], None], optional
         """
         # file lock
         self.__filename = filename
@@ -63,9 +63,9 @@ class INIFileHandler:
                 n_files = self._config.read(self.__filename, encoding='utf-8')
             if not n_files:
                 raise OSError(f"File '{self.__filename}' cannot be read.")
-            self.__on_read(None)
+            self.__on_read(self, None)
         except Exception as e:
-            self.__on_read(e)
+            self.__on_read(self, e)
 
     def __write(self):
         """
@@ -75,9 +75,9 @@ class INIFileHandler:
             with self.__file_lock:
                 with open(self.__filename, 'w', encoding='utf-8') as configfile:
                     self._config.write(configfile)
-            self.__on_write(None)
+            self.__on_write(self, None)
         except Exception as e:
-            self.__on_write(e)
+            self.__on_write(self, e)
 
     def __getitem__(self, sec_option: str):
         return self.get(sec_option)

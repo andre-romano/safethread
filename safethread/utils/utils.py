@@ -1,7 +1,7 @@
 
 """Utility functions for the library"""
 
-from typing import Callable, Iterable
+from typing import Callable
 
 
 def try_except_finally_wrap(

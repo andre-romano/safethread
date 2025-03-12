@@ -1,16 +1,32 @@
 import unittest
 import os
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from safethread.utils import INIFileHandler
 
 
 class TestINIFileHandler(unittest.TestCase):
 
+    def on_read(self, ini, e):
+        self.assertIsNotNone(ini)
+        self.assertIsInstance(ini, INIFileHandler)
+
+        self.assertIsNone(e)
+
+    def on_write(self, ini, e):
+        self.assertIsNotNone(ini)
+        self.assertIsInstance(ini, INIFileHandler)
+
+        self.assertIsNone(e)
+
     def setUp(self):
         self.filename = 'test_config.ini'
-        self.ini_handler = INIFileHandler(self.filename)
+        self.ini_handler = INIFileHandler(
+            self.filename,
+            on_read=self.on_read,
+            on_write=self.on_write
+        )
 
     def tearDown(self):
         if os.path.exists(self.filename):
@@ -38,7 +54,10 @@ class TestINIFileHandler(unittest.TestCase):
             mocked_print.assert_any_call('option = value')
 
     def test_read_file_not_found(self):
-        def on_read(e):
+        def on_read(ini, e):
+            self.assertIsNotNone(ini)
+            self.assertIsInstance(ini, INIFileHandler)
+
             self.assertIsNotNone(e)
             self.assertIsInstance(e, Exception)
 

@@ -1,7 +1,5 @@
 import unittest
 
-from typing import Any
-
 from safethread.utils import Subscriber
 
 

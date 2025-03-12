@@ -1,4 +1,4 @@
-from typing import Any, Callable, Iterable, Self
+from typing import Any, Iterable, Self
 
 from ..datatype import SafeList
 

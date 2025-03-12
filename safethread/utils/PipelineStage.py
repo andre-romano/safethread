@@ -1,7 +1,7 @@
 
 import queue
 
-from typing import Any, Callable, Iterable, Self, Type
+from typing import Any, Callable, Self
 
 from .utils import *
 

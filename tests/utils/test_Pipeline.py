@@ -1,7 +1,5 @@
 import unittest
 
-from typing import Callable
-
 from safethread.utils import PipelineStage, Pipeline
 
 # Assuming the `Pipeline` and `PipelineStage` classes are already imported

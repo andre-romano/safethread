@@ -2,9 +2,6 @@ import os
 import stat
 import unittest
 
-from unittest import result
-from unittest.mock import Mock
-
 from safethread.utils import FileHandler
 
 
