@@ -2,8 +2,8 @@ import logging
 import os
 import threading
 
+from typing import Self
 from logging import FileHandler, Formatter, StreamHandler
-from venv import logger
 
 from .Singleton import Singleton
 
@@ -20,24 +20,47 @@ class Log(Singleton):
 
     __handlers: list[logging.Handler] = []
 
-    def __init__(
-        self,
+    @classmethod
+    def get_instance(
+        cls: type[Self],
         logfile: str = "",
         log_level: int = DEBUG,
         log_format: str = "%(asctime)s - [%(levelname)s] - %(name)s.%(funcName)s(): %(message)s",
         date_format: str = "%Y-%m-%d %H:%M:%S",
-    ):
+    ) -> Self:
         """
         Initializes and configures the thread-safe logging system.
 
+        Creates only a single instance of Log class and returns it.
+
         :param logfile: Path to the log file. If not provided, logs will only be printed to the console.
         :type logfile: str, optional
-        :param log_level: The minimum log level to display. Defaults to INFO.
+        :param log_level: The minimum log level to display. Defaults to DEBUG.
         :type log_level: int, optional
         :param log_format: The format of the log messages. Defaults to a '%(asctime)s - [%(levelname)s] - %(name)s.%(funcName)s(): %(message)s'.
         :type log_format: str, optional
         :param date_format: The format of the date and time in log messages. Defaults to ' %Y-%m-%d %H:%M:%S '.
         :type date_format: str, optional
+
+        :return: the Log instance (single global instance -- Singleton)
+        :rtype: Log
+        """
+        return super().get_instance(
+            logfile=logfile,
+            log_level=log_level,
+            log_format=log_format,
+            date_format=date_format,
+        )
+
+    def __init__(
+        self,
+        logfile: str,
+        log_level: int,
+        log_format: str,
+        date_format: str,
+    ):
+        """
+        Initializes and configures the thread-safe logging system.
         """
         # configure logging
         self.__logfile = logfile
