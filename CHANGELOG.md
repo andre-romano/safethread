@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.2 (2025-02-26 23:00:09 -0300)
+
+- f9d1660 added pytest.ini (to config pytest) added utils.SocketServer and SocketClient
+- 1a169fe added utils.FileHandler; Fixed minor bugs in ThreadBase; Added syntatic sugar to method Publisher.subcribe()
+- da77837 improved docs to Sphinx docstring format; fixed Publisher implementation (from SafeSet to SafeList)
+- f668eb3 bug fix
+- 104cf20 release version v1.3.1
+
 ## v1.3.1 (2025-02-20 17:57:46 -0300)
 
 - 104cf20 release version v1.3.1

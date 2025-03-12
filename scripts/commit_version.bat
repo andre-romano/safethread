@@ -31,21 +31,25 @@ goto b_confirm
 
 :b_continue
 
-echo 3) Generating CHANGELOG.md ...
-python ./scripts/gen_changelog.py
-
-echo 4) Generating DOCS/ ...
+echo 3) Generating DOCS/ ...
 python ./scripts/gen_docs.py
 
 git status
 pause
 
-echo 5) Commiting in Github ...
+echo 4) Commiting in Github ...
 git add .
 git commit -m "release version v%VERSION%"
 git tag v%VERSION%
 git push --all
 git push --tags
+
+echo 5) Generating CHANGELOG.md (and commiting to Github) ...
+python ./scripts/gen_changelog.py
+
+git add .
+git commit -m "changelog for v%VERSION%"
+git push --all
 
 :c_confirm
 set /p "CONFIRM=Commit finished correctly? (y/n/t): "
