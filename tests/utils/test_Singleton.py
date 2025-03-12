@@ -20,11 +20,11 @@ class SingletonSubclassTwo(Singleton):
 class TestSingleton(unittest.TestCase):
     def setUp(self):
         """Setup method to run before each test."""
-        self.obj1 = SingletonSubclass.getInstance(10)
-        self.obj2 = SingletonSubclass.getInstance(20)
+        self.obj1 = SingletonSubclass.get_instance(10)
+        self.obj2 = SingletonSubclass.get_instance(20)
 
-        self.obj3 = SingletonSubclassTwo.getInstance()
-        self.obj4 = SingletonSubclassTwo.getInstance()
+        self.obj3 = SingletonSubclassTwo.get_instance()
+        self.obj4 = SingletonSubclassTwo.get_instance()
 
     def test_singleton_creation(self):
         """Test that the Singleton class only creates one instance."""
@@ -41,8 +41,8 @@ class TestSingleton(unittest.TestCase):
 
     def test_singleton_instance_reuse(self):
         """Test that the Singleton class reuses the instance."""
-        self.obj1 = SingletonSubclass.getInstance(5)
-        self.obj2 = SingletonSubclass.getInstance(30)
+        self.obj1 = SingletonSubclass.get_instance(5)
+        self.obj2 = SingletonSubclass.get_instance(30)
 
         # Assert that the instance is the same
         self.assertIs(self.obj1, self.obj2,

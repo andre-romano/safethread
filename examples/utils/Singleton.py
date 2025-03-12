@@ -11,11 +11,11 @@ class MyClass(Singleton):
 
 
 # Get the first instance of MyClass
-instance1 = MyClass.getInstance(10)
+instance1 = MyClass.get_instance(10)
 print(instance1)  # Output: MyClass instance with value: 10
 
 # Try to create a second instance with a different value
-instance2 = MyClass.getInstance(20)
+instance2 = MyClass.get_instance(20)
 print(instance2)  # Output: MyClass instance with value: 10
 
 # Verify that both instances are the same (singleton behavior)

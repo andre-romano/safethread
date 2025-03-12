@@ -15,7 +15,7 @@ class Singleton:
     _lock = RLock()
 
     @classmethod
-    def getInstance(cls: Type[Self], *args, **kwargs) -> Self:
+    def get_instance(cls: Type[Self], *args, **kwargs) -> Self:
         """
         Retrieves the single instance of the class, creating it if necessary.
 
