@@ -9,28 +9,48 @@ class TestSubprocess(unittest.TestCase):
 
     def test_successful_execution(self):
         """Test if a simple command executes successfully across platforms."""
+        command = []
         if sys.platform == "win32":
             command = ["cmd", "/c", "echo Hello, World!"]
         else:
             command = ["echo", "Hello, World!"]
         sp = Subprocess(command)
 
-        with self.assertRaises(Subprocess.NotTerminatedException) as context:
-            sp.get_return_code()
-
-        with self.assertRaises(Subprocess.NotTerminatedException) as context:
-            sp.get_stderr()
-
-        with self.assertRaises(Subprocess.NotTerminatedException) as context:
-            sp.get_stdout()
+        self.assertLess(sp.get_return_code(), 0)
+        self.assertEqual(sp.get_stderr(), "")
+        self.assertEqual(sp.get_stdout(), "")
 
         sp.start()
         sp.join()
 
+        self.assertEqual(tuple(sp.get_args()[0]), tuple(command))
         self.assertEqual(sp.get_stderr().strip(), "")
         self.assertEqual(sp.get_stdout().strip(), "Hello, World!")
         self.assertEqual(sp.get_return_code(), 0)
+
         self.assertTrue(sp.is_terminated())
+
+    def test_successful_on_finish(self):
+        """Test if a simple command executes successfully across platforms."""
+        command = []
+        if sys.platform == "win32":
+            command = ["cmd", "/c", "echo Hello, World!"]
+        else:
+            command = ["echo", "Hello, World!"]
+
+        def on_finish(result: Subprocess.Finished):
+            self.assertEqual(tuple(result.args), tuple(command))
+            self.assertEqual(result.stderr.strip(), "")
+            self.assertEqual(result.stdout.strip(), "Hello, World!")
+            self.assertEqual(result.returncode, 0)
+
+        sp = Subprocess(
+            command,
+            on_finish=on_finish
+        )
+
+        sp.start()
+        sp.join()
 
     def test_failing_command(self):
         """Test if an invalid command raises an exception, handling platform differences."""
@@ -46,16 +66,27 @@ class TestSubprocess(unittest.TestCase):
 
     def test_stderr_output(self):
         """Test if stderr is correctly captured."""
-        command = ["python", "-c",
-                   "import sys; sys.stderr.write('Error Message\\n')"]
+        err_msg = "Error Message"
 
-        sp = Subprocess(command)
+        command = ["python", "-c",
+                   f"import sys; sys.stderr.write('{err_msg}\\n')"]
+
+        def on_finish(result: Subprocess.Finished):
+            self.assertEqual(tuple(result.args), tuple(command))
+            self.assertEqual(result.stderr.strip(), err_msg)
+            self.assertEqual(result.returncode, 0)
+
+        sp = Subprocess(
+            command,
+            on_finish=on_finish,
+        )
+
         sp.start()
         sp.join()
 
         self.assertTrue(sp.is_terminated())
         self.assertEqual(sp.get_return_code(), 0)
-        self.assertEqual(sp.get_stderr().strip(), "Error Message")
+        self.assertEqual(sp.get_stderr().strip(), err_msg)
 
     def test_long_running_command(self):
         """Test handling of long-running processes in a cross-platform way."""
