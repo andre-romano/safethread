@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.0 (2025-03-12 01:53:12 -0300)
+
+- 16b1664 release version v2.0.0
+- 494ad77 improved thread.Subprocess interface (added event on_finished(), removed exception throwing)
+- 5fe1106 improved INIFileHandler.on_read() and on_write() interfaces to include Self params; removed unused imports from other files;
+- 7f650d9 added utils.Regex class;
+- b15829d improved Log get_instance() docstring;
+- d839cec added utils.Log class to manage logging Python system;
+- a2717f4 added INIFileHandler; added ThreadBase.on_end() callback to its constructor; added INIFileHandler / FileHandler read/write reset upon joining();
+- 5a0cecc removed socketClient and server (other more mature libraries exist - e.g., asyncio); reorganized scripts into scripts/ folder; added event driven handling for FileHandler (easier usage of the library);
+- 6ff6bb8 improved SocketClient implementation
+- cd08b6f improved SocketClient implementation
+- f9d1660 added pytest.ini (to config pytest) added utils.SocketServer and SocketClient
+
 ## v1.3.2 (2025-02-26 23:00:09 -0300)
 
 - f9d1660 added pytest.ini (to config pytest) added utils.SocketServer and SocketClient
