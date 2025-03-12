@@ -44,8 +44,10 @@ class FileHandler:
         """
         self.__filename = filename
         self.__file_lock = threading.RLock()
+
         self.__binary_mode = binary_mode
         self.__encoding = encoding
+
         self.__on_read = on_read
         self.__on_write = on_write
 
@@ -133,6 +135,7 @@ class FileHandler:
         :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
         self.__thread_read.join()
+        self.__thread_read = self.__thread_read.copy()  # reset the thread
 
     def join_write(self):
         """
@@ -141,3 +144,4 @@ class FileHandler:
         :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
         self.__thread_write.join()
+        self.__thread_write = self.__thread_write.copy()  # reset the thread

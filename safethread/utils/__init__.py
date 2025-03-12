@@ -7,6 +7,7 @@ This module provides utility functions and classes.
 Classes:
 - **Factory**: A thread-safe class that provides a `create()` method to create objects dynamically based on certain parameters or configurations. This can be used for creating objects of various types at runtime, without tightly coupling the client code to specific class implementations.
 - **FileHandler**: A thread-safe asynchronous file handler that allows non-blocking reading and writing operations in a file.
+- **INIFileHandler**: A thread-safe class to handle async reading and writing configuration files in INI format.    
 - **Pipeline**: A thread-safe class that connects multiple ``utils.PipelineStage`` objects together (input_queue => Pipe 1 => Pipe 2 => ... => output_queue).
 - **PipelineStage**: A thread-safe class that runs threads to processes data (using a Callable) from an Input Queue and places its output in an Output Queue.
 - **Publisher**: A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.    
@@ -14,8 +15,9 @@ Classes:
 - **Subscriber**: A thread-safe class that subscribes to a Publisher and receives notifications when data changes.
 """
 
-from .FileHandler import FileHandler
 from .Factory import Factory
+from .FileHandler import FileHandler
+from .INIFileHandler import INIFileHandler
 from .Pipeline import Pipeline
 from .PipelineStage import PipelineStage
 from .Publisher import Publisher

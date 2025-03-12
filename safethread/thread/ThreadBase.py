@@ -1,6 +1,6 @@
 import threading
 
-from typing import Callable, Iterable
+from typing import Any, Callable, Iterable, Self
 
 
 class ThreadBase:
@@ -36,7 +36,14 @@ class ThreadBase:
         """Get a new instance of RLock (reentrant lock)."""
         return threading.RLock()
 
-    def __init__(self, callback: Callable, args: Iterable | None = None, daemon: bool = True, repeat: bool = False):
+    def __init__(
+        self,
+        callback: Callable,
+        args: Iterable | None = None,
+        daemon: bool = True,
+        repeat: bool = False,
+        on_end: Callable[[Self], Any] = lambda threadBase: None
+    ):
         """
         Initializes the thread.
 
@@ -48,17 +55,26 @@ class ThreadBase:
         :type daemon: bool, optional
         :param repeat: If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
         :type repeat: bool, optional
+        :param on_end: The callback to be called when the thread ends.
+        :type on_end: Callable[[ThreadBase], None], optional
         """
+        self.__on_end: Callable = self.is_callable(on_end)
         self.__callback: Callable = self.is_callable(callback)
         self.__args = tuple(args or [])
+
         self.__repeat = repeat
+        self.__daemon = daemon
 
         self.__thread_started = False
         self.__thread_terminate = False
 
         self.__thread = threading.Thread(
-            target=self.__run, daemon=daemon
+            target=self.__run, daemon=self.__daemon
         )
+
+    def __del__(self):
+        """Destructor to ensure thread is stopped when object is deleted."""
+        self.stop()
 
     def __run(self):
         """
@@ -75,6 +91,8 @@ class ThreadBase:
             # Terminate thread if not repeating
             if not self.__repeat:
                 self.stop()
+        # call on end callback
+        self.__on_end(self)
 
     def get_args(self) -> tuple:
         """Gets the callback args"""
@@ -161,3 +179,13 @@ class ThreadBase:
         """
         self.stop()
         self.join(timeout=timeout)
+
+    def copy(self) -> Self:
+        """Creates a copy of the current thread."""
+        return self.__class__(
+            callback=self.__callback,
+            args=self.__args,
+            daemon=self.__daemon,
+            repeat=self.__repeat,
+            on_end=self.__on_end
+        )

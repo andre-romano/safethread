@@ -72,4 +72,9 @@
     },
     "license.year": "auto",
     "license.author": "Andre Luiz Romano Madureira",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }
