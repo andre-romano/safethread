@@ -2,10 +2,10 @@ import subprocess
 
 from typing import Any, Callable, Iterable
 
-from .ThreadBase import ThreadBase
+from .BaseThread import BaseThread
 
 
-class SubprocessThread(ThreadBase):
+class SubprocessThread(BaseThread):
 
     class Finished:
         """Stores information about the finished subprocess"""

@@ -8,10 +8,10 @@
 
 ## Features
 
-- **Thread-Safe and Multiprocessing-Safe Data Structures**: `SafeListProcess`, `SafeDictProcess`, `SafeListThread`, `SafeDictThread`, `SafeSetThread`, among others.
+- **Thread-Safe and Multiprocessing-Safe Data Structures**: `SafeProcessList`, `SafeProcessDict`, `SafeThreadList`, `SafeThreadDict`, `SafeThreadSet`, among others.
 - **Thread and Inter-process Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded and multiprocessing environments.
 - **Threaded and Multiprocessing Classes**: Threaded and multiprocessing classes to perform parallel data processing (`Pipeline` class), scheduled function calls (`Scheduler` class), among others.
-- **Utility Classes and Functions**: Additional helpers and utilities for threading  (`Pipeline`, `PipelineStageThread`, `SubprocessThread` , `Publish`/`Subscribe`, etc), for multiprocessing (`Pipeline`, `PipelineStageProcess`, `SubprocessProcess` etc), thread synchronization, and inter-process synchronization (IPC).
+- **Utility Classes and Functions**: Additional helpers and utilities for threading  (`Pipeline`, `PipelineStageThreaded`, `SubprocessThreaded` , `Publish`/`Subscribe`, etc), for multiprocessing (`Pipeline`, `PipelineStageProcessed`, `SubprocessProcessed` etc), thread synchronization, and inter-process synchronization (IPC).
 
 ## Installation
 
@@ -24,21 +24,21 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread.thread.datatype import SafeListThread, SafeDictThread
-from safethread.utils import PipelineStageThread
+from safethread.thread.datatype import SafeThreadList, SafeThreadDict
+from safethread.utils import PipelineStageThreaded
 
-# Using SafeListThread
-safe_list = SafeListThread()
+# Using SafeThreadList
+safe_list = SafeThreadList()
 safe_list.append(1)
 print(safe_list[0])  # Output: 1
 
-# Using SafeDictThread
-safe_dict = SafeDictThread()
+# Using SafeThreadDict
+safe_dict = SafeThreadDict()
 safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 
 # Using Pipeline (separate working thread)
-stage = PipelineStageThread(lambda x: x * 2)
+stage = PipelineStageThreaded(lambda x: x * 2)
 stage.start()
 
 # Put some values into the pipeline for processing

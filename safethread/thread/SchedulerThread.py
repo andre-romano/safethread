@@ -2,10 +2,10 @@ import time
 
 from typing import Callable, Iterable
 
-from .ThreadBase import ThreadBase
+from .BaseThread import BaseThread
 
 
-class SchedulerThread(ThreadBase):
+class SchedulerThread(BaseThread):
     """
     A thread scheduler that runs a given callback at regular intervals with an optional repeat option.
 

@@ -5,14 +5,14 @@
 This module provides thread-safe data structures to be used in multithreaded (concurrent) programming scenarios.
 
 ### **Classes:**
-- **SafeDictThread**: A thread-safe dictionary implementation.
-- **SafeListThread**: A thread-safe list implementation.
-- **SafeQueueThread**: A thread-safe queue implementation.
-- **SafeSetThread**: A thread-safe set implementation.
+- **SafeThreadDict**: A thread-safe dictionary implementation.
+- **SafeThreadList**: A thread-safe list implementation.
+- **SafeThreadQueue**: A thread-safe queue implementation.
+- **SafeThreadSet**: A thread-safe set implementation.
 """
 
-from .SafeBase import SafeBase
-from .SafeDictThread import SafeDictThread
-from .SafeListThread import SafeListThread
-from .SafeSetThread import SafeSetThread
-from .SafeQueueThread import SafeQueueThread
+from .SafeThreadBase import SafeThreadBase
+from .SafeThreadDict import SafeThreadDict
+from .SafeThreadList import SafeThreadList
+from .SafeThreadSet import SafeThreadSet
+from .SafeThreadQueue import SafeThreadQueue
