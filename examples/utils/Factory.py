@@ -1,13 +1,6 @@
 from typing import Self
 
-
-class Factory:
-    """Factory class, to control subclass creation using create() method."""
-
-    @classmethod
-    def create(cls, *args) -> Self:
-        """Creates an instance of the class that calls this method."""
-        return cls(*args)
+from safethread.utils import Factory
 
 
 class MyClass(Factory):

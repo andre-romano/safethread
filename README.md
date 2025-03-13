@@ -4,14 +4,14 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/andre-romano/safethread/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/pypi/dm/safethread)](https://pypi.org/project/safethread/)
 
-``safethread`` is a Python package that wraps common Python data structures in thread-safe classes, providing utilities for thread-safe operations and synchronization mechanisms. It includes custom data structures designed to ensure thread safety when used in multi-threaded programming.
+``safethread`` is a Python package that wraps common Python data structures in thread-safe / multiprocess-safe classes, providing utilities for thread-safe and multiprocess-safe operations and synchronization mechanisms (i.e., shared resources access and inter-process communication). It includes custom data structures and processing classes designed to ensure thread safety when used in multi-threaded programming, and multiprocessing safety when used in multi-processing programs.
 
 ## Features
 
-- **Thread-Safe Data Structures**: `SafeList`, `SafeDict`, `SafeTuple`, `SafeSet`, among others.
-- **Thread Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded environments.
-- **Threaded Classes**: Threaded classes to perform parallel data processing, scheduled function calls, among others.
-- **Utility Classes and Functions**: Additional helpers and utilities for threading  (`Pipeline`, `PipelineStage`, `Publish`/`Subscribe`, etc), synchronization and other functionality unrelated to multithread programming.
+- **Thread-Safe and Multiprocessing-Safe Data Structures**: `SafeListProcess`, `SafeDictProcess`, `SafeListThread`, `SafeDictThread`, `SafeSetThread`, among others.
+- **Thread and Inter-process Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded and multiprocessing environments.
+- **Threaded and Multiprocessing Classes**: Threaded and multiprocessing classes to perform parallel data processing (`Pipeline` class), scheduled function calls (`Scheduler` class), among others.
+- **Utility Classes and Functions**: Additional helpers and utilities for threading  (`Pipeline`, `PipelineStageThread`, `SubprocessThread` , `Publish`/`Subscribe`, etc), for multiprocessing (`Pipeline`, `PipelineStageProcess`, `SubprocessProcess` etc), thread synchronization, and inter-process synchronization (IPC).
 
 ## Installation
 
@@ -24,21 +24,21 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread.datatype import SafeList, SafeDict
-from safethread.utils import PipelineStage
+from safethread.thread.datatype import SafeListThread, SafeDictThread
+from safethread.utils import PipelineStageThread
 
-# Using SafeList
-safe_list = SafeList()
+# Using SafeListThread
+safe_list = SafeListThread()
 safe_list.append(1)
 print(safe_list[0])  # Output: 1
 
-# Using SafeDict
-safe_dict = SafeDict()
+# Using SafeDictThread
+safe_dict = SafeDictThread()
 safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 
 # Using Pipeline (separate working thread)
-stage = PipelineStage(lambda x: x * 2)
+stage = PipelineStageThread(lambda x: x * 2)
 stage.start()
 
 # Put some values into the pipeline for processing

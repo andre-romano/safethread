@@ -1,7 +1,7 @@
 
 from typing import Any, Iterable
 
-from .PipelineStage import PipelineStage
+from .PipelineStageThread import PipelineStageThread
 
 
 class Pipeline:
@@ -16,7 +16,7 @@ class Pipeline:
     <img src="../../../img/utils/Pipeline.svg" alt="" width="100%">
     """
 
-    def __init__(self, pipeline_stages: Iterable[PipelineStage]):
+    def __init__(self, pipeline_stages: Iterable[PipelineStageThread]):
         """
         Initializes a pipeline with the given sequence of pipeline stages.
 
@@ -34,8 +34,8 @@ class Pipeline:
         Each stage's output queue is connected to the next stage's input queue.
         """
         for i in range(len(self.__stages)-1):
-            cur_stage = PipelineStage.is_instance(self.__stages[i])
-            next_stage = PipelineStage.is_instance(self.__stages[i+1])
+            cur_stage = PipelineStageThread.is_instance(self.__stages[i])
+            next_stage = PipelineStageThread.is_instance(self.__stages[i+1])
             cur_stage.connect_output(next_stage)
 
     def get(self, block: bool = True, timeout: float | None = None):
