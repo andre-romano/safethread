@@ -3,7 +3,7 @@ import unittest
 import os
 import logging
 
-from safethread.thread.utils import Log
+from safethread.thread.utils import Log, Singleton
 
 global log_instance
 
@@ -41,6 +41,8 @@ class TestLog(unittest.TestCase):
         self.__create_log_instance()
         instance2 = log_instance
         self.assertEqual(instance1, instance2)
+        self.assertIsInstance(instance1, Singleton)
+        self.assertIsInstance(instance2, Singleton)
 
     def test_logger_instances(self):
         instance1 = log_instance.get_logger("test_logger")
