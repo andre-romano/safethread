@@ -1,6 +1,6 @@
 from queue import Queue
 
-from .SafeThreadBase import SafeThreadBase
+from . import SafeThreadBase
 
 
 class SafeThreadQueue(Queue, SafeThreadBase):

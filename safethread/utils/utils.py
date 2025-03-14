@@ -4,6 +4,25 @@
 from typing import Callable
 
 
+def is_callable(callback: Callable) -> Callable:
+    """
+    Checks if callback is a Callable (function, lambda, etc).
+
+    :param callback: The Callable to check.
+    :type callback: Callable
+
+    :return: The callback Callable.
+    :rtype: Callable
+
+    :raises TypeError: If the callback argument is not callable.
+    """
+    if not callable(callback):
+        raise TypeError(
+            "'callback' must be a Callable (e.g., function, lambda, etc)"
+        )
+    return callback
+
+
 def try_except_finally_wrap(
     callback: Callable,
     callback_succ: Callable = lambda: None,

@@ -2,6 +2,8 @@ import threading
 
 from typing import Any, Callable, Iterable, Self
 
+from ..utils import *
+
 
 class BaseThread:
     """
@@ -10,26 +12,6 @@ class BaseThread:
     This class provides a structure for creating and managing threads using the threading module.
     It also ensures that the thread's operations are protected by a reentrant lock (_lock) to ensure thread safety.
     """
-
-    class CallableException(Exception):
-        """Raised if a callable argument is not a Callable class (e.g., lambda, function, etc)"""
-
-    @staticmethod
-    def is_callable(callback: Callable) -> Callable:
-        """
-        Checks if callback is a Callable (function, lambda, etc).
-
-        :param callback: The Callable to check.
-        :type callback: Callable
-        :raises ThreadBase.CallableException: If the callback argument is not callable.
-        :return: The callback Callable.
-        :rtype: Callable
-        """
-        if not callable(callback):
-            raise BaseThread.CallableException(
-                "'callback' must be a Callable (e.g., function, lambda, etc)"
-            )
-        return callback
 
     @staticmethod
     def get_lock():
@@ -42,7 +24,7 @@ class BaseThread:
         args: Iterable | None = None,
         daemon: bool = True,
         repeat: bool = False,
-        on_end: Callable[[Self], Any] = lambda threadBase: None
+        on_end: Callable[[Self], Any] = lambda thread: None
     ):
         """
         Initializes the thread.
@@ -56,10 +38,10 @@ class BaseThread:
         :param repeat: If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
         :type repeat: bool, optional
         :param on_end: The callback to be called when the thread ends.
-        :type on_end: Callable[[ThreadBase], None], optional
+        :type on_end: Callable[[Self], None], optional
         """
-        self.__on_end: Callable = self.is_callable(on_end)
-        self.__callback: Callable = self.is_callable(callback)
+        self.__on_end: Callable = is_callable(on_end)
+        self.__callback: Callable = is_callable(callback)
         self.__args = tuple(args or [])
 
         self.__repeat = repeat
@@ -146,7 +128,7 @@ class BaseThread:
         :raises RuntimeError: if start() is called more than once on the same thread object.
         """
         if self.__thread_started:
-            raise RuntimeError("ThreadBase has already been started.")
+            raise RuntimeError("Thread has already been started.")
         self.__thread.start()
         self.__thread_started = True
 

@@ -2,7 +2,7 @@ import subprocess
 
 from typing import Any, Callable, Iterable
 
-from .BaseThread import BaseThread
+from . import BaseThread
 
 
 class SubprocessThread(BaseThread):

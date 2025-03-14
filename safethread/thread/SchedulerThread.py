@@ -2,7 +2,9 @@ import time
 
 from typing import Callable, Iterable
 
-from .BaseThread import BaseThread
+from . import BaseThread
+
+from ..utils import *
 
 
 class SchedulerThread(BaseThread):
@@ -34,14 +36,14 @@ class SchedulerThread(BaseThread):
         :param repeat: Whether the callback should be repeated indefinitely or just once. Defaults to True.
         :type repeat: bool, optional
 
-        :raises ThreadBase.CallableException: If 'callback' is not callable.
+        :raises TypeError: If 'callback' is not callable.
         """
         super().__init__(
             callback=self.__run_scheduler,
             repeat=repeat
         )
 
-        self.__callback: Callable = self.is_callable(callback)
+        self.__callback: Callable = is_callable(callback)
         # Default to empty list if args is None
         self.__args = tuple(args or [])
         self.__timeout = timeout

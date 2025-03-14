@@ -31,7 +31,7 @@ class TestSchedulerThread(unittest.TestCase):
 
     def test_invalid_callback(self):
         """Test that an exception is raised if the callback is not callable."""
-        with self.assertRaises(BaseThread.CallableException):
+        with self.assertRaises(TypeError):
             SchedulerThread(
                 timeout=1.0,
                 callback="not_a_function",  # type: ignore

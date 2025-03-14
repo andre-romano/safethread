@@ -1,7 +1,7 @@
 
 from typing import Any, Iterable
 
-from .SafeThreadBase import SafeThreadBase
+from . import SafeThreadBase
 
 
 class SafeThreadDict(SafeThreadBase):

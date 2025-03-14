@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from .SafeThreadBase import SafeThreadBase
+from . import SafeThreadBase
 
 
 class SafeThreadSet(SafeThreadBase):

@@ -13,7 +13,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
         """
         Test that an exception is raised when pipeline stage is improperly initialized.
         """
-        with self.assertRaises(BaseThread.CallableException) as context:
+        with self.assertRaises(TypeError) as context:
             PipelineStageThreaded(None)  # type: ignore
         with self.assertRaises(ValueError) as context:
             PipelineStageThreaded(lambda x: x + 3, n_threads=0)  # type: ignore

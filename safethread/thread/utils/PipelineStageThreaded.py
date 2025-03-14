@@ -25,7 +25,7 @@ class PipelineStageThreaded:
                      and return the processed result.
     :type callback: Callable
 
-    :raises ThreadBase.CallableException: If the provided callback is not callable.
+    :raises TypeError: If the provided callback is not callable.
     :raises ValueError: If `n_threads` is less than 1.
 
     <img src="../../../img/utils/PipelineStage.svg" alt="" width="100%">
@@ -75,11 +75,11 @@ class PipelineStageThreaded:
                           store result in the output queue. Defaults to 1.
         :type n_threads: int
 
-        :raises ThreadBase.CallableException: If the callback argument is not callable.
+        :raises TypeError: If the callback argument is not callable.
         :raises ValueError: If `n_threads` is less than 1.
         """
 
-        self.__callback: Callable = BaseThread.is_callable(callback)
+        self.__callback: Callable = is_callable(callback)
         self.__input_queue = queue.Queue()
         self.__output_queue = queue.Queue()
         self.__started = False

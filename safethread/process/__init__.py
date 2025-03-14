@@ -7,11 +7,11 @@ This module provides multiprocessed classes, that inherit from BaseProcess. It a
 > Warning: This module requires that data exchanged between Python be pickable (serializable). Examples of pickable structures are global functions, simple immutable data types (int, str, bool), data structures provided by ``.datatype`` module or by `multiprocessing.Manager()`. 
 
 Classes:
-- **BaseProcess**: An abstract class that manages processes.
+- **BaseProcess**: An process-safe class that manages processes safely.
 - **SchedulerProcess**: A process-safe class that runs a scheduled global Callable function after a pre-defined timeout, either singleshot or periodically.
 - **SubprocessProcess**: A process-safe class that runs a subprocess within a separate process.
 """
 
-# from .BaseProcess import BaseProcess
+from .BaseProcess import BaseProcess
 # from .SchedulerProcess import SchedulerProcess
 # from .SubprocessProcess import SubprocessProcess
