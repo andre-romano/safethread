@@ -1,12 +1,12 @@
 import os
 
-from safethread.thread.utils import INIFileHandler
+from safethread.thread.utils import ThreadINIFileHandler
 
 # Define the path to the INI file
 ini_file_path = os.path.join(os.path.dirname(__file__), 'TEST.ini')
 
 # Create an instance of INIFileHandler
-ini_handler = INIFileHandler(ini_file_path)
+ini_handler = ThreadINIFileHandler(ini_file_path)
 
 # Write some data to the INI file
 ini_handler.set('Section1.Key1', 'Value1')
@@ -19,7 +19,7 @@ ini_handler.join_write()
 print(f'Written to file: {ini_file_path}')
 
 # Create an instance of INIFileHandler
-ini_handler = INIFileHandler(ini_file_path)
+ini_handler = ThreadINIFileHandler(ini_file_path)
 
 # Read file
 ini_handler.start_read()

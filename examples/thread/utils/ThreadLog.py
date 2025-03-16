@@ -1,15 +1,15 @@
 
 import os
 
-from safethread.thread.utils import Log
+from safethread.thread.utils import ThreadLog
 
 # store logs into a file
 logfile = "example.log"
 
 # Create an instance of the Log class
-log = Log.get_instance(
+log = ThreadLog.get_instance(
     logfile=logfile,
-    log_level=Log.DEBUG
+    log_level=ThreadLog.DEBUG
 )
 
 # Log some messages

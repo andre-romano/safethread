@@ -1,8 +1,8 @@
 
-from safethread.thread.utils import Singleton
+from safethread.thread.utils import ThreadSingleton
 
 
-class MyClass(Singleton):
+class MyClass(ThreadSingleton):
     def __init__(self, value):
         self.value = value
 

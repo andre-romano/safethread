@@ -2,10 +2,10 @@ import os
 import stat
 import unittest
 
-from safethread.thread.utils import FileHandler
+from safethread.thread.utils import ThreadFileHandler
 
 
-class TestAsyncFileHandler(unittest.TestCase):
+class TestThreadFileHandler(unittest.TestCase):
     TEST_FILE = "test_async_file.txt"
 
     def setUp(self):
@@ -35,7 +35,7 @@ class TestAsyncFileHandler(unittest.TestCase):
             if e:
                 raise e
 
-        handler = FileHandler(
+        handler = ThreadFileHandler(
             self.TEST_FILE,
             on_read=on_read
         )
@@ -51,7 +51,7 @@ class TestAsyncFileHandler(unittest.TestCase):
             if e:
                 raise e
 
-        handler = FileHandler(
+        handler = ThreadFileHandler(
             self.TEST_FILE,
             on_write=on_write
         )
@@ -72,7 +72,7 @@ class TestAsyncFileHandler(unittest.TestCase):
 
     def test_write_after_shutdown(self):
         """Tests if attempting to write after thread termination raises an error."""
-        handler = FileHandler(self.TEST_FILE)
+        handler = ThreadFileHandler(self.TEST_FILE)
         handler.start_write()
         handler.join_write()
 
@@ -81,7 +81,7 @@ class TestAsyncFileHandler(unittest.TestCase):
 
     def test_join_before_start(self):
         # Test that joining a thread before starting it raises an error
-        file_handler = FileHandler(self.TEST_FILE)
+        file_handler = ThreadFileHandler(self.TEST_FILE)
 
         with self.assertRaises(RuntimeError):
             file_handler.join_read()
@@ -99,7 +99,7 @@ class TestAsyncFileHandler(unittest.TestCase):
             if e:
                 raise e
 
-        file_handler = FileHandler(
+        file_handler = ThreadFileHandler(
             self.TEST_FILE,
             binary_mode=True,
             on_read=on_read,
@@ -131,7 +131,7 @@ class TestAsyncFileHandler(unittest.TestCase):
             self.assertIsInstance(e, Exception)
 
         # Create a FileHandler instance with the mock callback
-        file_handler = FileHandler(
+        file_handler = ThreadFileHandler(
             filename="non_existent_file.txt",  # Use a non-existent file to trigger an error
             on_read=on_read,
         )
@@ -150,7 +150,7 @@ class TestAsyncFileHandler(unittest.TestCase):
             self.assertIsInstance(e, Exception)
 
         # Create a FileHandler instance with the mock callback
-        file_handler = FileHandler(
+        file_handler = ThreadFileHandler(
             filename=self.TEST_FILE,
             on_write=on_write,
         )

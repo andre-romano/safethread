@@ -1,6 +1,6 @@
 import unittest
 
-from safethread.thread.utils import PipelineStageThreaded, Pipeline
+from safethread.thread.utils import ThreadPipelineStage, ThreadPipeline
 
 # Assuming the `Pipeline` and `PipelineStage` classes are already imported
 # from your module, the mock `PipelineStage` is needed to test the `Pipeline`.
@@ -10,8 +10,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_single_stage(self):
         """Test that single stage pipeline."""
-        pipeline = Pipeline([
-            PipelineStageThreaded(lambda x: x+5),
+        pipeline = ThreadPipeline([
+            ThreadPipelineStage(lambda x: x+5),
         ])
 
         # Test multiple inputs
@@ -46,9 +46,9 @@ class TestPipeline(unittest.TestCase):
 
     def test_multi_stage(self):
         """Test that multi stage pipeline."""
-        pipeline = Pipeline([
-            PipelineStageThreaded(lambda x: x+5),
-            PipelineStageThreaded(lambda x: x**2),
+        pipeline = ThreadPipeline([
+            ThreadPipelineStage(lambda x: x+5),
+            ThreadPipelineStage(lambda x: x**2),
         ])
 
         # Test multiple inputs

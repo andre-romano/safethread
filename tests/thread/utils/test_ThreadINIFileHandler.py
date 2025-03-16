@@ -3,26 +3,26 @@ import os
 
 from unittest.mock import patch
 
-from safethread.thread.utils import INIFileHandler
+from safethread.thread.utils import ThreadINIFileHandler
 
 
 class TestINIFileHandler(unittest.TestCase):
 
     def on_read(self, ini, e):
         self.assertIsNotNone(ini)
-        self.assertIsInstance(ini, INIFileHandler)
+        self.assertIsInstance(ini, ThreadINIFileHandler)
 
         self.assertIsNone(e)
 
     def on_write(self, ini, e):
         self.assertIsNotNone(ini)
-        self.assertIsInstance(ini, INIFileHandler)
+        self.assertIsInstance(ini, ThreadINIFileHandler)
 
         self.assertIsNone(e)
 
     def setUp(self):
         self.filename = 'test_config.ini'
-        self.ini_handler = INIFileHandler(
+        self.ini_handler = ThreadINIFileHandler(
             self.filename,
             on_read=self.on_read,
             on_write=self.on_write
@@ -56,12 +56,12 @@ class TestINIFileHandler(unittest.TestCase):
     def test_read_file_not_found(self):
         def on_read(ini, e):
             self.assertIsNotNone(ini)
-            self.assertIsInstance(ini, INIFileHandler)
+            self.assertIsInstance(ini, ThreadINIFileHandler)
 
             self.assertIsNotNone(e)
             self.assertIsInstance(e, Exception)
 
-        self.ini_handler = INIFileHandler(
+        self.ini_handler = ThreadINIFileHandler(
             'nonexistent.ini',
             on_read=on_read
         )
@@ -75,7 +75,7 @@ class TestINIFileHandler(unittest.TestCase):
         self.ini_handler.start_write()
         self.ini_handler.join_write()
 
-        new_parser = INIFileHandler(self.filename)
+        new_parser = ThreadINIFileHandler(self.filename)
         new_parser.start_read()
         new_parser.join_read()
         self.assertEqual(new_parser.get(option), section)
@@ -88,7 +88,7 @@ class TestINIFileHandler(unittest.TestCase):
         self.ini_handler.start_write()
         self.ini_handler.join_write()
 
-        new_parser = INIFileHandler(self.filename)
+        new_parser = ThreadINIFileHandler(self.filename)
         new_parser.start_read()
         new_parser.join_read()
         self.assertEqual(new_parser.get(option), section)

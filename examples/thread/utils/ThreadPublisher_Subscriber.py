@@ -1,5 +1,5 @@
 
-from safethread.thread.utils import Publisher, Subscriber
+from safethread.thread.utils import ThreadPublisher, ThreadSubscriber
 
 result = "Hello from "
 
@@ -14,10 +14,10 @@ def append_to_result(data):
     result = result + data
 
 
-subscriber1 = Subscriber(replace_result_with)
-subscriber2 = Subscriber(append_to_result)
+subscriber1 = ThreadSubscriber(replace_result_with)
+subscriber2 = ThreadSubscriber(append_to_result)
 
-publisher = Publisher()
+publisher = ThreadPublisher()
 publisher.subscribe(subscriber1)
 publisher.subscribe(subscriber2)
 

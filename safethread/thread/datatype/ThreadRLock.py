@@ -3,7 +3,7 @@
 from threading import RLock
 from typing import Any
 
-from safethread import AbstractLock
+from ... import AbstractLock
 
 
 class ThreadRLock(AbstractLock):

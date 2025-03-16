@@ -1,6 +1,6 @@
 
 
-from safethread.thread.utils import PipelineStageThreaded
+from safethread.thread.utils import ThreadPipelineStage
 
 # A simple callback function that doubles the input number
 
@@ -10,7 +10,7 @@ def multiply_by_two(input_data):
 
 
 # Start pipeline with the 'multiply_by_two' function as the callback
-pipeline = PipelineStageThreaded(multiply_by_two)
+pipeline = ThreadPipelineStage(multiply_by_two)
 pipeline.start()
 
 # Put some values into the pipeline for processing
@@ -29,7 +29,7 @@ pipeline.stop()
 try:
     # try to add new input to pipeline, after stopped
     pipeline.put(20)
-except PipelineStageThreaded.StoppedException as e:
+except ThreadPipelineStage.StoppedException as e:
     print("The pipeline has terminated. No new values can be added to it.")
 
 # Join the thread to ensure it finishes execution before the program ends

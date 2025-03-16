@@ -1,7 +1,7 @@
 
 import os
 
-from safethread.thread.utils import FileHandler
+from safethread.thread.utils import ThreadFileHandler
 
 # Assume AsyncFileHandler is already imported
 
@@ -18,7 +18,7 @@ def on_read(data, e):
 
 
 # Initialize the AsyncFileHandler with default settings (text mode and max read queue size of 100)
-file_handler = FileHandler(
+file_handler = ThreadFileHandler(
     filename,
     on_read=on_read
 )

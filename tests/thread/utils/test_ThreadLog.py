@@ -3,7 +3,7 @@ import unittest
 import os
 import logging
 
-from safethread.thread.utils import Log, Singleton
+from safethread.thread.utils import ThreadLog, ThreadSingleton
 
 global log_instance
 
@@ -20,13 +20,13 @@ def tearDownModule():
 
 class TestLog(unittest.TestCase):
     logfile = logfile
-    log_level = Log.INFO
+    log_level = ThreadLog.INFO
     log_format = "%(asctime)s - [%(levelname)s] - %(name)s.%(funcName)s(): %(message)s"
     date_format = "%Y-%m-%d %H:%M:%S"
 
     def __create_log_instance(self):
         global log_instance
-        log_instance = Log.get_instance(
+        log_instance = ThreadLog.get_instance(
             logfile=self.logfile,
             log_level=self.log_level,
             log_format=self.log_format,
@@ -41,8 +41,8 @@ class TestLog(unittest.TestCase):
         self.__create_log_instance()
         instance2 = log_instance
         self.assertEqual(instance1, instance2)
-        self.assertIsInstance(instance1, Singleton)
-        self.assertIsInstance(instance2, Singleton)
+        self.assertIsInstance(instance1, ThreadSingleton)
+        self.assertIsInstance(instance2, ThreadSingleton)
 
     def test_logger_instances(self):
         instance1 = log_instance.get_logger("test_logger")

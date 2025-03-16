@@ -1,10 +1,9 @@
 import unittest
 
-from safethread.thread import BaseThread
-from safethread.thread.utils import PipelineStageThreaded
+from safethread.thread.utils import ThreadPipelineStage
 
 
-class TestPipelineStageThreaded(unittest.TestCase):
+class TestThreadPipelineStage(unittest.TestCase):
     """
     Unit tests for the Pipeline class.
     """
@@ -14,15 +13,15 @@ class TestPipelineStageThreaded(unittest.TestCase):
         Test that an exception is raised when pipeline stage is improperly initialized.
         """
         with self.assertRaises(TypeError) as context:
-            PipelineStageThreaded(None)  # type: ignore
+            ThreadPipelineStage(None)  # type: ignore
         with self.assertRaises(ValueError) as context:
-            PipelineStageThreaded(lambda x: x + 3, n_threads=0)  # type: ignore
+            ThreadPipelineStage(lambda x: x + 3, n_threads=0)  # type: ignore
 
     def test_put_and_get(self):
         """
         Test that data can be put into the pipeline, processed, and retrieved correctly.
         """
-        pipeline = PipelineStageThreaded(lambda x: x * 2)
+        pipeline = ThreadPipelineStage(lambda x: x * 2)
         test_input = 5
         expected_output = 10  # Since the callback doubles the input value
 
@@ -50,7 +49,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = PipelineStageThreaded(lambda x: x + 1, n_threads=5)
+        pipeline = ThreadPipelineStage(lambda x: x + 1, n_threads=5)
         pipeline.start()
 
         # Test multiple inputs
@@ -79,7 +78,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
         Test that the pipeline can handle multiple items in a concurrent setup.
         """
         # start the pipeline
-        pipeline = PipelineStageThreaded(lambda x: x + 1, n_threads=5)
+        pipeline = ThreadPipelineStage(lambda x: x + 1, n_threads=5)
 
         # Test multiple inputs
         inputs = [1, 2, 3, 4, 5]
@@ -109,7 +108,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
             return input_data * 2
 
         # Start pipeline with the 'multiply_by_two' function as the callback
-        pipeline = PipelineStageThreaded(multiply_by_two)
+        pipeline = ThreadPipelineStage(multiply_by_two)
         pipeline.start()
 
         # Test multiple inputs
@@ -127,7 +126,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
         # Stop the thread immediately (no processing will be done)
         pipeline.stop()
 
-        with self.assertRaises(PipelineStageThreaded.StoppedException) as context:
+        with self.assertRaises(ThreadPipelineStage.StoppedException) as context:
             pipeline.put(20)
 
         # Join to ensure it finishes execution before the program ends
@@ -139,18 +138,18 @@ class TestPipelineStageThreaded(unittest.TestCase):
 
     def test_pipeline_stopped_exception(self):
         """Tests that putting/getting data from a stopped pipeline raises an exception."""
-        pipeline = PipelineStageThreaded(lambda x: None)
+        pipeline = ThreadPipelineStage(lambda x: None)
         pipeline.start()
         pipeline.stop()
-        with self.assertRaises(PipelineStageThreaded.StoppedException):
+        with self.assertRaises(ThreadPipelineStage.StoppedException):
             pipeline.put(5)
-        with self.assertRaises(PipelineStageThreaded.StoppedException):
+        with self.assertRaises(ThreadPipelineStage.StoppedException):
             pipeline.get()
 
     def test_connect_output(self):
         # Create two pipeline instances
-        pipe1 = PipelineStageThreaded(lambda x: x+1)
-        pipe2 = PipelineStageThreaded(lambda x: x*2)
+        pipe1 = ThreadPipelineStage(lambda x: x+1)
+        pipe2 = ThreadPipelineStage(lambda x: x*2)
 
         # Connect pipe1's output to pipe2's input
         pipe1.connect_output(pipe2)

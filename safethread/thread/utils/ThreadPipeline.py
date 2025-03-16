@@ -1,10 +1,10 @@
 
 from typing import Any, Iterable
 
-from .PipelineStageThreaded import PipelineStageThreaded
+from .ThreadPipelineStage import ThreadPipelineStage
 
 
-class Pipeline:
+class ThreadPipeline:
     """
     A processing pipeline composed of interconnected `PipelineStage` instances.
 
@@ -16,7 +16,7 @@ class Pipeline:
     <img src="../../../img/utils/Pipeline.svg" alt="" width="100%">
     """
 
-    def __init__(self, pipeline_stages: Iterable[PipelineStageThreaded]):
+    def __init__(self, pipeline_stages: Iterable[ThreadPipelineStage]):
         """
         Initializes a pipeline with the given sequence of pipeline stages.
 
@@ -34,8 +34,8 @@ class Pipeline:
         Each stage's output queue is connected to the next stage's input queue.
         """
         for i in range(len(self.__stages)-1):
-            cur_stage = PipelineStageThreaded.is_instance(self.__stages[i])
-            next_stage = PipelineStageThreaded.is_instance(self.__stages[i+1])
+            cur_stage = ThreadPipelineStage.is_instance(self.__stages[i])
+            next_stage = ThreadPipelineStage.is_instance(self.__stages[i+1])
             cur_stage.connect_output(next_stage)
 
     def get(self, block: bool = True, timeout: float | None = None):

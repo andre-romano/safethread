@@ -3,10 +3,10 @@ import threading
 
 from typing import Self
 
-from .Singleton import Singleton
+from .ThreadSingleton import ThreadSingleton
 
 
-class Log(Singleton):
+class ThreadLog(ThreadSingleton):
     """
     Log is a thread-safe singleton class that provides a centralized logging system.
 

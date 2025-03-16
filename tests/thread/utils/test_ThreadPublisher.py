@@ -1,9 +1,9 @@
 import unittest
 
-from safethread.thread.utils import Publisher, Subscriber
+from safethread.thread.utils import ThreadPublisher, ThreadSubscriber
 
 
-class TestPublisher(unittest.TestCase):
+class TestThreadPublisher(unittest.TestCase):
     """Unit tests for the Publisher class."""
 
     def setUp(self) -> None:
@@ -16,10 +16,10 @@ class TestPublisher(unittest.TestCase):
         def append_to_result(data):
             self.result = self.result + data
 
-        self.subscriber1 = Subscriber(replace_result_with)
-        self.subscriber2 = Subscriber(append_to_result)
+        self.subscriber1 = ThreadSubscriber(replace_result_with)
+        self.subscriber2 = ThreadSubscriber(append_to_result)
 
-        self.publisher = Publisher()
+        self.publisher = ThreadPublisher()
         self.publisher.subscribe(self.subscriber1)
         self.publisher.subscribe(self.subscriber2)
 

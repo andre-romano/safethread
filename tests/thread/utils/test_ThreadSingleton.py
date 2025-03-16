@@ -1,23 +1,23 @@
 import unittest
 
 # Adjust the import path as needed
-from safethread.thread.utils import Singleton
+from safethread.thread.utils import ThreadSingleton
 
 
 # Sample subclass to test Singleton behavior
-class SingletonSubclass(Singleton):
+class SingletonSubclass(ThreadSingleton):
     def __init__(self, value: int):
         self.value = value
 
 # Sample subclass to test Singleton behavior
 
 
-class SingletonSubclassTwo(Singleton):
+class SingletonSubclassTwo(ThreadSingleton):
     def __init__(self):
         pass
 
 
-class TestSingleton(unittest.TestCase):
+class TestThreadSingleton(unittest.TestCase):
     def setUp(self):
         """Setup method to run before each test."""
         self.obj1 = SingletonSubclass.get_instance(10)

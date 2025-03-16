@@ -7,7 +7,7 @@ from typing import Callable, Self
 from .. import BaseThread
 
 
-class INIFileHandler:
+class ThreadINIFileHandler:
     """
     A thread-safe class to handle async reading and writing configuration files in INI format.    
     """

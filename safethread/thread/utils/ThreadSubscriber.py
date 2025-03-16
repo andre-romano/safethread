@@ -3,7 +3,7 @@ from typing import Any, Callable
 from ...utils import is_callable
 
 
-class Subscriber:
+class ThreadSubscriber:
     """
     A class that subscribes to a Publisher and receives notifications when data changes.
 

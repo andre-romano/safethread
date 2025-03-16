@@ -1,15 +1,15 @@
 import unittest
 
-from safethread.thread.utils import Subscriber
+from safethread.thread.utils import ThreadSubscriber
 
 
-class TestSubscriber(unittest.TestCase):
+class TestThreadSubscriber(unittest.TestCase):
     """Unit tests for the Subscriber class."""
 
     def test_subscriber_with_invalid_callback(self):
         """Test if the subscriber raises an error when initialized with a non-callable callback."""
         with self.assertRaises(TypeError):
-            Subscriber("not_a_function")   # type: ignore
+            ThreadSubscriber("not_a_function")   # type: ignore
 
     def test_subscriber_receives_notification(self):
         """Test if the subscriber receives notifications correctly."""
@@ -19,7 +19,7 @@ class TestSubscriber(unittest.TestCase):
             print(data)
             self.result = data+5
 
-        subscriber = Subscriber(callback)
+        subscriber = ThreadSubscriber(callback)
 
         test_data = 10
         subscriber._notify(test_data)

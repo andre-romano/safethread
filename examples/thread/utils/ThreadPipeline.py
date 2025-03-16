@@ -1,12 +1,12 @@
 
-from safethread.thread.utils import PipelineStageThreaded
-from safethread.thread.utils import Pipeline
+from safethread.thread.utils import ThreadPipelineStage
+from safethread.thread.utils import ThreadPipeline
 
 # creating pipeline and its stages (sequentially executed)
-pipeline = Pipeline([
-    PipelineStageThreaded(lambda x: x*2),
-    PipelineStageThreaded(lambda x: x+1),
-    PipelineStageThreaded(lambda x: x**2),
+pipeline = ThreadPipeline([
+    ThreadPipelineStage(lambda x: x*2),
+    ThreadPipelineStage(lambda x: x+1),
+    ThreadPipelineStage(lambda x: x**2),
 ])
 
 # starting pipeline

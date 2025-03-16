@@ -7,7 +7,7 @@ from typing import Any, Callable, Self
 from .. import BaseThread
 
 
-class FileHandler:
+class ThreadFileHandler:
     """
     A thread-safe asynchronous file handler that allows reading and writing operations 
     using separate threads, to ensure non-blocking behavior.

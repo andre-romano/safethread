@@ -8,7 +8,7 @@ from ...utils.utils import try_except_finally_wrap, is_callable
 from ..BaseThread import BaseThread
 
 
-class PipelineStageThreaded:
+class ThreadPipelineStage:
     """
     A pipeline stage that processes data through a callback function.
     It can run N separate threads to read and write data concurrently.
@@ -61,7 +61,7 @@ class PipelineStageThreaded:
         :return: The PipelineStage object if it is an instance.
         :rtype: PipelineStage
         """
-        if not isinstance(obj, PipelineStageThreaded):
+        if not isinstance(obj, ThreadPipelineStage):
             raise TypeError("Object is not a Pipeline Stage.")
         return obj
 

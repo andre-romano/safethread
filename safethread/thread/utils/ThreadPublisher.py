@@ -3,10 +3,10 @@ from threading import RLock
 
 from typing import Any, Iterable, Self
 
-from .Subscriber import Subscriber
+from .ThreadSubscriber import ThreadSubscriber
 
 
-class Publisher:
+class ThreadPublisher:
     """
     A thread-safe class that maintains a list of Subscriber instances and notifies them when data changes.
 
@@ -21,7 +21,7 @@ class Publisher:
         self._lock = RLock()
         self.__subscribers = []
 
-    def subscribe(self, subscribers: Subscriber | Iterable[Subscriber]) -> Self:
+    def subscribe(self, subscribers: ThreadSubscriber | Iterable[ThreadSubscriber]) -> Self:
         """
         Adds a subscriber(s) to receive notifications when new data is published.
 
@@ -34,7 +34,7 @@ class Publisher:
         :return: current object
         """
         with self._lock:
-            if isinstance(subscribers, Subscriber):
+            if isinstance(subscribers, ThreadSubscriber):
                 subscribers = [subscribers]
             if isinstance(subscribers, Iterable):
                 for subscriber in subscribers:
@@ -43,7 +43,7 @@ class Publisher:
             raise TypeError(
                 "Expected an instance of Subscriber or Iterable[Subscriber].")
 
-    def unsubscribe(self, subscriber: Subscriber):
+    def unsubscribe(self, subscriber: ThreadSubscriber):
         """
         Removes a subscriber from the list of subscribers, preventing further notifications.
 
@@ -66,5 +66,5 @@ class Publisher:
         # Notify all subscribers with the new data
         with self._lock:
             for subscriber in self.__subscribers:
-                subscriber: Subscriber
+                subscriber: ThreadSubscriber
                 subscriber._notify(data)

@@ -2,7 +2,7 @@ from threading import RLock
 from typing import Type, Self
 
 
-class Singleton:
+class ThreadSingleton:
     """
     Singleton class that ensures only one instance of a subclass exists.
 
