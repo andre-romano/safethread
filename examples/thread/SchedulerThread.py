@@ -4,9 +4,16 @@ from safethread.thread import SchedulerThread
 
 # Define the callback function
 
+i = 0
 
-def my_callback(arg):
+
+def my_callback(arg) -> bool:
+    global i
+    i += 1
     print(f"Callback executed with argument: {arg}")
+    if i == 3:
+        return False
+    return True
 
 
 # Create a scheduler instance with the following parameters:
@@ -24,11 +31,7 @@ scheduler = SchedulerThread(
 # Start the scheduler in a separate thread
 scheduler.start()
 
-# Let the scheduler run for a while (e.g., 3 executions - 6 seconds)
-time.sleep(5.0)
-
 # Stop the scheduler and Wait for the scheduler thread to finish
-scheduler.stop()
 scheduler.join()
 
 print("Scheduler stopped.")

@@ -2,10 +2,12 @@ import threading
 
 from typing import Any, Callable, Iterable, Self
 
-from ..utils import *
+from .ThreadEvent import ThreadEvent
+
+from .. import AbstractParallel, AbstractEvent, AbstractProcess
 
 
-class BaseThread:
+class BaseThread(AbstractParallel):
     """
     A base class for managing threads with thread safety.
 
@@ -18,123 +20,30 @@ class BaseThread:
         """Get a new instance of RLock (reentrant lock)."""
         return threading.RLock()
 
-    def __init__(
-        self,
-        callback: Callable,
-        args: Iterable | None = None,
-        daemon: bool = True,
-        repeat: bool = False,
-        on_end: Callable[[Self], Any] = lambda thread: None
-    ):
+    def _create_process_thread(self, target: Callable, kwargs: dict, daemon: bool) -> AbstractProcess:
         """
-        Initializes the thread.
+        Creates an instance of threading.Thread object.
 
-        :param callback: The Callable to check. Format: callback(*args)
-        :type callback: Callable
-        :param args: The arguments to pass to the callback() method when the thread starts.
-        :type args: Iterable, optional
-        :param daemon: If True, the thread will be daemonized. Defaults to True.
-        :type daemon: bool, optional
-        :param repeat: If True, the thread will repeat the execution of callback until .stop() is called. Defaults to False.
-        :type repeat: bool, optional
-        :param on_end: The callback to be called when the thread ends.
-        :type on_end: Callable[[Self], None], optional
+        :param target: The callable (function, lambda, etc) to be invoked by the thread.
+        :type target: Callable
+
+        :param kwargs: A dictionary of keyword arguments to pass to the target callable.
+        :type kwargs: dict
+
+        :param daemon: Whether the process should be a daemon process.
+        :type daemon: bool
+
+        :return: An instance of multiprocessing.Process.
+        :rtype: AbstractProcess
         """
-        self.__on_end: Callable = is_callable(on_end)
-        self.__callback: Callable = is_callable(callback)
-        self.__args = tuple(args or [])
-
-        self.__repeat = repeat
-        self.__daemon = daemon
-
-        self.__thread_started = False
-        self.__thread_terminate = False
-
-        self.__thread = threading.Thread(
-            target=self.__run, daemon=self.__daemon
+        return threading.Thread(
+            target=target,
+            kwargs=kwargs,
+            daemon=daemon,
         )
 
-    def __del__(self):
-        """Destructor to ensure thread is stopped when object is deleted."""
-        self.stop()
-
-    def __run(self):
-        """
-        The main run loop of the thread. This will repeatedly execute the callback at 
-        the given interval (timeout) and stop after the first execution if repeat is False.
-
-        This method runs in a separate thread and should not be called directly.
-
-        MUST NOT BE OVERLOADED.
-        """
-        while not self.__thread_terminate:
-            # Run callback
-            self.__callback(*self.__args)
-            # Terminate thread if not repeating
-            if not self.__repeat:
-                self.stop()
-        # call on end callback
-        self.__on_end(self)
-
-    def get_args(self) -> tuple:
-        """Gets the callback args"""
-        return self.__args
-
-    def has_started(self) -> bool:
-        """
-        Checks if the thread has started.
-
-        :return: True if thread has started, otherwise False.
-        :rtype: bool
-        """
-        return self.__thread_started
-
-    def is_alive(self) -> bool:
-        """
-        Checks if the thread is alive.
-
-        :return: True if thread is alive, otherwise False.
-        :rtype: bool
-        """
-        return self.__thread.is_alive()
-
-    def is_terminated(self) -> bool:
-        """
-        Checks if the thread has terminated.
-
-        :return: True if thread HAS started and is NOT alive, otherwise False.
-        :rtype: bool
-        """
-        return self.has_started() and not self.is_alive()
-
-    def is_repeatable(self) -> bool:
-        """Returns True if thread executes callback repeatedly (until .stop() is called)"""
-        return self.__repeat
-
-    def is_daemon(self) -> bool:
-        """Return whether this thread is a daemon."""
-        return self.__thread.daemon
-
-    def set_daemon(self, daemon: bool):
-        """Set whether this thread is a daemon."""
-        self.__thread.daemon = daemon
-
-    def start(self):
-        """
-        Starts the thread.
-
-        This method begins the execution of the thread by calling the __run method in the background.
-
-        :raises RuntimeError: if start() is called more than once on the same thread object.
-        """
-        if self.__thread_started:
-            raise RuntimeError("Thread has already been started.")
-        self.__thread.start()
-        self.__thread_started = True
-
-    def stop(self):
-        """Stops the thread."""
-        self.__thread_terminate = True
+    def _create_event(self) -> AbstractEvent:
+        return ThreadEvent()
 
     def join(self, timeout: float | None = None):
         """
@@ -145,10 +54,7 @@ class BaseThread:
 
         :raises RuntimeError: if an attempt is made to join the current thread, or the join() is called before start()
         """
-        if not self.__thread_started:
-            raise RuntimeError(
-                "Cannot join a thread that has not been started.")
-        self.__thread.join(timeout)
+        super().join(timeout=timeout)
 
     def stop_join(self, timeout: float | None = None):
         """
@@ -159,15 +65,4 @@ class BaseThread:
 
         :raises RuntimeError: if an attempt is made to join the current thread (main thread), or the join() is called before start()
         """
-        self.stop()
-        self.join(timeout=timeout)
-
-    def copy(self) -> Self:
-        """Creates a copy of the current thread."""
-        return self.__class__(
-            callback=self.__callback,
-            args=self.__args,
-            daemon=self.__daemon,
-            repeat=self.__repeat,
-            on_end=self.__on_end
-        )
+        super().stop_join(timeout=timeout)

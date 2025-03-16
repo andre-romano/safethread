@@ -139,7 +139,7 @@ class TestPipelineStageThreaded(unittest.TestCase):
 
     def test_pipeline_stopped_exception(self):
         """Tests that putting/getting data from a stopped pipeline raises an exception."""
-        pipeline = PipelineStageThreaded(lambda: None)
+        pipeline = PipelineStageThreaded(lambda x: None)
         pipeline.start()
         pipeline.stop()
         with self.assertRaises(PipelineStageThreaded.StoppedException):

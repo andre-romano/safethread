@@ -7,6 +7,11 @@ from . import BaseThread
 from ..utils import *
 
 
+def _dummy_callback(*args) -> bool:
+    """Dummy callback"""
+    return False
+
+
 class SchedulerThread(BaseThread):
     """
     A thread scheduler that runs a given callback at regular intervals with an optional repeat option.
@@ -23,41 +28,52 @@ class SchedulerThread(BaseThread):
     <img src="../../../img/thread/Scheduler.svg" alt="" width="100%">
     """
 
-    def __init__(self, timeout: float, callback: Callable, args: Iterable | None = None, repeat: bool = True):
+    def __init__(self, timeout: float, callback: Callable[..., bool], args: Iterable | None = None, repeat: bool = True):
         """
         Initializes the scheduler with the given parameters.
 
         :param timeout: Time interval in seconds between each callback execution.
         :type timeout: float
+
         :param callback: The function (or callable) to execute at each timeout.
-        :type callback: Callable
+        :type callback: Callable[..., bool]
+
         :param args: Optional arguments to pass to the callback. Defaults to None.
         :type args: list, optional
+
         :param repeat: Whether the callback should be repeated indefinitely or just once. Defaults to True.
         :type repeat: bool, optional
 
         :raises TypeError: If 'callback' is not callable.
         """
         super().__init__(
-            callback=self.__run_scheduler,
-            repeat=repeat
+            callback=self._run_scheduler,
+            repeat=repeat,
         )
 
-        self.__callback: Callable = is_callable(callback)
         # Default to empty list if args is None
-        self.__args = tuple(args or [])
-        self.__timeout = timeout
+        self.__timeout: float = timeout
 
-    def __run_scheduler(self):
+        self.__callback: Callable[..., bool] = _dummy_callback
+        self.__callback = is_callable(callback)
+
+        self.__args = tuple(args or [])
+
+    def _run_scheduler(self) -> bool:
         """
         The main run loop of the scheduler. This will repeatedly execute the callback at 
         the given interval (timeout) and stop after the first execution if repeat is False.
+
+        If callback() returns False, stop scheduler thread.
 
         This method runs in a separate thread and should not be called directly.
         """
         # Wait for timeout before running the callback
         time.sleep(self.__timeout)
-        self.__callback(*self.__args)
+        return self.__callback(*self.__args)
+
+    def get_args(self) -> tuple:
+        return self.__args
 
     def get_timeout(self) -> float:
         """Returns scheduler timeout."""

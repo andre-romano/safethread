@@ -6,25 +6,39 @@ from safethread.thread import BaseThread
 
 
 class TestBaseThread(unittest.TestCase):
-    def setUp(self) -> None:
-        def callback():
+
+    def _set_up_thread(self):
+        def callback() -> bool:
             time.sleep(0.2)
-
-        self.thread_nd_repeat_called = 0
-        self.thread_nd_repeat_result = 0
-
-        def callback_two(a, b):
-            self.thread_nd_repeat_called += 1
-            self.thread_nd_repeat_result += a+b
-            time.sleep(0.1)
+            return True
 
         self.thread = BaseThread(
             callback=callback,
-            daemon=True)
+            daemon=True
+        )
+
+    def _set_up_thread_nd_repeat(self):
+        self.thread_nd_repeat_called = 0
+        self.thread_nd_repeat_result = 0
+
+        def callback_two(a, b) -> bool:
+            self.thread_nd_repeat_called += 1
+            self.thread_nd_repeat_result += a+b
+
+            if self.thread_nd_repeat_called == 2:
+                return False  # interrupt thread now
+            return True  # keep thread running
 
         self.thread_nd_repeat = BaseThread(
             callback=callback_two,
-            args=[2, 3], daemon=False, repeat=True)
+            args=[2, 3],
+            daemon=False,
+            repeat=True
+        )
+
+    def setUp(self) -> None:
+        self._set_up_thread()
+        self._set_up_thread_nd_repeat()
 
     def test_thread_start(self):
         self.assertFalse(self.thread.has_started())
@@ -77,11 +91,7 @@ class TestBaseThread(unittest.TestCase):
         # Start the thread
         self.thread_nd_repeat.start()
 
-        # wait for 2 executions of callback()
-        time.sleep(0.15)
-
-        # stop and Join the thread
-        self.thread_nd_repeat.stop()
+        # Join the thread
         self.thread_nd_repeat.join()
 
         # Check that the callback was called 2 times

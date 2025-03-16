@@ -6,28 +6,45 @@ from safethread.thread import SchedulerThread, BaseThread
 
 class TestSchedulerThread(unittest.TestCase):
 
-    def setUp(self) -> None:
+    def _set_up_scheduler(self):
         # NON-REPEATED SCHEDULER
         self.scheduler_called = 0
         self.scheduler_result = 0
 
-        def callback(x):
+        def callback(x) -> bool:
             self.scheduler_called += 1
             self.scheduler_result = x+1
+            return True
 
         self.scheduler = SchedulerThread(
-            timeout=0.1, callback=callback, args=[1], repeat=False)
+            timeout=0.1,
+            callback=callback,
+            args=[1],
+            repeat=False,
+        )
 
+    def _set_up_scheduler_rep(self):
         # REPEATED SCHEDULER
         self.scheduler_rep_called = 0
         self.scheduler_rep_result = 0
 
-        def callback_two(a, b):
+        def callback_two(a, b) -> bool:
             self.scheduler_rep_called += 1
             self.scheduler_rep_result += a+b
+            if self.scheduler_rep_called == 2:
+                return False
+            return True
 
         self.scheduler_rep = SchedulerThread(
-            timeout=0.1, callback=callback_two, args=[2, 3], repeat=True)
+            timeout=0.1,
+            callback=callback_two,
+            args=[2, 3],
+            repeat=True,
+        )
+
+    def setUp(self) -> None:
+        self._set_up_scheduler()
+        self._set_up_scheduler_rep()
 
     def test_invalid_callback(self):
         """Test that an exception is raised if the callback is not callable."""
@@ -64,8 +81,6 @@ class TestSchedulerThread(unittest.TestCase):
         self.scheduler_rep.start()
 
         # Let it run for a while
-        time.sleep(0.15)  # Let it run for 2 times
-        self.scheduler_rep.stop()
         self.scheduler_rep.join()
 
         # Check that the callback was called 2 times

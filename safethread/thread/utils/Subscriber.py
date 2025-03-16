@@ -1,5 +1,7 @@
 from typing import Any, Callable
 
+from ...utils import is_callable
+
 
 class Subscriber:
     """
@@ -23,9 +25,8 @@ class Subscriber:
 
         :raises TypeError: If `callback` is not callable.
         """
-        if not callable(callback):
-            raise TypeError("Subscriber callback must be a callable function.")
-        self.__callback = callback
+        self.__callback: Callable[[Any], None] = lambda input: None
+        self.__callback = is_callable(callback)
 
     def _notify(self, data: Any):
         """

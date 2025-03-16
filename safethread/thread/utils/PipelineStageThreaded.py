@@ -3,7 +3,7 @@ import queue
 
 from typing import Any, Callable, Self
 
-from ...utils.utils import *
+from ...utils.utils import try_except_finally_wrap, is_callable
 
 from ..BaseThread import BaseThread
 
@@ -65,12 +65,13 @@ class PipelineStageThreaded:
             raise TypeError("Object is not a Pipeline Stage.")
         return obj
 
-    def __init__(self, callback: Callable, n_threads: int = 1):
+    def __init__(self, callback: Callable[[Any], Any], n_threads: int = 1):
         """
         Initializes the pipeline stage with a callback function.
 
-        :param callback: The function to process data through the pipeline stage.
-        :type callback: Callable
+        :param callback: The function to process data through the pipeline stage. Accepts one data argument, and returns an output data.
+        :type callback: Callable[[Any],Any]
+
         :param n_threads: Number of threads that will read the input queue, and 
                           store result in the output queue. Defaults to 1.
         :type n_threads: int
@@ -78,12 +79,13 @@ class PipelineStageThreaded:
         :raises TypeError: If the callback argument is not callable.
         :raises ValueError: If `n_threads` is less than 1.
         """
-
-        self.__callback: Callable = is_callable(callback)
         self.__input_queue = queue.Queue()
         self.__output_queue = queue.Queue()
         self.__started = False
         self.__threads: list[BaseThread] = []
+
+        self.__callback: Callable[[Any], Any] = lambda input: None
+        self.__callback = is_callable(callback)
 
         if n_threads < 1:
             raise ValueError(
@@ -94,20 +96,25 @@ class PipelineStageThreaded:
                 BaseThread(self.__run_pipeline, repeat=True)
             )
 
-    def __run_pipeline(self):
+    def __run_pipeline(self) -> bool:
         """
         Method to be executed in the thread. It gets data from the input queue,
         processes it through the callback function, and puts the result into
         the output queue.
 
         :raises PipelineStage.FullException: If the output queue is full (no available slot to store output).
+
+        :return: True to keep pipeline thread running, False otherwise
+        :rtype: bool
         """
         try:
             input_data = self.__input_queue.get()
             output_data = self.__callback(input_data)
             self.__output_queue.put(output_data)
+            return True
         except queue.ShutDown as e:
             self.stop()
+            return False
 
     def has_started(self) -> bool:
         """

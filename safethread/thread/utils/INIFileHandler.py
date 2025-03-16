@@ -24,12 +24,16 @@ class INIFileHandler:
                  ):
         """
         Initialize the ConfigParser object.
+
         :param filename: The name of the configuration file.
         :type filename: str
+
         :param create_default: Flag to create default configuration if the file does not exist, defaults to False.
         :type create_default: bool, optional
+
         :param on_read: Callback function to be called after reading the configuration file. It receives this INI object and an Exception or None.
         :type on_read: Callable[[Self, Exception | None], None], optional
+
         :param on_write: Callback function to be called after writing to the configuration file. It receives this INI object and an Exception or None.
         :type on_write: Callable[[Self, Exception | None], None], optional
         """
@@ -51,9 +55,12 @@ class INIFileHandler:
         if create_default:
             self._init_default_data()
 
-    def __read(self):
+    def __read(self) -> bool:
         """
         Loads the configurations from the INI file 
+
+        :return: True, to keep read thread running
+        :rtype: bool
         """
         try:
             with self.__file_lock:
@@ -66,10 +73,14 @@ class INIFileHandler:
             self.__on_read(self, None)
         except Exception as e:
             self.__on_read(self, e)
+        return True  # do not stop read thread
 
-    def __write(self):
+    def __write(self) -> bool:
         """
         Saves the configurations to the INI file.
+
+        :return: True, to keep write thread running
+        :rtype: bool
         """
         try:
             with self.__file_lock:
@@ -78,6 +89,7 @@ class INIFileHandler:
             self.__on_write(self, None)
         except Exception as e:
             self.__on_write(self, e)
+        return True  # do not stop read thread
 
     def __getitem__(self, sec_option: str):
         return self.get(sec_option)
@@ -92,10 +104,11 @@ class INIFileHandler:
         This method should be overloaded in subclasses to provide specific
         default data initialization. If not overloaded, it raises a RuntimeError.
 
-        :raises RuntimeError: If the method is not overloaded in a subclass.
+        :raises NotImplementedError: If the method is not overloaded in a subclass.
         """
 
-        raise RuntimeError(f"ConfigParser._init_default_data() NOT overloaded")
+        raise NotImplementedError(
+            f"ConfigParser._init_default_data() NOT overloaded")
 
     def get(self, sec_option: str, fallback: str = ''):
         """

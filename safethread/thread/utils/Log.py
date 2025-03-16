@@ -2,7 +2,6 @@ import logging
 import threading
 
 from typing import Self
-from logging import FileHandler, Formatter, StreamHandler
 
 from .Singleton import Singleton
 
@@ -68,16 +67,16 @@ class Log(Singleton):
         self.__date_format = date_format
 
         # Create formatter
-        formatter = Formatter(self.__log_format, self.__date_format)
+        formatter = logging.Formatter(self.__log_format, self.__date_format)
 
         # Console handler
-        console_handler = StreamHandler()
+        console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
         self.__handlers.append(console_handler)
 
         # File handler (if a log file is provided)
         if self.__logfile:
-            file_handler = FileHandler(
+            file_handler = logging.FileHandler(
                 self.__logfile,
                 mode="a",
                 encoding="utf-8"

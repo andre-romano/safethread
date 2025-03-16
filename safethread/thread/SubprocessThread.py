@@ -71,6 +71,9 @@ class SubprocessThread(BaseThread):
 
         :raises TypeError: If `command` is not a string or an iterable of strings.
         """
+        # exception handling
+        e: Exception | None = None
+
         # check command
         cmd: list[str] = []
         if isinstance(command, str):
@@ -78,9 +81,10 @@ class SubprocessThread(BaseThread):
         elif isinstance(command, Iterable):
             cmd = list(command)
         else:
-            raise TypeError(
+            e = TypeError(
                 "Command must be a string or an iterable of strings.")
 
+        # call super
         super().__init__(
             callback=self.__run_subprocess,
             args=[cmd],
@@ -102,7 +106,11 @@ class SubprocessThread(BaseThread):
             stdout="",
         )
 
-    def __run_subprocess(self, command: list[str]):
+        # raise exception, if needed
+        if e:
+            raise e
+
+    def __run_subprocess(self, command: list[str]) -> bool:
         """
         Runs the command in a subprocess and captures the output.
         """
@@ -130,6 +138,7 @@ class SubprocessThread(BaseThread):
             )
         finally:
             self.__on_finish(self.__result)
+        return True
 
     def get_return_code(self) -> int:
         """

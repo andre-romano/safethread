@@ -62,7 +62,7 @@ class FileHandler:
         self.__thread_read = BaseThread(self.__read)
         self.__thread_write = BaseThread(self.__write)
 
-    def __read(self):
+    def __read(self) -> bool:
         """
         Reads lines from the file and adds them to the read queue.
         """
@@ -74,6 +74,7 @@ class FileHandler:
                         self.__on_read(line, None)
         except Exception as e:
             self.__on_read(None, e)
+        return True
 
     def __write(self):
         """
@@ -94,6 +95,7 @@ class FileHandler:
             self.__on_write(None, e)
         finally:
             self.__queue_write.shutdown(immediate=True)
+            return True
 
     def put(self, data) -> Self:
         """
