@@ -32,4 +32,5 @@ from .AbstractContext import AbstractContext
 from .AbstractEvent import AbstractEvent
 from .AbstractLock import AbstractLock
 from .AbstractParallel import AbstractParallel
+from .AbstractPicklable import AbstractPicklable
 from .AbstractProcess import AbstractProcess

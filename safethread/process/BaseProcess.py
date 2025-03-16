@@ -53,3 +53,15 @@ class BaseProcess(AbstractParallel):
         :rtype: AbstractEvent
         """
         return ProcessEvent()
+
+    def stop(self):
+        super().stop()
+        try:
+            self._process: multiprocessing.Process
+            self._process.kill()
+        except:
+            pass
+
+    def get_exitcode(self) -> int | None:
+        """Return exit code of process or ``None`` if it has yet to stop"""
+        return self._process.exitcode

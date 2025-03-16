@@ -16,4 +16,4 @@ Classes:
 from .BaseProcess import BaseProcess
 from .ProcessEvent import ProcessEvent
 from .SchedulerProcess import SchedulerProcess
-# from .SubprocessProcess import SubprocessProcess
+from .SubprocessProcess import SubprocessProcess

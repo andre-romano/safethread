@@ -99,7 +99,7 @@ class AbstractParallel:
         self.__process_started = False
         self.__process_terminate = self._create_event()
 
-        self.__process = self._create_process_thread(
+        self._process = self._create_process_thread(
             target=_run_parallel,
             kwargs={
                 "callback": self.__callback,
@@ -160,7 +160,7 @@ class AbstractParallel:
         :return: True if process / thread is alive, otherwise False.
         :rtype: bool
         """
-        return self.__process.is_alive()
+        return self._process.is_alive()
 
     def is_terminated(self) -> bool:
         """
@@ -187,7 +187,7 @@ class AbstractParallel:
         :return: True if daemon, False otherwise
         :rtype: bool
         """
-        return self.__process.daemon
+        return self._process.daemon
 
     def set_daemon(self, daemon: bool):
         """
@@ -196,7 +196,7 @@ class AbstractParallel:
         :param daemon: True to set thread/process as daemon, False otherwise.
         :type daemon: bool
         """
-        self.__process.daemon = daemon
+        self._process.daemon = daemon
 
     def start(self):
         """
@@ -208,7 +208,7 @@ class AbstractParallel:
         """
         if self.__process_started:
             raise RuntimeError("Thread / Process has already been started.")
-        self.__process.start()
+        self._process.start()
         self.__process_started = True
 
     def stop(self):
@@ -225,7 +225,7 @@ class AbstractParallel:
         if not self.__process_started:
             raise RuntimeError(
                 "Cannot join a thread / process that has not been started.")
-        self.__process.join(timeout=timeout)
+        self._process.join(timeout=timeout)
 
     def stop_join(self, timeout: float | None = None):
         """
