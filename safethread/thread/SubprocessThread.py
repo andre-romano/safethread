@@ -6,6 +6,11 @@ from . import BaseThread
 
 
 class SubprocessThread(BaseThread):
+    """
+    A thread-safe class for running subprocess commands.
+
+    This class inherits from BaseThread and provides functionality to run a command in a subprocess, capture its output, and handle its completion through a callback.
+    """
 
     class Finished:
         """Stores information about the finished subprocess"""

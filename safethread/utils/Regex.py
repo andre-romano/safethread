@@ -5,11 +5,13 @@ import sys
 
 
 class Regex:
+    """
+    A class for handling regular expressions with exception-based error handling.
+    """
+
     class NotFound(RuntimeError):
         """Raised when a regex is not found in a string object"""
-
-        def __init__(self, *args: object) -> None:
-            super().__init__(*args)
+        pass
 
     def __init__(
         self,

@@ -5,8 +5,10 @@ import threading
 
 from typing import Self
 
+from .. import AbstractLock
 
-class HybridRLock:
+
+class HybridRLock(AbstractLock):
     """
     A lock class that supports both inter-process (multiprocessing) and
     intra-process (threading) synchronization.
@@ -16,6 +18,14 @@ class HybridRLock:
     """
 
     def __init__(self):
+        """
+        Initializes the HybridRLock instance.
+
+        This constructor sets up two types of locks:
+        - `self.__mp_lock`: A reentrant lock for inter-process synchronization using `multiprocessing.RLock()`.
+        - `self.__thread_lock`: A reentrant lock for intra-process synchronization using `threading.RLock()`.
+        """
+
         # Lock for inter-process synchronization
         self.__mp_lock = multiprocessing.RLock()
         # Lock for intra-process synchronization

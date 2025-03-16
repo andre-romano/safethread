@@ -7,6 +7,15 @@ from .Singleton import Singleton
 
 
 class Log(Singleton):
+    """
+    Log is a thread-safe singleton class that provides a centralized logging system.
+
+    Attributes:
+        DEBUG (int): Logging level for debug messages.
+        INFO (int): Logging level for informational messages.
+        WARNING (int): Logging level for warning messages.
+        ERROR (int): Logging level for error messages.
+    """
 
     DEBUG = logging.DEBUG
     INFO = logging.INFO

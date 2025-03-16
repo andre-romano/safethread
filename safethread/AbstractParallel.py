@@ -32,6 +32,7 @@ def _run_parallel(
 
 
 def _dummy_callback(*args) -> bool:
+    """Dummy callback that does nothing"""
     return True
 
 

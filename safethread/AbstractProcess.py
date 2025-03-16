@@ -4,7 +4,13 @@ from typing import Protocol
 
 
 class AbstractProcess(Protocol):
-    """Represents a process / thread instance interface"""
+    """
+    Abstract base class for a process or thread.
+
+    This class defines the interface for a process or thread with methods to start(),
+    join(), check if alive, and manage the daemon status. Subclasses must override
+    these methods and properties to provide specific functionality.
+    """
 
     def start(self) -> None:
         """
