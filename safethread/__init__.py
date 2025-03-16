@@ -34,3 +34,5 @@ from .AbstractLock import AbstractLock
 from .AbstractParallel import AbstractParallel
 from .AbstractPicklable import AbstractPicklable
 from .AbstractProcess import AbstractProcess
+from .AbstractScheduler import AbstractScheduler
+from .AbstractSubprocess import AbstractSubprocess

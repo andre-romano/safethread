@@ -31,6 +31,3 @@ if __name__ == "__main__":
         print("----------------------")
         print("Subprocess terminated!")
         print("----------------------")
-        print("Return code:", subprocess_obj.get_return_code())
-        print("Standard output:", subprocess_obj.get_stdout())
-        print("Standard error:", subprocess_obj.get_stderr())
