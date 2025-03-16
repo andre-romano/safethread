@@ -1,8 +1,8 @@
 # Assuming SafeList is correctly imported
-from safethread.thread.datatype import SafeThreadList
+from safethread.thread.datatype import ThreadSafeList
 
 # Initialize a SafeList with some data
-safe_list = SafeThreadList([1, 2, 3])
+safe_list = ThreadSafeList([1, 2, 3])
 
 # Append an item to the list
 safe_list.append(4)

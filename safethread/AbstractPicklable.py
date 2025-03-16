@@ -1,9 +1,9 @@
 
 
-from typing import Any, Self
+from typing import Protocol, Self
 
 
-class AbstractPicklable:
+class AbstractPicklable(Protocol):
     """
     Abstract base class that defines the interface for picklable objects.
     """

@@ -1,8 +1,8 @@
 # Assuming SafeSet is correctly imported
-from safethread.thread.datatype import SafeThreadSet
+from safethread.thread.datatype import ThreadSafeSet
 
 # Initialize an empty SafeSet
-safe_set = SafeThreadSet()
+safe_set = ThreadSafeSet()
 
 # Add elements to the set
 safe_set.add(1)
@@ -13,7 +13,7 @@ safe_set.add(3)
 print(f"SafeSet contains: {safe_set._data}")  # Output: {1, 2, 3}
 
 # Perform set operations (example: union)
-another_set = SafeThreadSet([2, 3, 4, 5])
+another_set = ThreadSafeSet([2, 3, 4, 5])
 result = safe_set.union(another_set)
 print(f"Union of sets: {result}")  # Output: {1, 2, 3, 4, 5}
 

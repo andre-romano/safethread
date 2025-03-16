@@ -4,14 +4,14 @@ import threading
 from queue import Queue
 
 # Ensure SafeQueueThread is imported from the correct module
-from safethread.thread.datatype import SafeThreadQueue
+from safethread.thread.datatype import ThreadSafeQueue
 
 
 class TestSafeThreadQueue(unittest.TestCase):
 
     def test_initialization_from_int(self):
         # Test that initializing SafeQueueThread with an integer sets the maxsize correctly
-        safe_queue = SafeThreadQueue(5)
+        safe_queue = ThreadSafeQueue(5)
         self.assertEqual(safe_queue.maxsize, 5)
         self.assertTrue(safe_queue.empty())
 
@@ -21,7 +21,7 @@ class TestSafeThreadQueue(unittest.TestCase):
         for i in range(5):
             original_queue.put(i)
 
-        safe_queue = SafeThreadQueue(original_queue)
+        safe_queue = ThreadSafeQueue(original_queue)
 
         # Check if all items are copied correctly
         self.assertEqual(safe_queue.qsize(), 5)
@@ -30,7 +30,7 @@ class TestSafeThreadQueue(unittest.TestCase):
         self.assertTrue(original_queue.empty())
 
     def test_thread_safety(self):
-        safe_queue = SafeThreadQueue()
+        safe_queue = ThreadSafeQueue()
 
         def producer():
             for i in range(5):
@@ -61,7 +61,7 @@ class TestSafeThreadQueue(unittest.TestCase):
         self.assertTrue(safe_queue.all_tasks_done)
 
     def test_get_and_put(self):
-        safe_queue = SafeThreadQueue()
+        safe_queue = ThreadSafeQueue()
 
         # Test put() and get() methods
         safe_queue.put(1)
@@ -72,7 +72,7 @@ class TestSafeThreadQueue(unittest.TestCase):
         self.assertEqual(safe_queue.get_nowait(), 2)
 
     def test_shutdown(self):
-        safe_queue = SafeThreadQueue()
+        safe_queue = ThreadSafeQueue()
 
         # Shutdown the queue and check its status
         safe_queue.shutdown()
@@ -87,7 +87,7 @@ class TestSafeThreadQueue(unittest.TestCase):
             safe_queue.get()
 
     def test_task_done_and_unfinished_tasks(self):
-        safe_queue = SafeThreadQueue()
+        safe_queue = ThreadSafeQueue()
 
         # Test task_done() and unfinished_tasks()
         safe_queue.put(1)
@@ -102,7 +102,7 @@ class TestSafeThreadQueue(unittest.TestCase):
         self.assertEqual(safe_queue.unfinished_tasks, 0)
 
     def test_empty_full_and_qsize(self):
-        safe_queue = SafeThreadQueue(3)
+        safe_queue = ThreadSafeQueue(3)
 
         self.assertTrue(safe_queue.empty())
         self.assertFalse(safe_queue.full())
@@ -122,14 +122,14 @@ class TestSafeThreadQueue(unittest.TestCase):
             safe_queue.put(4, block=False)
 
     def test_clear(self):
-        safe_queue = SafeThreadQueue()
+        safe_queue = ThreadSafeQueue()
 
         # Add items to the queue
         safe_queue.put(1)
         safe_queue.put(2)
 
         # Clear the queue
-        safe_queue.queue.clear()  # Directly clear the underlying queue
+        safe_queue.clear()  # Directly clear the underlying queue
 
         # Test if the queue is empty after clearing
         self.assertTrue(safe_queue.empty())

@@ -1,20 +1,24 @@
 
+from multiprocessing.managers import DictProxy
+
 from typing import Any, Iterable
 
-from . import SafeThreadBase
+from .. import AbstractLock
+
+from . import AbstractSafeBase
 
 
-class SafeThreadDict(SafeThreadBase):
-    def __init__(self, data: dict | Iterable | None = None):
+class AbstractSafeDict(AbstractSafeBase):
+    def __init__(self, data: dict | Iterable | DictProxy | None = None):
         """
-        Initialize a shared dictionary with a Lock for thread safety.
+        Initialize a dictionary with a Lock for safety.
 
         :param data: Initial data to populate the dictionary. Defaults to None.
-        :type data: dict or Iterable, optional
+        :type data: dict or Iterable or DictProxy, optional
         """
-        data = data if isinstance(data, dict) else dict(data or {})
         super().__init__(data)
-        self._data: dict
+        self._lock: AbstractLock
+        self._data: dict | DictProxy
 
     def clear(self):
         """
@@ -22,21 +26,6 @@ class SafeThreadDict(SafeThreadBase):
         """
         with self._lock:
             self._data.clear()
-
-    def fromkeys(self, iterable: Iterable, value: Any | None = None):
-        """
-        Create a new dictionary with keys from an iterable and values set to a specified value.
-
-        :param iterable: Iterable containing the keys for the new dictionary.
-        :type iterable: Iterable
-        :param value: Value assigned to each key. Defaults to None.
-        :type value: Any, optional
-
-        :return: A new dictionary with the specified keys and values.
-        :rtype: dict
-        """
-        with self._lock:
-            return self._data.fromkeys(iterable, value)
 
     def get(self, key, default=None):
         """
@@ -92,7 +81,7 @@ class SafeThreadDict(SafeThreadBase):
 
     def popitem(self):
         """
-        Remove and return the last key-value pair from the dictionary in a thread-safe manner.
+        Remove and return the last key-value pair from the dictionary in a process-safe manner.
 
         :raises KeyError: If the dictionary is empty.
 

@@ -13,7 +13,7 @@ class AbstractContext(Protocol):
     behavior.
     """
 
-    def __enter__(self) -> Any:
+    def __enter__(self, blocking: bool = True, timeout: float = -1) -> Any:
         """
         Enter context-manager
 

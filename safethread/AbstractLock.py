@@ -1,7 +1,5 @@
 
 
-from typing import Any, Self
-
 from . import AbstractContext
 
 
@@ -13,7 +11,7 @@ class AbstractLock(AbstractContext):
     provides two methods that must be implemented by subclasses: acquire() and release().
     """
 
-    def acquire(self) -> bool:
+    def acquire(self, blocking=True, timeout: float = -1) -> bool:
         """
         Acquires the lock
 

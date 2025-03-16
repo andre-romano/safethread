@@ -1,20 +1,23 @@
 
-from typing import Iterable
+from multiprocessing.managers import ListProxy
 
-from . import SafeThreadBase
+from typing import Any, Iterable, MutableSequence
+
+from .. import AbstractLock
+
+from . import AbstractSafeBase
 
 
-class SafeThreadList(SafeThreadBase):
-    def __init__(self, data: list | Iterable | None = None):
+class AbstractSafeList(AbstractSafeBase):
+    def __init__(self, data: list | Iterable | ListProxy | None = None):
         """
-        Initializes a shared list with a lock for thread safety.
+        Initializes a shared list with a lock for safety.
 
         :param data: The initial data to populate the list with.
-        :type data: list, Iterable, or None
+        :type data: list or Iterable or ListProxy, optional
         """
-        data = data if isinstance(data, list) else list(data or [])
         super().__init__(data)
-        self._data: list
+        self._data: list | ListProxy
 
     def append(self, value):
         """

@@ -1,24 +1,36 @@
 
+from typing import Any
 import unittest
 
 import threading
 
 # Adjust the import path as needed
-from safethread.thread.datatype import SafeThreadBase
+from safethread import AbstractLock
+from safethread.datatype import AbstractSafeBase
+from safethread.thread.datatype import ThreadRLock
+
+
+class ThreadSafeBase(AbstractSafeBase):
+
+    def _create_data(self, data: Any | None) -> Any:
+        return data
+
+    def _create_lock(self) -> AbstractLock:
+        return ThreadRLock()
 
 
 class TestSafeThreadBase(unittest.TestCase):
     def setUp(self):
         """Initialize test objects before each test."""
-        self.obj = SafeThreadBase(10)
-        self.obj_float1 = SafeThreadBase(10.2)
-        self.obj_float2 = SafeThreadBase(10.7)
+        self.obj = ThreadSafeBase(10)
+        self.obj_float1 = ThreadSafeBase(10.2)
+        self.obj_float2 = ThreadSafeBase(10.7)
 
-        self.obj_bool = SafeThreadBase(True)
+        self.obj_bool = ThreadSafeBase(True)
 
-        self.obj_list = SafeThreadBase([1, 2, 3, 4])
-        self.obj_set = SafeThreadBase({1, 2, 3, 4})
-        self.obj_dict = SafeThreadBase({
+        self.obj_list = ThreadSafeBase([1, 2, 3, 4])
+        self.obj_set = ThreadSafeBase({1, 2, 3, 4})
+        self.obj_dict = ThreadSafeBase({
             'a': 'A',
             'b': 'B',
             'c': 'C',
@@ -176,7 +188,7 @@ class TestSafeThreadBase(unittest.TestCase):
         """Test __bool__ method."""
         self.assertTrue(bool(self.obj_bool))
 
-        self.assertFalse(bool(SafeThreadBase(0)))
+        self.assertFalse(bool(ThreadSafeBase(0)))
 
     def test_type_conversions(self):
         """Test __int__, __float__ methods."""
@@ -224,7 +236,7 @@ class TestSafeThreadBase(unittest.TestCase):
         n_threads = 10
 
         def increment():
-            obj2 = SafeThreadBase(1)
+            obj2 = ThreadSafeBase(1)
             for _ in range(n_iterations):
                 self.obj += obj2
 

@@ -1,35 +1,35 @@
 import unittest
 import threading
 
-from safethread.thread.datatype import SafeThreadList
+from safethread.thread.datatype import ThreadSafeList
 
 
 class TestSafeThreadList(unittest.TestCase):
 
     def setUp(self):
         """Set up a new SafeListThread instance for each test."""
-        self.safe_list = SafeThreadList()
+        self.safe_list = ThreadSafeList()
 
     def test_initialization(self):
-        safe_list = SafeThreadList([])
+        safe_list = ThreadSafeList([])
         self.assertEqual(safe_list._data, [])
 
-        safe_list = SafeThreadList([1, 2])
+        safe_list = ThreadSafeList([1, 2])
         self.assertEqual(safe_list, [1, 2])
 
-        safe_list = SafeThreadList((5, 7))
+        safe_list = ThreadSafeList((5, 7))
         self.assertEqual(safe_list[0], 5)
         self.assertEqual(safe_list[1], 7)
 
     def test_empty(self):
         self.assertEqual(self.safe_list._data, [])
-        self.assertEqual(self.safe_list, SafeThreadList([]))
+        self.assertEqual(self.safe_list, ThreadSafeList([]))
 
     def test_non_empty(self):
         """Test creating non-empty list."""
-        self.safe_list = SafeThreadList([1])
+        self.safe_list = ThreadSafeList([1])
         self.assertEqual(self.safe_list._data, [1])
-        self.assertEqual(self.safe_list, SafeThreadList([1]))
+        self.assertEqual(self.safe_list, ThreadSafeList([1]))
 
     def test_append(self):
         """Test appending elements to the list."""
@@ -98,7 +98,7 @@ class TestSafeThreadList(unittest.TestCase):
 
     def test_thread_safety(self):
         """Test SafeListThread with multiple threads appending elements."""
-        def worker(lst: SafeThreadList, values: int):
+        def worker(lst: ThreadSafeList, values: int):
             for value in range(values):
                 lst.append(value)
 

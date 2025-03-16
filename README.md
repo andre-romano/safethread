@@ -8,7 +8,7 @@
 
 ## Features
 
-- **Thread-Safe and Multiprocessing-Safe Data Structures**: `SafeProcessList`, `SafeProcessDict`, `SafeThreadList`, `SafeThreadDict`, `SafeThreadSet`, among others.
+- **Thread-Safe and Multiprocessing-Safe Data Structures**: `SafeProcessList`, `SafeProcessDict`, `ThreadSafeList`, `ThreadSafeDict`, `SafeThreadSet`, among others.
 - **Thread and Inter-process Synchronization**: Built-in locking mechanisms to ensure safe operations in multithreaded and multiprocessing environments.
 - **Threaded and Multiprocessing Classes**: Threaded and multiprocessing classes to perform parallel data processing (`Pipeline` class), scheduled function calls (`Scheduler` class), among others.
 - **Utility Classes and Functions**: Additional helpers and utilities for threading  (`Pipeline`, `PipelineStageThreaded`, `SubprocessThreaded` , `Publish`/`Subscribe`, etc), for multiprocessing (`Pipeline`, `PipelineStageProcessed`, `SubprocessProcessed` etc), thread synchronization, and inter-process synchronization (IPC).
@@ -24,16 +24,16 @@ pip install safethread
 ## Usage
 
 ```python
-from safethread.thread.datatype import SafeThreadList, SafeThreadDict
-from safethread.utils import PipelineStageThreaded
+from safethread.thread.datatype import ThreadSafeList, ThreadSafeDict
+from safethread.thread.utils import PipelineStageThreaded
 
-# Using SafeThreadList
-safe_list = SafeThreadList()
+# Using ThreadSafeList
+safe_list = ThreadSafeList()
 safe_list.append(1)
 print(safe_list[0])  # Output: 1
 
-# Using SafeThreadDict
-safe_dict = SafeThreadDict()
+# Using ThreadSafeDict
+safe_dict = ThreadSafeDict()
 safe_dict['key'] = 'value'
 print(safe_dict['key'])  # Output: 'value'
 

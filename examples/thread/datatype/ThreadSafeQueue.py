@@ -1,8 +1,8 @@
 # Assuming SafeQueue is correctly imported
-from safethread.thread.datatype import SafeThreadQueue
+from safethread.thread.datatype import ThreadSafeQueue
 
 # Initialize a SafeQueue with a maximum size of 3
-safe_queue = SafeThreadQueue(3)
+safe_queue = ThreadSafeQueue(3)
 
 # Put items into the queue
 safe_queue.put(1)

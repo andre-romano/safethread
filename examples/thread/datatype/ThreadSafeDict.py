@@ -1,10 +1,10 @@
 
 # EXAMPLE CODE BELOW
 
-from safethread.thread.datatype import SafeThreadDict
+from safethread.thread.datatype import ThreadSafeDict
 
 # Create a SafeDict instance
-safe_dict = SafeThreadDict()
+safe_dict = ThreadSafeDict()
 
 # Update the dictionary in a thread-safe manner
 safe_dict.update({'a': 1, 'b': 2})

@@ -1,20 +1,20 @@
 import unittest
 import threading
 
-from safethread.thread.datatype import SafeThreadDict
+from safethread.thread.datatype import ThreadSafeDict
 
 
 class TestSafeThreadDict(unittest.TestCase):
 
     def setUp(self):
         """Initialize a SafeDictThread instance before each test."""
-        self.safe_dict = SafeThreadDict({'a': 1, 'b': 2, 'c': 3})
+        self.safe_dict = ThreadSafeDict({'a': 1, 'b': 2, 'c': 3})
 
     def test_initialize(self):
-        safe_dict = SafeThreadDict()
+        safe_dict = ThreadSafeDict()
         self.assertEqual(len(safe_dict), 0)
 
-        safe_dict = SafeThreadDict([('a', 1), ('b', 2)])
+        safe_dict = ThreadSafeDict([('a', 1), ('b', 2)])
         self.assertEqual(safe_dict['a'], 1)
         self.assertEqual(safe_dict['b'], 2)
 

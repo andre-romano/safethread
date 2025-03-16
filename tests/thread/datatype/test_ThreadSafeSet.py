@@ -1,21 +1,21 @@
 import unittest
 import threading
 
-from safethread.thread.datatype import SafeThreadSet
+from safethread.thread.datatype import ThreadSafeSet
 
 
 class TestSafeThreadSet(unittest.TestCase):
 
     def setUp(self):
         """Create a SafeSetThread instance for testing."""
-        self.safe_set = SafeThreadSet([1, 2, 3])
+        self.safe_set = ThreadSafeSet([1, 2, 3])
 
     def test_initialization(self):
-        safe_set = SafeThreadSet([5, 6])
+        safe_set = ThreadSafeSet([5, 6])
         self.assertIn(5, safe_set)
 
         set_custom = set([7, 8])
-        safe_set = SafeThreadSet(set_custom)
+        safe_set = ThreadSafeSet(set_custom)
         self.assertIn(8, safe_set)
 
     def test_add(self):

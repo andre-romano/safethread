@@ -4,9 +4,9 @@
 This module provides process-safe data structures to be used in multiprocess (parallel) programming scenarios.
 
 ### **Classes:**
-- **SafeProcessDict**: A process-safe dictionary implementation.
-- **SafeProcessList**: A process-safe list implementation.
-- **SafeProcessQueue**: A process-safe queue implementation.
+- **ProcessSafeDict**: A process-safe dictionary implementation.
+- **ProcessSafeList**: A process-safe list implementation.
+- **ProcessSafeQueue**: A process-safe queue implementation.
 """
 
-# from .HybridRLock import HybridRLock
+# from .ProcessSafeDict import ProcessSafeDict

@@ -1,13 +1,13 @@
 
-from threading import RLock
+from typing import Any, Callable, Self
 
-from typing import Self
+from .. import AbstractLock
 
 
-class SafeThreadBase:
+class AbstractSafeBase:
     """
-    A thread-safe wrapper around a data object, ensuring safe access
-    in multithreaded environments using locking mechanisms.
+    A safe wrapper around a data object, ensuring safe access
+    in multithreaded / multiprocessing environments using locking mechanisms.
     """
 
     @classmethod
@@ -647,22 +647,59 @@ class SafeThreadBase:
         with self._lock:
             return float(self._data)
 
-    def __init__(self, data):
+    def __init__(self, data: Any):
         """
-        Initialize a thread-safe object with an internal lock.
+        Initialize a safe object with an internal lock.
 
-        :param data: The initial data to be wrapped in a thread-safe manner.
+        :param data: The initial data to be wrapped in a safe manner.
         """
         super().__init__()  # Ensure parent class initialization
-        self._data = data if not isinstance(
-            data, SafeThreadBase) else data._data
-        self._lock = RLock() if not isinstance(data, SafeThreadBase) else data._lock
 
-    def execute(self, callback):
+        if isinstance(data, AbstractSafeBase):
+            self._data = data._data
+        else:
+            self._data = self._create_data(data)
+
+        if isinstance(data, AbstractSafeBase):
+            self._lock = data._lock
+        else:
+            self._lock = self._create_lock()
+
+    def _create_data(self, data: Any | None) -> Any:
+        """
+        Create a data instance.
+
+        This method should be overridden by subclasses to provide a specific
+        implementation of a lock.
+
+        :raises NotImplementedError: If the method is not overridden by a subclass.
+
+        :return: An instance of data.
+        """
+
+        raise NotImplementedError("Method NOT overloaded")
+
+    def _create_lock(self) -> AbstractLock:
+        """
+        Create a lock instance.
+
+        This method should be overridden by subclasses to provide a specific
+        implementation of a lock.
+
+        :raises NotImplementedError: If the method is not overridden by a subclass.
+
+        :return: An instance of a lock.
+        :rtype: AbstractLock
+        """
+
+        raise NotImplementedError("Method NOT overloaded")
+
+    def execute(self, callback: Callable[[], Any]):
         """
         Run a callback function in a thread-safe manner.
 
         :param callback: The function to execute safely.
+        :type callback: Callable[[],Any]
         """
         with self._lock:
             callback()
