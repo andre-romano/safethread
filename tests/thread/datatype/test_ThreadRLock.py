@@ -7,6 +7,13 @@ from safethread.thread.datatype.ThreadRLock import ThreadRLock
 
 
 class TestThreadRLock(unittest.TestCase):
+
+    def test_with_statement(self):
+        lock = ThreadRLock()
+        with lock:
+            self.assertTrue(lock.acquire())
+            lock.release()
+
     def test_release_not_locked(self):
         lock = ThreadRLock()
         with self.assertRaises(RuntimeError):
@@ -14,18 +21,14 @@ class TestThreadRLock(unittest.TestCase):
 
     def test_acquire_release(self):
         lock = ThreadRLock()
+        self.assertTrue(lock.acquire(blocking=False))
+        lock.release()
 
         self.assertTrue(lock.acquire())
         self.assertTrue(lock.acquire())
         lock.release()
         lock.release()
         with self.assertRaises(RuntimeError):
-            lock.release()
-
-    def test_with_statement(self):
-        lock = ThreadRLock()
-        with lock:
-            self.assertTrue(lock.acquire())
             lock.release()
 
     def test_threading(self):
@@ -59,6 +62,9 @@ class TestThreadRLock(unittest.TestCase):
         threads = [Thread(target=worker) for _ in range(1)]
         for thread in threads:
             thread.start()
+
+        # Wait for the lock to be acquired by one of the worker processes
+        time.sleep(0.05)  # Adjust this sleep time as needed
 
         with lock:
             self.assertGreaterEqual(time.perf_counter()-begin, timeout)

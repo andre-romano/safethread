@@ -55,9 +55,9 @@ class AbstractParallel:
     """
 
     @staticmethod
-    def get_lock() -> AbstractLock:
+    def create_lock() -> AbstractLock:
         """Get a new instance of an RLock (reentrant lock)."""
-        raise NotImplementedError("get_lock() NOT overloaded")
+        raise NotImplementedError("create_lock() NOT overloaded")
 
     def __init__(
         self,
@@ -97,7 +97,7 @@ class AbstractParallel:
         self.__daemon = daemon
 
         self.__process_started = False
-        self.__process_terminate = self._create_event()
+        self.__process_terminate = self._create_terminate_event()
 
         self._process = self._create_process_thread(
             target=_run_parallel,
@@ -125,15 +125,15 @@ class AbstractParallel:
         """
         raise NotImplementedError("_create_process_thread() NOT overloaded")
 
-    def _create_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> AbstractEvent:
         """
-        Creates an instance of AbstractEvent
+        Creates an instance of AbstractEvent to control parallel loop termination. When event is set, loop is terminated.
 
         MUST BE OVERLOADED.
 
         :raises NotImplementedError: if method is not overloaded
         """
-        raise NotImplementedError("_create_event() NOT overloaded")
+        raise NotImplementedError("_create_terminate_event() NOT overloaded")
 
     def get_args(self) -> tuple:
         """

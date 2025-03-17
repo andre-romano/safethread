@@ -2,9 +2,11 @@ import threading
 
 from typing import Any, Callable, Iterable, Self
 
+from .datatype import ThreadRLock
+
 from .ThreadEvent import ThreadEvent
 
-from .. import AbstractParallel, AbstractEvent, AbstractProcess
+from .. import AbstractParallel, AbstractEvent, AbstractProcess, AbstractLock
 
 
 class BaseThread(AbstractParallel):
@@ -16,9 +18,9 @@ class BaseThread(AbstractParallel):
     """
 
     @staticmethod
-    def get_lock():
+    def create_lock() -> AbstractLock:
         """Get a new instance of RLock (reentrant lock)."""
-        return threading.RLock()
+        return ThreadRLock()
 
     def _create_process_thread(self, target: Callable, kwargs: dict, daemon: bool) -> AbstractProcess:
         """
@@ -42,7 +44,7 @@ class BaseThread(AbstractParallel):
             daemon=daemon,
         )
 
-    def _create_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> AbstractEvent:
         return ThreadEvent()
 
     def join(self, timeout: float | None = None):

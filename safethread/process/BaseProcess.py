@@ -2,9 +2,11 @@ import multiprocessing
 
 from typing import Any, Callable, Iterable, Self
 
+from .datatype import ProcessRLock
+
 from .ProcessEvent import ProcessEvent
 
-from .. import AbstractParallel, AbstractEvent, AbstractProcess
+from .. import AbstractParallel, AbstractEvent, AbstractProcess, AbstractLock
 
 
 class BaseProcess(AbstractParallel):
@@ -16,9 +18,9 @@ class BaseProcess(AbstractParallel):
     """
 
     @staticmethod
-    def get_lock():
+    def create_lock() -> AbstractLock:
         """Get a new instance of multiprocessing.RLock (reentrant lock)."""
-        return multiprocessing.RLock()
+        return ProcessRLock()
 
     def _create_process_thread(self, target: Callable, kwargs: dict, daemon: bool) -> AbstractProcess:
         """
@@ -42,7 +44,7 @@ class BaseProcess(AbstractParallel):
             daemon=daemon,
         )
 
-    def _create_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> AbstractEvent:
         """
         Create and return a new event instance.
 

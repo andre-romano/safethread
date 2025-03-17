@@ -1,6 +1,6 @@
 
 
-from typing import Any, Protocol
+from typing import Any, Protocol, Self
 
 
 class AbstractContext(Protocol):
@@ -13,7 +13,7 @@ class AbstractContext(Protocol):
     behavior.
     """
 
-    def __enter__(self, blocking: bool = True, timeout: float = -1) -> Any:
+    def __enter__(self) -> Self:
         """
         Enter context-manager
 

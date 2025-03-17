@@ -10,6 +10,6 @@ This module provides process-safe data structures to be used in multiprocess (pa
 - **ProcessSafeQueue**: A process-safe queue implementation.
 """
 
-# TODO
-# from .ProcessRLock import ProcessRLock
+from .ProcessRLock import ProcessRLock
 # from .ProcessSafeDict import ProcessSafeDict
+# TODO

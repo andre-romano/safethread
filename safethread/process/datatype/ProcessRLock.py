@@ -1,28 +1,27 @@
 
 
-from threading import RLock
+import multiprocessing
 
 from typing import Any, Self
 
 from ... import AbstractLock
 
 
-class ThreadRLock(AbstractLock):
+class ProcessRLock(AbstractLock):
     """
-    A re-entrant lock for thread synchronization.
+    A re-entrant lock for inter-process synchronization.
 
-    This class provides a reentrant lock mechanism, allowing the same thread to 
-    acquire the lock multiple times without causing a deadlock. 
+    This class provides a lock object that can be used to synchronize processes.
 
-    It is designed to  be used as a context manager with the 'with' statement.
+    It is designed to be used as a context manager with the 'with' statement.
     """
 
     def __init__(self) -> None:
         """
-        Initializes the ThreadRLock object.
+        Initializes the ProcessRLock object.
         """
         super().__init__()
-        self.__lock = RLock()
+        self.__lock = multiprocessing.RLock()
 
     def __enter__(self) -> Self:
         """
@@ -62,6 +61,7 @@ class ThreadRLock(AbstractLock):
                      - args[1]: Exception value (if any)
                      - args[2]: Exception traceback (if any)
         """
+
         t = args[0] if len(args) >= 1 else None
         v = args[1] if len(args) >= 2 else None
         tb = args[2] if len(args) >= 3 else None
@@ -87,7 +87,7 @@ class ThreadRLock(AbstractLock):
         :return: True if lock acquired successfully, False otherwise.
         :rtype: bool
         """
-        return self.__lock.acquire(blocking=blocking, timeout=timeout)
+        return self.__lock.acquire(block=blocking, timeout=timeout)
 
     def release(self):
         """
