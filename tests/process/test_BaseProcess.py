@@ -92,11 +92,11 @@ class TestBaseProcess(unittest.TestCase):
 
         # Check that the callback was called 0 times
         with self.process_nd_repeat_called.get_lock():
-            self.assertEqual(self.process_nd_repeat_called.value, 0)
+            self.assertTrue(self.process_nd_repeat_called.value == 0)
 
         # Check that the callback result
         with self.process_nd_repeat_result.get_lock():
-            self.assertEqual(self.process_nd_repeat_result.value, 0)
+            self.assertTrue(self.process_nd_repeat_result.value == 0)
 
     def test_non_daemon_process(self):
         # Check if the process is daemon
@@ -116,11 +116,11 @@ class TestBaseProcess(unittest.TestCase):
 
         # Check that the callback was called 2 times
         with self.process_nd_repeat_called.get_lock():
-            self.assertEqual(self.process_nd_repeat_called.value, 2)
+            self.assertTrue(self.process_nd_repeat_called.value, 2)
 
         # Check that the callback result
         with self.process_nd_repeat_result.get_lock():
-            self.assertEqual(self.process_nd_repeat_result.value, 10)
+            self.assertTrue(self.process_nd_repeat_result.value, 10)
 
 
 if __name__ == "__main__":

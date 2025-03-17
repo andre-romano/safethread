@@ -71,7 +71,7 @@ class TestSubprocessProcess(unittest.TestCase):
         sp.start()
         sp.join()
 
-        self.assertEqual(tuple(sp.get_args()[0]), tuple(command))
+        self.assertTrue(tuple(sp.get_args()[0]) == tuple(command))
 
         self.assertTrue(sp.is_terminated())
 

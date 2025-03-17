@@ -34,7 +34,7 @@ class TestPipeline(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipeline.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # stop and join pipeline
         pipeline.stop()
@@ -71,7 +71,7 @@ class TestPipeline(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipeline.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # stop and join pipeline
         pipeline.stop()

@@ -9,11 +9,11 @@ class TestUtils(unittest.TestCase):
     def test_is_callable_with_function(self):
         def sample_function():
             pass
-        self.assertEqual(is_callable(sample_function), sample_function)
+        self.assertTrue(is_callable(sample_function) == sample_function)
 
     def test_is_callable_with_lambda(self):
         def sample_lambda(): return None
-        self.assertEqual(is_callable(sample_lambda), sample_lambda)
+        self.assertTrue(is_callable(sample_lambda) == sample_lambda)
 
     def test_is_callable_with_non_callable(self):
         with self.assertRaises(TypeError):

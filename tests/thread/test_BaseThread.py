@@ -95,8 +95,8 @@ class TestBaseThread(unittest.TestCase):
         self.thread_nd_repeat.join()
 
         # Check that the callback was called 2 times
-        self.assertEqual(self.thread_nd_repeat_called, 2)
-        self.assertEqual(self.thread_nd_repeat_result, 10)
+        self.assertTrue(self.thread_nd_repeat_called == 2)
+        self.assertTrue(self.thread_nd_repeat_result == 10)
 
 
 if __name__ == "__main__":

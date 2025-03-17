@@ -40,10 +40,10 @@ class TestFactory(unittest.TestCase):
             self.object, Object, "Factory did not create an instance of the correct class")
 
         # Check that the attributes are set correctly
-        self.assertEqual(self.product1.name, "Widget",
-                         "Product name was not set correctly by the factory")
-        self.assertEqual(self.product1.price, 19.99,
-                         "Product price was not set correctly by the factory")
+        self.assertTrue(self.product1.name == "Widget",
+                        "Product name was not set correctly by the factory")
+        self.assertTrue(self.product1.price == 19.99,
+                        "Product price was not set correctly by the factory")
 
     def test_factory_different_instances(self):
         """Test that the Factory creates different instances each time."""
@@ -52,21 +52,21 @@ class TestFactory(unittest.TestCase):
             self.product2, self.product3, "Factory returned the same instance instead of creating a new one")
 
         # Check that the attributes are set correctly for each instance
-        self.assertNotEqual(self.product2.name, self.product3.name,
-                            "Product names should be different")
-        self.assertNotEqual(self.product2.price, self.product3.price,
-                            "Product prices should be different")
+        self.assertTrue(self.product2.name != self.product3.name,
+                        "Product names should be different")
+        self.assertTrue(self.product2.price != self.product3.price,
+                        "Product prices should be different")
 
     def test_factory_set_name(self):
         """Test that the arguments are passed correctly to the created object."""
 
         # Verify that the arguments were passed correctly
-        self.assertEqual(self.object.name, "object",
-                         "Object name not correct")
+        self.assertTrue(self.object.name == "object",
+                        "Object name not correct")
 
         self.object.setName('test')
-        self.assertEqual(self.object.name, "test",
-                         "Object name not correct")
+        self.assertTrue(self.object.name == "test",
+                        "Object name not correct")
 
 
 if __name__ == '__main__':

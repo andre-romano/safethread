@@ -36,8 +36,8 @@ class TestThreadSingleton(unittest.TestCase):
                       "SingletonTwo instances are not the same!")
 
         # Assert that the value remains the same (due to singleton pattern)
-        self.assertEqual(
-            self.obj1.value, 10, f"Singleton value '{self.obj1.value}' was not retained properly")
+        self.assertTrue(
+            self.obj1.value == 10, f"Singleton value '{self.obj1.value}' was not retained properly")
 
     def test_singleton_instance_reuse(self):
         """Test that the Singleton class reuses the instance."""
@@ -49,14 +49,14 @@ class TestThreadSingleton(unittest.TestCase):
                       "Singleton should reuse the same instance!")
 
         # Assert that the value should not change (should remain as 10)
-        self.assertEqual(
-            self.obj1.value, 10, "Singleton value was not retained correctly across multiple calls")
+        self.assertTrue(
+            self.obj1.value == 10, "Singleton value was not retained correctly across multiple calls")
 
     def test_singleton_same_atributes(self):
         # Assert that the value remains as 2 (the first instance's value)
         self.obj2.value = 2
-        self.assertEqual(
-            self.obj1.value, 2, "Singleton value was not set properly")
+        self.assertTrue(
+            self.obj1.value == 2, "Singleton value was not set properly")
 
 
 if __name__ == '__main__':

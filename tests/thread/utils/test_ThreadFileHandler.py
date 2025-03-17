@@ -42,7 +42,7 @@ class TestThreadFileHandler(unittest.TestCase):
         handler.start_read()
 
         handler.join_read()
-        self.assertEqual(self.__result, ["Line 1\n", "Line 2\n", "Line 3\n"])
+        self.assertTrue(self.__result == ["Line 1\n", "Line 2\n", "Line 3\n"])
 
     def test_write_functionality(self):
         """Tests if asynchronous writing works correctly."""
@@ -68,7 +68,7 @@ class TestThreadFileHandler(unittest.TestCase):
         with open(self.TEST_FILE, 'r', encoding='utf-8') as f:
             content = f.readlines()
 
-        self.assertEqual(content, ["New Line 1\n", "New Line 2\n"])
+        self.assertTrue(content == ["New Line 1\n", "New Line 2\n"])
 
     def test_write_after_shutdown(self):
         """Tests if attempting to write after thread termination raises an error."""
@@ -119,7 +119,7 @@ class TestThreadFileHandler(unittest.TestCase):
         file_handler.join_read()
 
         # Verify the content of the file
-        self.assertEqual(self.__result, [
+        self.assertTrue(self.__result == [
             b"Binary data\n",
             b"More binary data\n",
         ])

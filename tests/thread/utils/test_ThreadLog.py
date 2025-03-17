@@ -40,29 +40,29 @@ class TestLog(unittest.TestCase):
         instance1 = log_instance
         self.__create_log_instance()
         instance2 = log_instance
-        self.assertEqual(instance1, instance2)
+        self.assertTrue(instance1 == instance2)
         self.assertIsInstance(instance1, ThreadSingleton)
         self.assertIsInstance(instance2, ThreadSingleton)
 
     def test_logger_instances(self):
         instance1 = log_instance.get_logger("test_logger")
         instance2 = log_instance.get_logger("test_logger")
-        self.assertEqual(instance1, instance2)
+        self.assertTrue(instance1 == instance2)
 
     def test_log_level(self):
-        self.assertEqual(log_instance.get_level(), self.log_level)
+        self.assertTrue(log_instance.get_level() == self.log_level)
 
     def test_log_format(self):
-        self.assertEqual(log_instance.get_log_format(), self.log_format)
+        self.assertTrue(log_instance.get_log_format() == self.log_format)
 
     def test_date_format(self):
-        self.assertEqual(log_instance.get_date_format(), self.date_format)
+        self.assertTrue(log_instance.get_date_format() == self.date_format)
 
     def test_get_logger(self):
         logger_name = "test_logger"
         logger = log_instance.get_logger(logger_name)
         self.assertIsInstance(logger, logging.Logger)
-        self.assertEqual(logger.name, logger_name)
+        self.assertTrue(logger.name == logger_name)
 
     def test_log_message(self):
         msg = "This is a test log message."

@@ -23,11 +23,11 @@ class TestThreadSubscriber(unittest.TestCase):
 
         test_data = 10
         subscriber._notify(test_data)
-        self.assertEqual(self.result, 15)
+        self.assertTrue(self.result == 15)
 
         test_data = 50.2
         subscriber._notify(test_data)
-        self.assertEqual(self.result, 55.2)
+        self.assertTrue(self.result == 55.2)
 
 
 if __name__ == "__main__":

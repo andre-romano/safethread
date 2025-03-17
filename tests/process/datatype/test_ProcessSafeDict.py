@@ -24,28 +24,28 @@ class TestProcessSafeDict(unittest.TestCase):
         # Test initialization with no data
         safe_dict = ProcessSafeDict()
         self.assertIsInstance(safe_dict._data, DictProxy)
-        self.assertEqual(len(safe_dict), 0)
+        self.assertTrue(len(safe_dict) == 0)
 
         # Test initialization with a dictionary
         safe_dict = ProcessSafeDict({"a": 1, "b": 2})
         self.assertIsInstance(safe_dict._data, DictProxy)
-        self.assertEqual(len(safe_dict), 2)
-        self.assertEqual(safe_dict["a"], 1)
-        self.assertEqual(safe_dict["b"], 2)
+        self.assertTrue(len(safe_dict) == 2)
+        self.assertTrue(safe_dict["a"] == 1)
+        self.assertTrue(safe_dict["b"] == 2)
 
         # Test initialization with an iterable
         safe_dict = ProcessSafeDict([("a", 1), ("b", 2)])
         self.assertIsInstance(safe_dict._data, DictProxy)
-        self.assertEqual(len(safe_dict), 2)
-        self.assertEqual(safe_dict["a"], 1)
-        self.assertEqual(safe_dict["b"], 2)
+        self.assertTrue(len(safe_dict) == 2)
+        self.assertTrue(safe_dict["a"] == 1)
+        self.assertTrue(safe_dict["b"] == 2)
 
         # Test initialization with another ProcessSafeDict
         safe_dict = ProcessSafeDict(safe_dict)
         self.assertIsInstance(safe_dict._data, DictProxy)
-        self.assertEqual(len(safe_dict), 2)
-        self.assertEqual(safe_dict["a"], 1)
-        self.assertEqual(safe_dict["b"], 2)
+        self.assertTrue(len(safe_dict) == 2)
+        self.assertTrue(safe_dict["a"] == 1)
+        self.assertTrue(safe_dict["b"] == 2)
 
     def test_basic_operations(self):
         """
@@ -55,7 +55,7 @@ class TestProcessSafeDict(unittest.TestCase):
 
         # Test __setitem__ and __getitem__
         safe_dict["a"] = 1
-        self.assertEqual(safe_dict["a"], 1)
+        self.assertTrue(safe_dict["a"] == 1)
 
         # Test __delitem__
         safe_dict["b"] = 2
@@ -64,7 +64,7 @@ class TestProcessSafeDict(unittest.TestCase):
             _ = safe_dict["b"]
 
         # Test __len__
-        self.assertEqual(len(safe_dict), 1)
+        self.assertTrue(len(safe_dict) == 1)
 
     def test_concurrent_access(self):
         """
@@ -88,9 +88,9 @@ class TestProcessSafeDict(unittest.TestCase):
             process.join()
 
         # Verify that all keys were added correctly
-        self.assertEqual(len(safe_dict), 10)
+        self.assertTrue(len(safe_dict) == 10)
         for i in range(10):
-            self.assertEqual(safe_dict[f"key_{i}"], i)
+            self.assertTrue(safe_dict[f"key_{i}"] == i)
 
     def test_concurrent_access_two(self):
         """
@@ -114,9 +114,9 @@ class TestProcessSafeDict(unittest.TestCase):
             process.join()
 
         # Verify that all keys were added correctly
-        self.assertEqual(len(safe_dict), 10)
+        self.assertTrue(len(safe_dict) == 10)
         for i in range(10):
-            self.assertEqual(safe_dict[f"key_{i}"], i)
+            self.assertTrue(safe_dict[f"key_{i}"] == i)
 
     def test_edge_cases(self):
         """
@@ -133,7 +133,7 @@ class TestProcessSafeDict(unittest.TestCase):
             del safe_dict["non_existent_key"]
 
         # Test empty dictionary
-        self.assertEqual(len(safe_dict), 0)
+        self.assertTrue(len(safe_dict) == 0)
 
 
 if __name__ == "__main__":

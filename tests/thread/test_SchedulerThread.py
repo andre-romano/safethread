@@ -67,12 +67,12 @@ class TestSchedulerThread(unittest.TestCase):
         end = time.perf_counter()
 
         self.assertTrue(self.scheduler.is_terminated())
-        self.assertEqual(self.scheduler.get_timeout(), 0.1)
-        self.assertEqual(self.scheduler_called, 1)
-        self.assertEqual(self.scheduler_result, 2)
+        self.assertTrue(self.scheduler.get_timeout() == 0.1)
+        self.assertTrue(self.scheduler_called == 1)
+        self.assertTrue(self.scheduler_result == 2)
 
-        self.assertGreaterEqual(
-            end-begin, self.scheduler.get_timeout())  # in secs
+        self.assertTrue(
+            end-begin >= self.scheduler.get_timeout())  # in secs
 
     def test_callback_repeat(self):
         """Test that the callback is executed repeatedly if repeat is True."""
@@ -84,8 +84,8 @@ class TestSchedulerThread(unittest.TestCase):
         self.scheduler_rep.join()
 
         # Check that the callback was called 2 times
-        self.assertEqual(self.scheduler_rep_called, 2)
-        self.assertEqual(self.scheduler_rep_result, 10)
+        self.assertTrue(self.scheduler_rep_called == 2)
+        self.assertTrue(self.scheduler_rep_result == 10)
 
 
 if __name__ == '__main__':

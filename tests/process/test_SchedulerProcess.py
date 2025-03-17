@@ -20,7 +20,6 @@ def callback(scheduler_called: Synchronized, scheduler_result: Synchronized, x: 
     with scheduler_called.get_lock(), scheduler_result.get_lock():
         scheduler_called.value += 1
         scheduler_result.value = x+1
-        logging.debug("RUNNED CALLBACK")
         return True
 
 
@@ -28,7 +27,6 @@ def callback_two(scheduler_rep_called: Synchronized, scheduler_rep_result: Synch
     with scheduler_rep_called.get_lock(), scheduler_rep_result.get_lock():
         scheduler_rep_called.value += 1
         scheduler_rep_result.value += a+b
-        logging.debug("RUNNED CALLBACK TWO")
         if scheduler_rep_called.value == 2:
             return False
         return True
@@ -104,15 +102,15 @@ class TestSchedulerProcess(unittest.TestCase):
         scheduler.join()
         end = time.perf_counter()
 
-        self.assertGreaterEqual(
-            end-begin, scheduler.get_timeout())  # in secs
+        self.assertTrue(
+            end-begin >= scheduler.get_timeout())  # in secs
 
-        self.assertEqual(scheduler.get_timeout(), 0.1)
+        self.assertTrue(scheduler.get_timeout() == 0.1)
         self.assertTrue(scheduler.is_terminated())
 
         with scheduler_result.get_lock(), scheduler_called.get_lock():
-            self.assertEqual(scheduler_result.value, 2)
-            self.assertEqual(scheduler_called.value, 1)
+            self.assertTrue(scheduler_result.value == 2)
+            self.assertTrue(scheduler_called.value == 1)
 
     def test_callback_repeat(self):
         """Test that the callback is executed repeatedly if repeat is True."""
@@ -127,8 +125,8 @@ class TestSchedulerProcess(unittest.TestCase):
 
         # Check that the callback was called 2 times
         with scheduler_rep_result.get_lock(), scheduler_rep_called.get_lock():
-            self.assertEqual(scheduler_rep_called.value, 2)
-            self.assertEqual(scheduler_rep_result.value, 10)
+            self.assertTrue(scheduler_rep_called.value == 2)
+            self.assertTrue(scheduler_rep_result.value == 10)
 
 
 if __name__ == '__main__':

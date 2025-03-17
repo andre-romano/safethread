@@ -44,8 +44,8 @@ class TestHybridRLock(unittest.TestCase):
         for thread in threads:
             thread.join()
 
-        self.assertEqual(len(results), 10)
-        self.assertEqual(results, [1]*10)
+        self.assertTrue(len(results) == 10)
+        self.assertTrue(results == [1]*10)
 
     def test_process_synchronization(self):
         # Test synchronization between different processes (multiprocessing)
@@ -58,8 +58,8 @@ class TestHybridRLock(unittest.TestCase):
         for process in processes:
             process.join()
 
-        self.assertEqual(len(results), 10)
-        self.assertEqual(list(results), [1]*10)
+        self.assertTrue(len(results) == 10)
+        self.assertTrue(list(results) == [1]*10)
 
     def test_process_synchronization_two(self):
         # Test synchronization between different processes (multiprocessing)
@@ -72,8 +72,8 @@ class TestHybridRLock(unittest.TestCase):
         for process in processes:
             process.join()
 
-        self.assertEqual(len(results), 10)
-        self.assertEqual(list(results), [1]*10)
+        self.assertTrue(len(results) == 10)
+        self.assertTrue(list(results) == [1]*10)
 
     def test_acquire_reentrant(self):
         self.assertTrue(self.lock.acquire())
@@ -84,7 +84,7 @@ class TestHybridRLock(unittest.TestCase):
     def test_acquire_reentrant_two(self):
         with self.lock:
             with self.lock:
-                self.assertEqual(True, True)
+                self.assertTrue(True == True)
 
     def test_release_without_acquire(self):
         # Test releasing the lock without acquiring it first

@@ -1,4 +1,5 @@
 
+import logging
 from typing import Any, Callable, Self
 
 from .. import AbstractLock
@@ -451,9 +452,7 @@ class AbstractSafeBase:
         :return: True if the objects are not equal, False otherwise.
         :rtype: bool
         """
-        other = self.create(other)
-        with self._lock, other._lock:
-            return self._data != other._data
+        return not self.__eq__(other)
 
     def __eq__(self, other) -> bool:
         """
@@ -488,9 +487,7 @@ class AbstractSafeBase:
         :return: `True` if the object is less than or equal to the other object, otherwise `False`.
         :rtype: bool
         """
-        other = self.create(other)
-        with self._lock, other._lock:
-            return self._data <= other._data
+        return self < other or self == other
 
     def __gt__(self, other):
         """
@@ -514,9 +511,7 @@ class AbstractSafeBase:
         :return: `True` if the object is greater than or equal to the other object, otherwise `False`.
         :rtype: bool
         """
-        other = self.create(other)
-        with self._lock, other._lock:
-            return self._data >= other._data
+        return self > other or self == other
 
     def __getitem__(self, index):
         """

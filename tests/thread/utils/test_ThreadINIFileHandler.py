@@ -38,13 +38,13 @@ class TestINIFileHandler(unittest.TestCase):
 
     def test_set_and_get(self):
         self.ini_handler.set('Config.filename', 'name_of_file')
-        self.assertEqual(self.ini_handler.get(
-            'Config.filename'), 'name_of_file')
+        self.assertTrue(self.ini_handler.get(
+            'Config.filename') == 'name_of_file')
 
     def test_get_with_fallback(self):
         value = self.ini_handler.get(
             'nonexistent.option', 'default_value')
-        self.assertEqual(value, 'default_value')
+        self.assertTrue(value == 'default_value')
 
     def test_show_all(self):
         self.ini_handler.set('section.option', 'value')
@@ -78,7 +78,7 @@ class TestINIFileHandler(unittest.TestCase):
         new_parser = ThreadINIFileHandler(self.filename)
         new_parser.start_read()
         new_parser.join_read()
-        self.assertEqual(new_parser.get(option), section)
+        self.assertTrue(new_parser.get(option) == section)
 
     def test_write_and_read_many_times(self):
         # TEST OPTIONS 1 WRITE
@@ -91,7 +91,7 @@ class TestINIFileHandler(unittest.TestCase):
         new_parser = ThreadINIFileHandler(self.filename)
         new_parser.start_read()
         new_parser.join_read()
-        self.assertEqual(new_parser.get(option), section)
+        self.assertTrue(new_parser.get(option) == section)
 
         # TEST OPTIONS 2 WRITE
         option_2, section_2 = 'XX.optionzz', 'value AA'
@@ -102,7 +102,7 @@ class TestINIFileHandler(unittest.TestCase):
 
         new_parser.start_read()
         new_parser.join_read()
-        self.assertEqual(new_parser.get(option_2), section_2)
+        self.assertTrue(new_parser.get(option_2) == section_2)
 
 
 if __name__ == '__main__':

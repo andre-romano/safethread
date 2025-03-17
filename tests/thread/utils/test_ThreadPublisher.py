@@ -27,7 +27,7 @@ class TestThreadPublisher(unittest.TestCase):
         """Test if publisher and subscriber work correctly together."""
         test_data = "New Data "
         self.publisher.publish(test_data)
-        self.assertEqual(self.result, "New Data New Data ")
+        self.assertTrue(self.result == "New Data New Data ")
 
     def test_unsubscribe(self):
         """Test if publisher and subscriber work correctly together."""
@@ -35,4 +35,4 @@ class TestThreadPublisher(unittest.TestCase):
 
         test_data = "TestUnit"
         self.publisher.publish(test_data)
-        self.assertEqual(self.result, "Hello from TestUnit")
+        self.assertTrue(self.result == "Hello from TestUnit")

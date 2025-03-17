@@ -38,7 +38,7 @@ class TestThreadPipelineStage(unittest.TestCase):
         self.assertTrue(pipeline.has_started())
         self.assertTrue(pipeline.is_alive())
 
-        self.assertEqual(result, expected_output)
+        self.assertTrue(result == expected_output)
 
         # stop pipeline and join
         pipeline.stop()
@@ -62,7 +62,7 @@ class TestThreadPipelineStage(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipeline.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # stop pipeline
         pipeline.stop()
@@ -92,7 +92,7 @@ class TestThreadPipelineStage(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipeline.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # stop pipeline
         pipeline.stop()
@@ -121,7 +121,7 @@ class TestThreadPipelineStage(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipeline.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # Stop the thread immediately (no processing will be done)
         pipeline.stop()
@@ -133,8 +133,8 @@ class TestThreadPipelineStage(unittest.TestCase):
         pipeline.join()
 
         # check if it finished properly
-        self.assertEqual(pipeline.is_alive(), False)
-        self.assertEqual(pipeline.is_terminated(), True)
+        self.assertTrue(pipeline.is_alive() == False)
+        self.assertTrue(pipeline.is_terminated() == True)
 
     def test_pipeline_stopped_exception(self):
         """Tests that putting/getting data from a stopped pipeline raises an exception."""
@@ -168,7 +168,7 @@ class TestThreadPipelineStage(unittest.TestCase):
         #  check results
         for expected in expected_outputs:
             result = pipe2.get()
-            self.assertEqual(result, expected)
+            self.assertTrue(result == expected)
 
         # stop pipes
         pipe1.stop()

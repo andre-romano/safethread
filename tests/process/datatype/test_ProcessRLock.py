@@ -64,7 +64,7 @@ class TestProcessRLock(unittest.TestCase):
         for process in processes:
             process.join()
 
-        self.assertEqual(list(results), ['locked', 'released']*5)
+        self.assertTrue(list(results) == ['locked', 'released']*5)
 
     def test_timeout(self):
         lock = ProcessRLock()
@@ -86,7 +86,7 @@ class TestProcessRLock(unittest.TestCase):
         ready_event.wait()
 
         with lock:
-            self.assertGreaterEqual(time.perf_counter()-begin, timeout)
+            self.assertTrue(time.perf_counter()-begin >= timeout)
 
         for process in processes:
             process.join()

@@ -12,6 +12,21 @@ from .ProcessRLock import ProcessRLock
 
 class ProcessSafeList(AbstractSafeList):
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, ProcessSafeList):
+            return list(self._data) == list(other._data)
+        return self == ProcessSafeList(other)
+
+    def __lt__(self, other):
+        if isinstance(other, ProcessSafeList):
+            return list(self._data) < list(other._data)
+        return self < ProcessSafeList(other)
+
+    def __gt__(self, other):
+        if isinstance(other, ProcessSafeList):
+            return list(self._data) > list(other._data)
+        return self > ProcessSafeList(other)
+
     def __init__(self, data: list | Iterable | None = None):
         """
         Initialize a process-safe list.

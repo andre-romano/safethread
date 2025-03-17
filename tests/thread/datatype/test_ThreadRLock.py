@@ -47,7 +47,7 @@ class TestThreadRLock(unittest.TestCase):
         for thread in threads:
             thread.join()
 
-        self.assertEqual(results, ['locked', 'released']*5)
+        self.assertTrue(results == ['locked', 'released']*5)
 
     def test_timeout(self):
         lock = ThreadRLock()
@@ -67,7 +67,7 @@ class TestThreadRLock(unittest.TestCase):
         time.sleep(0.05)  # Adjust this sleep time as needed
 
         with lock:
-            self.assertGreaterEqual(time.perf_counter()-begin, timeout)
+            self.assertTrue(time.perf_counter()-begin >= timeout)
 
         for thread in threads:
             thread.join()
