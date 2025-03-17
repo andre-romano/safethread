@@ -588,7 +588,7 @@ class AbstractSafeBase:
         :rtype: iterator
         """
         with self._lock:
-            return iter(self._data.copy())
+            return iter(self._data)
 
     def __hash__(self):
         """
@@ -718,6 +718,8 @@ class AbstractSafeBase:
         Return a thread-safe copy of the object.
 
         :return: A new instance of `SafeBaseObj` containing a copy of the data.
+
+        :raises AttributeError: if self._data.copy() does not exist
         """
         with self._lock:
             return self.create(self._data.copy())
@@ -727,6 +729,8 @@ class AbstractSafeBase:
         Return an internal data copy.
 
         :return: A copy of the internal data
+
+        :raises AttributeError: if self._data.copy() does not exist
         """
         with self._lock:
             return self._data.copy()
