@@ -6,7 +6,7 @@ from .datatype import ProcessRLock
 
 from .ProcessEvent import ProcessEvent
 
-from .. import AbstractParallel, AbstractEvent, AbstractProcess, AbstractLock
+from .. import AbstractParallel, BaseEvent, AbstractProcess, AbstractLock
 
 
 class BaseProcess(AbstractParallel):
@@ -44,7 +44,7 @@ class BaseProcess(AbstractParallel):
             daemon=daemon,
         )
 
-    def _create_terminate_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> BaseEvent:
         """
         Create and return a new event instance.
 

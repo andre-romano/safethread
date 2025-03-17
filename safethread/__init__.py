@@ -29,10 +29,10 @@ The package is designed to ensure safe, concurrent operations on common Python d
 """
 
 from .AbstractContext import AbstractContext
-from .AbstractEvent import AbstractEvent
 from .AbstractLock import AbstractLock
 from .AbstractParallel import AbstractParallel
 from .AbstractPicklable import AbstractPicklable
 from .AbstractProcess import AbstractProcess
 from .AbstractScheduler import AbstractScheduler
 from .AbstractSubprocess import AbstractSubprocess
+from .BaseEvent import BaseEvent

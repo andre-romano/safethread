@@ -1,26 +1,20 @@
-
 import threading
 
-from .. import AbstractEvent
+from .. import BaseEvent
 
 
-class ThreadEvent(AbstractEvent):
+class ThreadEvent(BaseEvent):
     """
     A thread-safe class to handle events using threading.
+
+    This class provides an event object that can be used to synchronize threads.
+    It is implemented using `threading.Event` for better performance and reliability.
     """
 
     def __init__(self) -> None:
         """
-        Initializes the ProcessEvent instance.
+        Initializes the ThreadEvent instance.
+
+        The event is initially unset.
         """
-        self.__event = 0
-        self.__lock = threading.RLock()
-
-    def is_set(self) -> bool:
-        """Checks if event is set"""
-        return self.__event == 1
-
-    def set(self):
-        """Sets event"""
-        with self.__lock:
-            self.__event = 1
+        super().__init__(threading.Event())

@@ -1,7 +1,7 @@
 
 from typing import Any, Callable, Iterable, Self, Type
 
-from . import AbstractEvent, AbstractLock, AbstractProcess
+from . import BaseEvent, AbstractLock, AbstractProcess
 
 from .utils import is_callable
 
@@ -10,7 +10,7 @@ def _run_parallel(
         callback: Callable[..., bool],
         args: tuple,
         repeat: bool,
-        stop: AbstractEvent,
+        stop: BaseEvent,
         on_end: Callable[[Exception | None], Any],
 ):
     """
@@ -125,7 +125,7 @@ class AbstractParallel:
         """
         raise NotImplementedError("_create_process_thread() NOT overloaded")
 
-    def _create_terminate_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> BaseEvent:
         """
         Creates an instance of AbstractEvent to control parallel loop termination. When event is set, loop is terminated.
 

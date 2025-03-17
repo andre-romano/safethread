@@ -1,25 +1,19 @@
-
 import multiprocessing
 
-from .. import AbstractEvent
+from .. import BaseEvent
 
 
-class ProcessEvent(AbstractEvent):
+class ProcessEvent(BaseEvent):
     """
     A process-safe class to handle events using multiprocessing.
+
+    This class provides an event object that can be used to synchronize processes.
     """
 
     def __init__(self) -> None:
         """
         Initializes the ProcessEvent instance.
+
+        The event is initially unset.
         """
-        self.__event = multiprocessing.Value('i', 0)
-
-    def is_set(self) -> bool:
-        """Checks if event is set"""
-        return self.__event.value == 1
-
-    def set(self):
-        """Sets event"""
-        with self.__event.get_lock():
-            self.__event.value = 1
+        super().__init__(multiprocessing.Event())

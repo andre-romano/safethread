@@ -6,7 +6,7 @@ from .datatype import ThreadRLock
 
 from .ThreadEvent import ThreadEvent
 
-from .. import AbstractParallel, AbstractEvent, AbstractProcess, AbstractLock
+from .. import AbstractParallel, BaseEvent, AbstractProcess, AbstractLock
 
 
 class BaseThread(AbstractParallel):
@@ -44,7 +44,7 @@ class BaseThread(AbstractParallel):
             daemon=daemon,
         )
 
-    def _create_terminate_event(self) -> AbstractEvent:
+    def _create_terminate_event(self) -> BaseEvent:
         return ThreadEvent()
 
     def join(self, timeout: float | None = None):
