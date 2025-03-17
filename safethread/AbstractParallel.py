@@ -113,7 +113,10 @@ class AbstractParallel:
 
     def __del__(self):
         """Destructor to ensure thread / process is stopped when object is deleted."""
-        self.stop()
+        try:
+            self.stop()
+        except:
+            pass
 
     def _create_process_thread(self, target: Callable, kwargs: dict, daemon: bool) -> AbstractProcess:
         """

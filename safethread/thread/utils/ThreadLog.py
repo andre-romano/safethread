@@ -96,7 +96,10 @@ class ThreadLog(ThreadSingleton):
     def __del__(self):
         """Destructor for the Log class."""
         # ensures all logs are written to disk, and all handlers are closed
-        self.shutdown()
+        try:
+            self.shutdown()
+        except:
+            pass
 
     def __getitem__(self, name: str) -> logging.Logger:
         """

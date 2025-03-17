@@ -694,6 +694,15 @@ class AbstractSafeBase:
 
         raise NotImplementedError("Method NOT overloaded")
 
+    def get_lock(self) -> AbstractLock:
+        """
+        Retrieve the lock associated with this object.
+
+        :return: The lock object.
+        :rtype: AbstractLock
+        """
+        return self._lock
+
     def execute(self, callback: Callable[[], Any]):
         """
         Run a callback function in a thread-safe manner.

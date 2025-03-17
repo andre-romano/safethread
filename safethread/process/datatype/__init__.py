@@ -11,5 +11,5 @@ This module provides process-safe data structures to be used in multiprocess (pa
 """
 
 from .ProcessRLock import ProcessRLock
-# from .ProcessSafeDict import ProcessSafeDict
+from .ProcessSafeDict import ProcessSafeDict
 # TODO
