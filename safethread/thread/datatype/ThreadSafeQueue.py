@@ -2,7 +2,7 @@
 import queue
 
 from threading import Condition
-from typing import Any
+from typing import Any, Iterable
 
 from .ThreadRLock import ThreadRLock
 
@@ -39,13 +39,13 @@ class ThreadSafeQueue(AbstractSafeQueue):
                 "Queue create failed, provided argument is not int | queue.Queue")
 
         # create queue
-        queue_instance = queue.Queue(maxsize)
+        instance = queue.Queue(maxsize)
 
         # copy data
-        if isinstance(data, queue.Queue):
-            while not data.empty():
-                queue_instance.put(data.get())
-        return queue_instance
+        if (isinstance(data, queue.Queue) or
+                isinstance(data, Iterable)):
+            self._init_with_data(instance, data)
+        return instance
 
     def _create_lock(self) -> AbstractLock:
         return ThreadRLock()
@@ -75,12 +75,6 @@ class ThreadSafeQueue(AbstractSafeQueue):
         """
 
         self._data.shutdown(immediate=immediate)
-
-    def qsize(self) -> int:
-        """
-        Return the approximate size of the queue (not reliable!).
-        """
-        return self._data.qsize()
 
     def task_done(self):
         """

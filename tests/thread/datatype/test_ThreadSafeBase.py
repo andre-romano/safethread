@@ -204,7 +204,7 @@ class TestSafeThreadBase(unittest.TestCase):
         self.assertTrue(copied_obj == self.obj_list)
         self.assertTrue(id(copied_obj) != id(self.obj_list))
 
-        copied_internal = self.obj_list.copyObj()
+        copied_internal = self.obj_list.copy_obj()
         self.assertTrue(copied_internal == self.obj_list._data)
 
     def test_thread_safety(self):

@@ -716,10 +716,9 @@ class AbstractSafeBase:
 
         :raises AttributeError: if self._data.copy() does not exist
         """
-        with self._lock:
-            return self.create(self._data.copy())
+        return self.create(self.copy_obj())
 
-    def copyObj(self):
+    def copy_obj(self):
         """
         Return an internal data copy.
 

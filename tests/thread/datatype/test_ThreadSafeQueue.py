@@ -134,6 +134,31 @@ class TestSafeThreadQueue(unittest.TestCase):
         # Test if the queue is empty after clearing
         self.assertTrue(safe_queue.empty())
 
+    def test_parallel_put_get(self):
+        queue = ThreadSafeQueue()
+        results = ThreadSafeQueue()
+
+        def producer(output: ThreadSafeQueue):
+            for i in range(5):
+                output.put(i)
+
+        def consumer(input: ThreadSafeQueue, output: ThreadSafeQueue):
+            while True:
+                try:
+                    output.put(input.get(timeout=1))
+                except:
+                    break
+
+        p1 = threading.Thread(target=producer, args=(queue,))
+        p2 = threading.Thread(target=consumer, args=(queue, results))
+
+        p1.start()
+        p2.start()
+        p1.join()
+        p2.join()
+
+        self.assertEqual(sorted(results), [0, 1, 2, 3, 4])
+
 
 if __name__ == '__main__':
     unittest.main()

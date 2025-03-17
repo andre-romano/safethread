@@ -5,7 +5,7 @@ import queue
 import multiprocessing
 import multiprocessing.queues
 
-from typing import Any
+from typing import Any, Iterable, Self
 
 from .AbstractSafeBase import AbstractSafeBase
 
@@ -16,19 +16,69 @@ class AbstractSafeQueue(AbstractSafeBase):
     a multiprocessing queue, an integer representing the maximum size, or None for an unlimited size queue.
     """
 
-    def __init__(self, data: queue.Queue | multiprocessing.queues.Queue | int | None = None):
+    def __iter__(self):
+        """
+        Returns an iterator over the queue's items. Since multiprocessing.Queue is not directly iterable,
+        we dequeue items until empty (not thread-safe for concurrent access).
+
+        :return: Generator yielding queue items.
+        """
+        # Temporarily store all items in a list
+        with self._lock:
+            temp_items = []
+            while not self._data.empty():
+                temp_items.append(self._data.get())
+
+            # Re-enqueue the items back into the queue
+            for item in temp_items:
+                self._data.put(item)
+
+            # Yield items from the temporary list
+            yield from temp_items
+
+    def __init__(self, data: queue.Queue | multiprocessing.queues.Queue | int | Iterable | None = None):
         """
         Initialize the safe queue.
 
-        If a `Queue` is provided, its items are copied into the new queue.
-        If an integer is provided, it sets the maximum size of the queue.
-        If no argument is provided, the queue is initialized with an unlimited size.
+        - If a `Queue` is provided, its items are copied into the new queue.
+        - If an integer is provided, it sets the maximum size of the queue.
+        - If an Iterable is provided, it populates the queue with those items.
+        - If no argument is provided, the queue is initialized with an unlimited size.
 
         :param data: The initial data to populate the queue with, or the maximum size.
         :type data: queue.Queue, multiprocessing.queues.Queue, int, or None
         """
         super().__init__(data)
         self._data: queue.Queue | multiprocessing.queues.Queue
+
+    def _init_with_data(self, instance: queue.Queue | multiprocessing.queues.Queue, data: queue.Queue | multiprocessing.queues.Queue | Iterable):
+        """
+        Initialize a queue instance with data from another queue or an iterable.
+
+        :param instance: The queue instance to be initialized.
+        :type instance: queue.Queue, multiprocessing.queues.Queue
+
+        :param data: The data source to initialize the queue with. It can be another queue or an iterable.
+        :type data: queue.Queue, multiprocessing.queues.Queue, Iterable
+        """
+        if isinstance(data, queue.Queue) or isinstance(data, multiprocessing.queues.Queue):
+            while not data.empty():
+                instance.put(data.get())
+        elif isinstance(data, Iterable):
+            for item in data:
+                instance.put(item)
+
+    def copy_obj(self) -> Self:
+        with self._lock:
+            # Temporarily store all items in a list
+            temp_items = []
+            while not self._data.empty():
+                temp_items.append(self._data.get())
+
+            # Re-enqueue the items back into the queue
+            for item in temp_items:
+                self._data.put(item)
+            return self._create_data(temp_items)
 
     def empty(self) -> bool:
         """
@@ -102,3 +152,17 @@ class AbstractSafeQueue(AbstractSafeBase):
         :raises queue.Full: If no free slot is available and block is False or the timeout expires.
         """
         self._data.put(item, block=block, timeout=timeout)
+
+    def qsize(self) -> int:
+        """
+        Return the approximate size of the queue (not reliable!).
+        """
+        return self._data.qsize()
+
+    def clear(self):
+        """
+        Clears the queue
+
+        :raises NotImplementedError: Method NOT overloaded.
+        """
+        raise NotImplementedError("Method NOT overloaded")
