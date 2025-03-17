@@ -11,6 +11,11 @@ from .ProcessRLock import ProcessRLock
 
 
 class ProcessSafeDict(AbstractSafeDict):
+    def __eq__(self, other) -> bool:
+        if isinstance(other, ProcessSafeDict):
+            return dict(self._data) == dict(other._data)
+        return self == ProcessSafeDict(other)
+
     def __init__(self, data: dict | Iterable | None = None):
         """
         Initialize a process-safe dictionary.
