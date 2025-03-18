@@ -79,6 +79,8 @@ class ThreadPipelineStage:
         :raises TypeError: If the callback argument is not callable.
         :raises ValueError: If `n_threads` is less than 1.
         """
+        super().__init__()
+
         self.__input_queue = queue.Queue()
         self.__output_queue = queue.Queue()
         self.__started = False

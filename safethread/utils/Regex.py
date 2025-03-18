@@ -28,6 +28,8 @@ class Regex:
 
         :raises TypeError: If `regex_or_pattern` is not a string or a compiled regex pattern.
         """
+        super().__init__()
+
         if isinstance(regex_or_pattern, str):
             self.__regex = re.compile(regex_or_pattern, *args)
         elif isinstance(regex_or_pattern, re.Pattern):

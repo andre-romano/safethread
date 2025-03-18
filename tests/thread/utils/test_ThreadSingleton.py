@@ -7,6 +7,7 @@ from safethread.thread.utils import ThreadSingleton
 # Sample subclass to test Singleton behavior
 class SingletonSubclass(ThreadSingleton):
     def __init__(self, value: int):
+        super().__init__()
         self.value = value
 
 # Sample subclass to test Singleton behavior
@@ -14,7 +15,7 @@ class SingletonSubclass(ThreadSingleton):
 
 class SingletonSubclassTwo(ThreadSingleton):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class TestThreadSingleton(unittest.TestCase):

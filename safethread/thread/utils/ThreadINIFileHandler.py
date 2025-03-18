@@ -37,6 +37,8 @@ class ThreadINIFileHandler:
         :param on_write: Callback function to be called after writing to the configuration file. It receives this INI object and an Exception or None.
         :type on_write: Callable[[Self, Exception | None], None], optional
         """
+        super().__init__()
+
         # file lock
         self.__filename = filename
         self.__file_lock = threading.RLock()

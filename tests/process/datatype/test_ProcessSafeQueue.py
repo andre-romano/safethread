@@ -26,16 +26,16 @@ def consumer(input: ProcessSafeQueue, output: ProcessSafeQueue):
 class TestProcessSafeQueue(unittest.TestCase):
 
     def test_initialization_with_none(self):
-        queue = ProcessSafeQueue()
-        self.assertTrue(queue.maxsize == 0)
-        self.assertTrue(queue._data.empty())
+        queue_1 = ProcessSafeQueue()
+        self.assertTrue(queue_1.maxsize == 0)
+        self.assertTrue(queue_1._data.empty())
 
-        self.assertIsInstance(queue._lock, ProcessRLock)
+        self.assertIsInstance(queue_1._lock, ProcessRLock)
 
     def test_initialization_with_int(self):
-        queue = ProcessSafeQueue(10)
-        self.assertTrue(queue.maxsize == 10)
-        self.assertTrue(queue._data.empty())
+        queue_1 = ProcessSafeQueue(10)
+        self.assertTrue(queue_1.maxsize == 10)
+        self.assertTrue(queue_1._data.empty())
 
     def test_initialization_with_queue(self):
         initial_queue = multiprocessing.Queue()
@@ -49,47 +49,47 @@ class TestProcessSafeQueue(unittest.TestCase):
         self.assertTrue(queue._data.get() == 2)
 
     def test_equality(self):
-        queue1 = ProcessSafeQueue()
-        queue2 = ProcessSafeQueue()
+        queue_1 = ProcessSafeQueue()
+        queue_2 = ProcessSafeQueue()
         with self.assertRaises(NotImplementedError):
-            self.assertTrue(queue1 == queue2)
+            self.assertTrue(queue_1 == queue_2)
 
-        queue1._data.put(1)
+        queue_1._data.put(1)
         with self.assertRaises(NotImplementedError):
-            self.assertTrue(queue1 != queue2)
+            self.assertTrue(queue_1 != queue_2)
 
-        queue2._data.put(1)
+        queue_2._data.put(1)
         with self.assertRaises(NotImplementedError):
-            self.assertTrue(queue1 == queue2)
+            self.assertTrue(queue_1 == queue_2)
 
     def test_create_data_with_invalid_type(self):
         with self.assertRaises(TypeError):
             ProcessSafeQueue("invalid")  # type: ignore
 
     def test_multiprocessing_queue(self):
-        queue = ProcessSafeQueue()
-        process = multiprocessing.Process(target=worker, args=(queue,))
+        queue_1 = ProcessSafeQueue()
+        process = multiprocessing.Process(target=worker, args=(queue_1,))
         process.start()
         process.join()
 
-        self.assertFalse(queue.empty())
-        self.assertEqual(queue.get(), 42)
+        self.assertFalse(queue_1.empty())
+        self.assertEqual(queue_1.get(), 42)
 
     def test_multiprocessing_queue_get_blocking(self):
-        queue = ProcessSafeQueue()
-        process = multiprocessing.Process(target=worker, args=(queue,))
+        queue_1 = ProcessSafeQueue()
+        process = multiprocessing.Process(target=worker, args=(queue_1,))
         process.start()
 
-        self.assertEqual(queue.get(), 42)
+        self.assertEqual(queue_1.get(), 42)
 
         process.join()
 
     def test_parallel_put_get(self):
-        queue = ProcessSafeQueue()
+        queue_1 = ProcessSafeQueue()
         results = ProcessSafeQueue()
 
-        p1 = multiprocessing.Process(target=producer, args=(queue,))
-        p2 = multiprocessing.Process(target=consumer, args=(queue, results))
+        p1 = multiprocessing.Process(target=producer, args=(queue_1,))
+        p2 = multiprocessing.Process(target=consumer, args=(queue_1, results))
 
         p1.start()
         p2.start()
@@ -99,22 +99,29 @@ class TestProcessSafeQueue(unittest.TestCase):
         self.assertEqual(sorted(results), [0, 1, 2, 3, 4])
 
     def test_shutdown(self):
-        queue = ProcessSafeQueue()
-        process = multiprocessing.Process(target=producer, args=(queue,))
+        queue_1 = ProcessSafeQueue()
+        process = multiprocessing.Process(target=producer, args=(queue_1,))
         process.start()
         process.join()
 
-        queue.shutdown()  # Shut down the queue
+        queue_1.shutdown()  # Shut down the queue_1
         self.assertTrue(True)
 
     def test_clear(self):
-        queue = ProcessSafeQueue()
+        queue_1 = ProcessSafeQueue()
         for i in range(5):
-            queue.put(i)
+            queue_1.put(i)
 
-        self.assertFalse(queue.empty())
-        queue.clear()
-        self.assertTrue(queue.empty())
+        time.sleep(0.05)
+
+        self.assertFalse(queue_1.full())
+        self.assertFalse(queue_1.empty())
+
+        queue_1.clear()
+        time.sleep(0.05)
+
+        self.assertFalse(queue_1.full())
+        self.assertTrue(queue_1.empty())
 
 
 if __name__ == '__main__':

@@ -38,10 +38,12 @@ class ThreadFileHandler:
                                 In case of error, data will be None, and exception will be passed as the second argument. Otherwise, exception will be None.
         :type on_read: Callable[[Any | None, Exception | None], None]
         :param on_write: A callback function that is called when data is written to a file.
-                                The function should accept two argumenst: data written, the Exception.                                
+                                The function should accept two arguments: data written, the Exception.                                
                                 In case of error, data will be None, and exception will be passed as the second argument. Otherwise, exception will be None.
         :type on_write: Callable[[Any | None, Exception | None], None]
         """
+        super().__init__()
+
         self.__filename = filename
         self.__file_lock = threading.RLock()
 

@@ -1,6 +1,6 @@
 import threading
 
-from typing import Any, Callable, Iterable, Self
+from typing import Callable
 
 from .datatype import ThreadRLock
 

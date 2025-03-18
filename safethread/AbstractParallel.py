@@ -85,6 +85,7 @@ class AbstractParallel:
         :param on_end: The callback to be called when the thread / process ends. NEEDS TO BE A GLOBAL FUNCTION.
         :type on_end: Callable[[Exception | None], Any], optional
         """
+        super().__init__()
         self.__args = tuple(args or [])
 
         self.__callback: Callable[..., bool] = _dummy_callback

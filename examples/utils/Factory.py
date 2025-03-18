@@ -5,6 +5,7 @@ from safethread.utils import Factory
 
 class MyClass(Factory):
     def __init__(self, name: str):
+        super().__init__()
         self.name = name
 
     def greet(self):
@@ -20,6 +21,7 @@ print(instance.greet())  # Output: Hello, Alice!
 
 class AnotherClass(Factory):
     def __init__(self, value: int):
+        super().__init__()
         self.value = value
 
     def double(self):

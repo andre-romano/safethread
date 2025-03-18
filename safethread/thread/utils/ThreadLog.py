@@ -69,6 +69,8 @@ class ThreadLog(ThreadSingleton):
         """
         Initializes and configures the thread-safe logging system.
         """
+        super().__init__()
+
         # configure logging
         self.__logfile = logfile
         self.__log_level = log_level

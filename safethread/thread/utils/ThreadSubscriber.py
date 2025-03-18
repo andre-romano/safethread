@@ -25,6 +25,8 @@ class ThreadSubscriber:
 
         :raises TypeError: If `callback` is not callable.
         """
+        super().__init__()
+
         self.__callback: Callable[[Any], None] = lambda input: None
         self.__callback = is_callable(callback)
 

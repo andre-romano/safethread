@@ -4,6 +4,7 @@ from safethread.thread.utils import ThreadSingleton
 
 class MyClass(ThreadSingleton):
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def __str__(self):

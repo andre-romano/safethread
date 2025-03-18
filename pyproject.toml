@@ -1,3 +1,69 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.pyright]
+# Specify the language server (Pylance should be set by default if using Pyright)
+languageServer = "Pylance"
+
+# Type checking mode (options: "off", "basic", "strict")
+typeCheckingMode = "basic"
+
+# Diagnostic mode (options: "workspace", "openFiles")
+diagnosticMode = "workspace"
+
+# extra search path
+extraPaths = ["safethread"]
+
+# Automatically adds paths to the environment
+autoSearchPaths = true
+
+# Enable indexing for better suggestions
+indexing = true
+
+# Use type stubs from libraries for better error detection
+useLibraryCodeForTypes = true
+
+# Report an error if there are overlapping overloads
+reportOverlappingOverload = "error"
+
+# Report an error if a method override is incompatible with the base class
+reportIncompatibleMethodOverride = "error"
+
+# Report an error if the constructor is inconsistent
+reportInconsistentConstructor = "error"
+
+# Report an error if a type stub is incomplete
+reportIncompleteStub = "error"
+
+# Report an error if there is an invalid statement in a type stub
+reportInvalidStubStatement = "error"
+
+# Report an error if there is a type mismatch in a property
+reportPropertyTypeMismatch = "error"
+
+# Report an error if a required super() call is missing
+reportMissingSuperCall = "error"
+
+# Report a warning if there is a duplicate import
+reportDuplicateImport = "warning"
+
+# Report a warning if deprecated code is used
+reportDeprecated = "warning"
+
+# Exclude directories from analysis
+exclude = [
+    "**/venv/**",
+    "**/__pycache__/**",
+    "**/build/**",
+    "**/dist/**",
+    "**/.tox/**",
+    "**/.nox/**",
+    "**/.coverage/**",
+    "**/.mypy_cache/**",
+    "**/.pytest_cache/**",
+    "**/*.egg-info",
+    "**/*.egg",
+    "**/node_modules/**",
+    "dist/",
+]

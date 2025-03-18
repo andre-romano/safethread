@@ -23,6 +23,8 @@ class ThreadPipeline:
         :param pipeline_stages: A collection of `PipelineStage` instances that make up the pipeline.
         :type pipeline_stages: Iterable[PipelineStage]
         """
+        super().__init__()
+
         self.__started = False
         self.__stages = tuple(pipeline_stages)
         self.__connect()

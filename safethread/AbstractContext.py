@@ -1,6 +1,6 @@
 
 
-from typing import Any, Protocol, Self
+from typing import Protocol, Self
 
 
 class AbstractContext(Protocol):

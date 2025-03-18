@@ -25,7 +25,7 @@ class HybridRLock(AbstractLock):
         - `self.__mp_lock`: A reentrant lock for inter-process synchronization using `multiprocessing.RLock()`.
         - `self.__thread_lock`: A reentrant lock for intra-process synchronization using `threading.RLock()`.
         """
-
+        super().__init__()
         # Lock for inter-process synchronization
         self.__mp_lock = multiprocessing.RLock()
         # Lock for intra-process synchronization
@@ -47,7 +47,7 @@ class HybridRLock(AbstractLock):
         self.__dict__.update(state)
         self.__thread_lock = threading.RLock()  # Reinitialize the threading.RLock
 
-    def acquire(self) -> bool:
+    def acquire(self, blocking=True, timeout: float = -1) -> bool:
         """
         Acquire both threading and multiprocess RLocks.
 
@@ -60,11 +60,13 @@ class HybridRLock(AbstractLock):
         acquired_thread = False
 
         try:
-            acquired_mp = self.__mp_lock.acquire()
+            acquired_mp = self.__mp_lock.acquire(
+                block=blocking, timeout=timeout)
             if not acquired_mp:
                 return False
 
-            acquired_thread = self.__thread_lock.acquire()
+            acquired_thread = self.__thread_lock.acquire(
+                blocking=blocking, timeout=timeout)
             if not acquired_thread:
                 self.__mp_lock.release()  # Release `_mp_lock` if `_thread_lock` acquisition fails
                 return False
@@ -94,14 +96,14 @@ class HybridRLock(AbstractLock):
         except Exception as e:
             pass
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> Self:  # type: ignore
         """
         Enter the context manager (automatically acquire the lock).
         """
         self.acquire()
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args):  # type: ignore
         """
         Exit the context manager (automatically release the lock).
         """

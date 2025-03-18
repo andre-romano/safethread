@@ -17,6 +17,8 @@ class BaseEvent:
         :param event: The underlying event object to wrap.
         :type event: threading.Event | multiprocessing.synchronize.Event
         """
+        super().__init__()
+
         self.__event = event
 
     def is_set(self) -> bool:

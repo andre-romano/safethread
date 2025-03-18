@@ -7,6 +7,7 @@ from safethread.utils import Factory
 # Sample subclass to test Factory behavior
 class Product(Factory):
     def __init__(self, name: str, price: float):
+        super().__init__()
         self.name = name
         self.price = price
 
@@ -14,6 +15,7 @@ class Product(Factory):
 # Sample subclass to test Factory behavior
 class Object(Factory):
     def __init__(self):
+        super().__init__()
         self.name = 'object'
 
     def setName(self, name):

@@ -2,7 +2,7 @@
 
 from threading import RLock
 
-from typing import Any, Self
+from typing import Self
 
 from ... import AbstractLock
 
@@ -24,7 +24,7 @@ class ThreadRLock(AbstractLock):
         super().__init__()
         self.__lock = RLock()
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> Self:  # type: ignore
         """
         Acquire the lock.
 
@@ -50,7 +50,7 @@ class ThreadRLock(AbstractLock):
             raise RuntimeError("Cannot acquire ThreadRLock")
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args):  # type: ignore
         """
         Exit the runtime context related to this object.
 

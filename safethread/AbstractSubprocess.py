@@ -87,6 +87,8 @@ class AbstractSubprocess(AbstractParallel):
             :param stdout: STDOUT output of subprocess
             :type stdout: str
             """
+            super().__init__()
+
             self.args = tuple(args)
             self.returncode = returncode
             self.stderr = stderr

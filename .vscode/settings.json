@@ -1,39 +1,13 @@
 {
-    "cSpell.words": [
-        "gaierror",
-        "noconsole",
-        "pady",
-        "pyautogui",
-        "pyinstaller",
-        "safethread",
-        "venv"
-    ],
     "editor.formatOnSave": true,
-    "python.analysis.autoIndent": true,
-    "python.languageServer": "Pylance", // Ensure Pylance is being used as the language server
-    "python.analysis.typeCheckingMode": "basic", // Set the type checking mode: "off", "basic", or "strict"
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.languageServer": "Pylance", // Ensure Pylance is being used as the language server    
     "python.analysis.diagnosticMode": "workspace", // Checks errors only for open files (use "workspace" to check all files)
+    "python.analysis.indexing": true, // Enable indexing for better suggestions
+    "python.analysis.completeFunctionParens": true, // Show function parameter hints
+    "python.analysis.autoIndent": true,
     "python.analysis.autoFormatStrings": true,
     "python.analysis.supportDocstringTemplate": true,
-    "python.analysis.autoSearchPaths": true, // Automatically adds paths to the environment
-    "python.analysis.useLibraryCodeForTypes": true, // Use type stubs from libraries for better error detection
-    "python.analysis.completeFunctionParens": true, // Show function parameter hints
-    "python.analysis.indexing": true, // Enable indexing for better suggestions
-    "python.analysis.exclude": [
-        "**/venv/**", // Exclude virtual environment folder
-        "**/__pycache__/**", // Exclude __pycache__ folders
-        "**/build/**", // Exclude build folder
-        "**/dist/**", // Exclude dist folder
-        "**/.tox/**", // Exclude tox folder (optional)
-        "**/.nox/**", // Exclude nox folder (optional)
-        "**/.coverage/**", // Exclude coverage files (optional)
-        "**/.mypy_cache/**", // Exclude mypy cache (optional)
-        "**/.pytest_cache/**", // Exclude pytest cache (optional)
-        "**/*.egg-info",
-        "**/*.egg",
-        "**/node_modules/**",
-        "dist/",
-    ],
     "files.exclude": {
         "**/venv/": true, // Exclude virtual environment folder
         "**/__pycache__/": true, // Exclude __pycache__ folders
@@ -77,4 +51,13 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "cSpell.words": [
+        "gaierror",
+        "noconsole",
+        "pady",
+        "pyautogui",
+        "pyinstaller",
+        "safethread",
+        "venv"
+    ],
 }

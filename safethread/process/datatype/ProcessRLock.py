@@ -2,7 +2,7 @@
 
 import multiprocessing
 
-from typing import Any, Self
+from typing import Self
 
 from ... import AbstractLock
 
@@ -23,7 +23,7 @@ class ProcessRLock(AbstractLock):
         super().__init__()
         self.__lock = multiprocessing.RLock()
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> Self:  # type: ignore
         """
         Acquire the lock.
 
@@ -49,7 +49,7 @@ class ProcessRLock(AbstractLock):
             raise RuntimeError("Cannot acquire ThreadRLock")
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args):  # type: ignore
         """
         Exit the runtime context related to this object.
 

@@ -18,6 +18,8 @@ class ThreadPublisher:
         """
         Initializes a new Publisher instance.
         """
+        super().__init__()
+
         self._lock = RLock()
         self.__subscribers = []
 
