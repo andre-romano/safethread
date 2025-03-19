@@ -2,9 +2,9 @@
 
 from typing import MutableSequence
 
-from .. import AbstractSubprocess
+from safethread.AbstractSubprocess import AbstractSubprocess
 
-from . import BaseThread
+from safethread.thread.BaseThread import BaseThread
 
 
 class SubprocessThread(AbstractSubprocess, BaseThread):

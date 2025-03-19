@@ -1,8 +1,8 @@
 
 
-from .. import AbstractScheduler
+from safethread import AbstractScheduler
 
-from . import BaseProcess
+from safethread.process.BaseProcess import BaseProcess
 
 
 class SchedulerProcess(AbstractScheduler, BaseProcess):

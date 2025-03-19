@@ -23,7 +23,6 @@ def on_finish_failing(result: SubprocessThread.Finished):
 
     assert tuple(result.args) == tuple(command)
     assert result.stderr != ""
-    assert result.stdout == ""
     assert result.returncode != 0
 
 

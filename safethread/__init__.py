@@ -28,11 +28,11 @@ The package is designed to ensure safe, concurrent operations on common Python d
 - Apache-2.0 License
 """
 
-from .AbstractContext import AbstractContext
-from .AbstractLock import AbstractLock
-from .AbstractParallel import AbstractParallel
-from .AbstractPicklable import AbstractPicklable
-from .AbstractProcess import AbstractProcess
-from .AbstractScheduler import AbstractScheduler
-from .AbstractSubprocess import AbstractSubprocess
-from .BaseEvent import BaseEvent
+from safethread.AbstractContext import AbstractContext
+from safethread.AbstractLock import AbstractLock
+from safethread.AbstractParallel import AbstractParallel
+from safethread.AbstractPicklable import AbstractPicklable
+from safethread.AbstractProcess import AbstractProcess
+from safethread.AbstractScheduler import AbstractScheduler
+from safethread.AbstractSubprocess import AbstractSubprocess
+from safethread.BaseEvent import BaseEvent

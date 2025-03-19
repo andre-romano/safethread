@@ -13,7 +13,7 @@ Classes:
 - **SubprocessProcess**: A process-safe class that runs a subprocess within a separate process.
 """
 
-from .BaseProcess import BaseProcess
-from .ProcessEvent import ProcessEvent
-from .SchedulerProcess import SchedulerProcess
-from .SubprocessProcess import SubprocessProcess
+from safethread.process.BaseProcess import BaseProcess
+from safethread.process.ProcessEvent import ProcessEvent
+from safethread.process.SchedulerProcess import SchedulerProcess
+from safethread.process.SubprocessProcess import SubprocessProcess

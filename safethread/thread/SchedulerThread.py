@@ -1,8 +1,8 @@
 
 
-from .. import AbstractScheduler
+from safethread.AbstractScheduler import AbstractScheduler
 
-from . import BaseThread
+from safethread.thread.BaseThread import BaseThread
 
 
 class SchedulerThread(AbstractScheduler, BaseThread):

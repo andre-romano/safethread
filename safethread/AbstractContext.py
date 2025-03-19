@@ -16,15 +16,11 @@ class AbstractContext(Protocol):
     def __enter__(self) -> Self:
         """
         Enter context-manager
-
-        :raises NotImplementedError: if method is not overloaded
         """
-        raise NotImplementedError("Method NOT overloaded")
+        ...
 
     def __exit__(self, *args):
         """
         Exits context-manager
-
-        :raises NotImplementedError: if method is not overloaded
         """
-        raise NotImplementedError("Method NOT overloaded")
+        ...

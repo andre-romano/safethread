@@ -1,9 +1,12 @@
 
 
-from . import AbstractContext
+from typing import Protocol, Self
 
 
-class AbstractLock(AbstractContext):
+from safethread.AbstractContext import AbstractContext
+
+
+class AbstractLock(AbstractContext, Protocol):
     """
     Abstract base class that defines the interface for lock objects.
 
@@ -14,10 +17,8 @@ class AbstractLock(AbstractContext):
     def acquire(self, blocking=True, timeout: float = -1) -> bool:
         """
         Acquires the lock
-
-        :raises NotImplementedError: if method is not overloaded
         """
-        raise NotImplementedError("Method NOT overloaded")
+        ...
 
     def release(self):
         """
@@ -25,4 +26,4 @@ class AbstractLock(AbstractContext):
 
         :raises NotImplementedError: if method is not overloaded
         """
-        raise NotImplementedError("Method NOT overloaded")
+        ...

@@ -4,9 +4,9 @@ import multiprocessing
 
 from typing import MutableSequence
 
-from .. import AbstractSubprocess
+from safethread.AbstractSubprocess import AbstractSubprocess
 
-from . import BaseProcess
+from safethread.process.BaseProcess import BaseProcess
 
 
 class SubprocessProcess(AbstractSubprocess, BaseProcess):

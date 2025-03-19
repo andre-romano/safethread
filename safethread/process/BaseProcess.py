@@ -2,11 +2,14 @@ import multiprocessing
 
 from typing import Any, Callable, Iterable, Self
 
-from .datatype import ProcessRLock
+from safethread.process.datatype.ProcessRLock import ProcessRLock
 
-from .ProcessEvent import ProcessEvent
+from safethread.process.ProcessEvent import ProcessEvent
 
-from .. import AbstractParallel, BaseEvent, AbstractProcess, AbstractLock
+from safethread.AbstractParallel import AbstractParallel
+from safethread.BaseEvent import BaseEvent
+from safethread.AbstractProcess import AbstractProcess
+from safethread.AbstractLock import AbstractLock
 
 
 class BaseProcess(AbstractParallel):

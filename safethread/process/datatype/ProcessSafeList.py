@@ -4,10 +4,10 @@ import multiprocessing
 from multiprocessing.managers import ListProxy
 from typing import Any, Iterable
 
-from ... import AbstractLock
-from ...datatype import AbstractSafeList
+from safethread.AbstractLock import AbstractLock
+from safethread.datatype.AbstractSafeList import AbstractSafeList
 
-from .ProcessRLock import ProcessRLock
+from safethread.process.datatype.ProcessRLock import ProcessRLock
 
 
 class ProcessSafeList(AbstractSafeList):

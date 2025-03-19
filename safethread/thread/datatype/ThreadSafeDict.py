@@ -1,11 +1,11 @@
 
 from typing import Any, Iterable
 
-from ... import AbstractLock
+from safethread.AbstractLock import AbstractLock
 
-from ...datatype import AbstractSafeDict
+from safethread.datatype.AbstractSafeDict import AbstractSafeDict
 
-from .ThreadRLock import ThreadRLock
+from safethread.thread.datatype.ThreadRLock import ThreadRLock
 
 
 class ThreadSafeDict(AbstractSafeDict):

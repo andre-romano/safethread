@@ -1,10 +1,10 @@
 
 from typing import Any, Iterable
 
-from ... import AbstractLock
-from ...datatype import AbstractSafeList
+from safethread.AbstractLock import AbstractLock
+from safethread.datatype.AbstractSafeList import AbstractSafeList
 
-from .ThreadRLock import ThreadRLock
+from safethread.thread.datatype.ThreadRLock import ThreadRLock
 
 
 class ThreadSafeList(AbstractSafeList):

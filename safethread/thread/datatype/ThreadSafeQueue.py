@@ -4,11 +4,11 @@ import queue
 from threading import Condition
 from typing import Any, Iterable
 
-from .ThreadRLock import ThreadRLock
+from safethread.thread.datatype.ThreadRLock import ThreadRLock
 
-from ... import AbstractLock
+from safethread.AbstractLock import AbstractLock
 
-from ...datatype import AbstractSafeQueue
+from safethread.datatype.AbstractSafeQueue import AbstractSafeQueue
 
 
 class ThreadSafeQueue(AbstractSafeQueue):

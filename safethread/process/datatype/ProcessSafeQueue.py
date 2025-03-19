@@ -5,10 +5,10 @@ import multiprocessing.queues
 from typing import Any, Iterable, Self
 
 
-from ... import AbstractLock
-from ...datatype import AbstractSafeQueue
+from safethread.AbstractLock import AbstractLock
+from safethread.datatype.AbstractSafeQueue import AbstractSafeQueue
 
-from . import ProcessRLock
+from safethread.process.datatype.ProcessRLock import ProcessRLock
 
 
 class ProcessSafeQueue(AbstractSafeQueue):

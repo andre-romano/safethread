@@ -30,12 +30,12 @@ class TestProcessSafeSet(unittest.TestCase):
     def test_add(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.add(4)
-        self.assertIn(4, safe_set._data)
+        self.assertIn(4, safe_set)
 
     def test_clear(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.clear()
-        self.assertTrue(len(safe_set._data) == 0)
+        self.assertTrue(len(safe_set) == 0)
 
     def test_difference(self):
         safe_set = ProcessSafeSet({1, 2, 3})
@@ -45,12 +45,12 @@ class TestProcessSafeSet(unittest.TestCase):
     def test_difference_update(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.difference_update({2, 3})
-        self.assertTrue(safe_set._data == {1})
+        self.assertTrue(safe_set == {1})
 
     def test_discard(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.discard(2)
-        self.assertTrue(2 not in safe_set._data)
+        self.assertTrue(2 not in safe_set)
 
     def test_intersection(self):
         safe_set = ProcessSafeSet({1, 2, 3})
@@ -78,12 +78,12 @@ class TestProcessSafeSet(unittest.TestCase):
     def test_pop(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         value = safe_set.pop()
-        self.assertTrue(value not in safe_set._data)
+        self.assertTrue(value not in safe_set)
 
     def test_remove(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.remove(3)
-        self.assertTrue(3 not in safe_set._data)
+        self.assertTrue(3 not in safe_set)
 
     def test_symmetric_difference(self):
         safe_set = ProcessSafeSet({1, 2, 3})
@@ -93,7 +93,7 @@ class TestProcessSafeSet(unittest.TestCase):
     def test_symmetric_difference_update(self):
         safe_set = ProcessSafeSet({1, 2, 3})
         safe_set.symmetric_difference_update({2, 4})
-        self.assertTrue(safe_set._data == {1, 3, 4})
+        self.assertTrue(safe_set == {1, 3, 4})
 
     def test_union(self):
         safe_set = ProcessSafeSet({1, 2, 3})
@@ -118,7 +118,7 @@ class TestProcessSafeSet(unittest.TestCase):
             p.join()
 
         for i in range(10, 20):
-            self.assertIn(i, safe_set._data)
+            self.assertIn(i, safe_set)
 
 
 if __name__ == '__main__':

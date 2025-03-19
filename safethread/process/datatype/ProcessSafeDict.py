@@ -4,10 +4,10 @@ import multiprocessing
 from multiprocessing.managers import DictProxy
 from typing import Any, Iterable
 
-from ... import AbstractLock
-from ...datatype import AbstractSafeDict
+from safethread.AbstractLock import AbstractLock
+from safethread.datatype.AbstractSafeDict import AbstractSafeDict
 
-from .ProcessRLock import ProcessRLock
+from safethread.process.datatype.ProcessRLock import ProcessRLock
 
 
 class ProcessSafeDict(AbstractSafeDict):

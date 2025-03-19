@@ -1,87 +1,105 @@
+import logging
 import os
 import stat
+import time
 import unittest
+import tracemalloc
 
 from safethread.thread.utils import ThreadFileHandler
 
 
 class TestThreadFileHandler(unittest.TestCase):
-    TEST_FILE = "test_async_file.txt"
+    @staticmethod
+    def create_file(filename):
+        try:
+            with open(filename, 'x') as file:
+                pass
+        except:
+            pass
+
+    @staticmethod
+    def remove_file(filename):
+        while os.path.exists(filename):
+            try:
+                os.remove(filename)
+            except:
+                time.sleep(0.05)
+
+    @staticmethod
+    def set_file_permissions(filename, permissions):
+        while os.path.exists(filename):
+            try:
+                os.chmod(filename, permissions)
+                break
+            except:
+                time.sleep(0.05)
 
     def setUp(self):
         """Creates a test file before each test."""
         # clear result obj
-        self.__result = []
+        self.__result_read = []
+        self.__result_write = []
 
-        # guarantee that the file is writeable
-        if os.path.exists(self.TEST_FILE):
-            os.chmod(self.TEST_FILE, stat.S_IRUSR | stat.S_IWUSR)
-
-        # Create a test file with some content
-        with open(self.TEST_FILE, 'w', encoding='utf-8') as f:
-            f.write("Line 1\nLine 2\nLine 3\n")
-
-    def tearDown(self):
-        """Removes the test file after each test."""
-        if os.path.exists(self.TEST_FILE):
-            # Restore write permissions
-            os.chmod(self.TEST_FILE, stat.S_IRUSR | stat.S_IWUSR)
-            os.remove(self.TEST_FILE)
-
-    def test_read_functionality(self):
-        """Tests if asynchronous file reading works correctly."""
+    def test_write_read(self):
+        """Tests if asynchronous file write / reading works correctly."""
         def on_read(data, e):
-            self.__result.append(data)
+            self.__result_read.append(data)
             if e:
                 raise e
 
-        handler = ThreadFileHandler(
-            self.TEST_FILE,
-            on_read=on_read
-        )
-        handler.start_read()
-
-        handler.join_read()
-        self.assertTrue(self.__result == ["Line 1\n", "Line 2\n", "Line 3\n"])
-
-    def test_write_functionality(self):
-        """Tests if asynchronous writing works correctly."""
         def on_write(data, e):
-            self.__result.append(data)
+            self.__result_write.append(data)
             if e:
                 raise e
 
+        test_filename = "test_file1.txt"
+        TestThreadFileHandler.create_file(test_filename)
+
         handler = ThreadFileHandler(
-            self.TEST_FILE,
-            on_write=on_write
+            test_filename,
+            on_read=on_read,
+            on_write=on_write,
         )
 
-        # Put data into buffer
-        handler.put("New Line 1\n")
-        handler.put("New Line 2\n")
+        handler.put("Line 1\n")
+        handler.put("Line 2\n")
+        handler.put("Line 3\n")
 
-        # Write data to the file
         handler.start_write()
         handler.join_write()
 
-        content = []
-        with open(self.TEST_FILE, 'r', encoding='utf-8') as f:
-            content = f.readlines()
+        self.assertTrue(self.__result_write == [
+                        "Line 1\n", "Line 2\n", "Line 3\n"])
 
-        self.assertTrue(content == ["New Line 1\n", "New Line 2\n"])
+        handler.start_read()
+        handler.join_read()
+
+        self.assertTrue(self.__result_read == [
+                        "Line 1\n", "Line 2\n", "Line 3\n"])
+
+        TestThreadFileHandler.remove_file(test_filename)
 
     def test_write_after_shutdown(self):
         """Tests if attempting to write after thread termination raises an error."""
-        handler = ThreadFileHandler(self.TEST_FILE)
+
+        test_filename = "test_file3.txt"
+
+        TestThreadFileHandler.create_file(test_filename)
+        handler = ThreadFileHandler(test_filename)
         handler.start_write()
         handler.join_write()
 
         with self.assertRaises(RuntimeError):
             handler.put("Should Fail\n")
 
+        TestThreadFileHandler.remove_file(test_filename)
+
     def test_join_before_start(self):
         # Test that joining a thread before starting it raises an error
-        file_handler = ThreadFileHandler(self.TEST_FILE)
+
+        test_filename = "test_file4.txt"
+        TestThreadFileHandler.create_file(test_filename)
+        file_handler = ThreadFileHandler(test_filename)
 
         with self.assertRaises(RuntimeError):
             file_handler.join_read()
@@ -89,18 +107,24 @@ class TestThreadFileHandler(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             file_handler.join_write()
 
+        TestThreadFileHandler.remove_file(test_filename)
+
     def test_binary_file(self):
         def on_read(data, e):
-            self.__result.append(data)
+            self.__result_read.append(data)
             if e:
                 raise e
 
         def on_write(data, e):
+            self.__result_write.append(data)
             if e:
                 raise e
 
+        test_filename = "test_file5.txt"
+        TestThreadFileHandler.create_file(test_filename)
+
         file_handler = ThreadFileHandler(
-            self.TEST_FILE,
+            test_filename,
             binary_mode=True,
             on_read=on_read,
             on_write=on_write,
@@ -119,10 +143,12 @@ class TestThreadFileHandler(unittest.TestCase):
         file_handler.join_read()
 
         # Verify the content of the file
-        self.assertTrue(self.__result == [
+        self.assertTrue(self.__result_read == [
             b"Binary data\n",
             b"More binary data\n",
         ])
+
+        TestThreadFileHandler.remove_file(test_filename)
 
     def test_read_error(self):
         def on_read(data, e):
@@ -149,14 +175,18 @@ class TestThreadFileHandler(unittest.TestCase):
             self.assertIsNotNone(e)
             self.assertIsInstance(e, Exception)
 
+        test_filename = "test_file6.txt"
+        TestThreadFileHandler.create_file(test_filename)
+
         # Create a FileHandler instance with the mock callback
         file_handler = ThreadFileHandler(
-            filename=self.TEST_FILE,
+            filename=test_filename,
             on_write=on_write,
         )
 
         # Set the file permissions to read-only
-        os.chmod(self.TEST_FILE, stat.S_IRUSR)  # Read-only for the owner
+        self.set_file_permissions(
+            test_filename, stat.S_IRUSR)
 
         # Add data to the write queue
         file_handler.put("Test data")
@@ -165,6 +195,13 @@ class TestThreadFileHandler(unittest.TestCase):
         file_handler.start_write()
         file_handler.join_write()
 
+        # Reset file permissions
+        self.set_file_permissions(
+            test_filename, stat.S_IRUSR | stat.S_IWUSR)
+
+        TestThreadFileHandler.remove_file(test_filename)
+
 
 if __name__ == "__main__":
+    tracemalloc.start()
     unittest.main()

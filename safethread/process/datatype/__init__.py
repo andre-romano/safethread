@@ -11,9 +11,14 @@ This module provides process-safe data structures to be used in multiprocess (pa
 - **ProcessSafeQueue**: A process-safe queue implementation.
 """
 
-from .ProcessRLock import ProcessRLock
-from .ProcessSafeDict import ProcessSafeDict
-from .ProcessSafeList import ProcessSafeList
-from .ProcessSafeSet import ProcessSafeSet
-from .ProcessSafeQueue import ProcessSafeQueue
+# - **AbstractProcessSafeBasicData**: A base class for process-safe basic data structures (e.g., int, float, str, bool).
+# from .AbstractProcessSafeBasicData import AbstractProcessSafeBasicData
+# - **ProcessSafeInt**: A process-safe int implementation.
+# from .ProcessSafeInt import ProcessSafeInt
+
+from safethread.process.datatype.ProcessRLock import ProcessRLock
+from safethread.process.datatype.ProcessSafeDict import ProcessSafeDict
+from safethread.process.datatype.ProcessSafeList import ProcessSafeList
+from safethread.process.datatype.ProcessSafeSet import ProcessSafeSet
+from safethread.process.datatype.ProcessSafeQueue import ProcessSafeQueue
 # TODO

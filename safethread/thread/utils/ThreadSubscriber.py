@@ -1,7 +1,5 @@
 from typing import Any, Callable
 
-from ...utils import is_callable
-
 
 class ThreadSubscriber:
     """
@@ -28,7 +26,9 @@ class ThreadSubscriber:
         super().__init__()
 
         self.__callback: Callable[[Any], None] = lambda input: None
-        self.__callback = is_callable(callback)
+        if not callable(callback):
+            raise TypeError("`callback` argument is not a callable")
+        self.__callback = callback
 
     def _notify(self, data: Any):
         """

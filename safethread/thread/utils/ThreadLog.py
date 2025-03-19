@@ -3,7 +3,7 @@ import threading
 
 from typing import Self
 
-from .ThreadSingleton import ThreadSingleton
+from safethread.thread.utils.ThreadSingleton import ThreadSingleton
 
 
 class ThreadLog(ThreadSingleton):

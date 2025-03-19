@@ -1,9 +1,9 @@
 
 from typing import Any, Callable, Iterable, Self, Type
 
-from . import BaseEvent, AbstractLock, AbstractProcess
-
-from .utils import is_callable
+from safethread.BaseEvent import BaseEvent
+from safethread.AbstractLock import AbstractLock
+from safethread.AbstractProcess import AbstractProcess
 
 
 def _run_parallel(
@@ -89,10 +89,18 @@ class AbstractParallel:
         self.__args = tuple(args or [])
 
         self.__callback: Callable[..., bool] = _dummy_callback
-        self.__callback = is_callable(callback)
+        if not callable(callback):
+            raise TypeError(
+                "'callback' must be a Callable (e.g., function, lambda, etc)"
+            )
+        self.__callback = callback
 
         self.__on_end: Callable[[Exception | None], Any] = _dummy_on_end
-        self.__on_end = is_callable(on_end)
+        if not callable(on_end):
+            raise TypeError(
+                "'callback' must be a Callable (e.g., function, lambda, etc)"
+            )
+        self.__on_end = on_end
 
         self.__repeat = repeat
         self.__daemon = daemon

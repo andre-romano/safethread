@@ -4,7 +4,7 @@ import threading
 
 from typing import Any, Callable, Self
 
-from .. import BaseThread
+from safethread.thread.BaseThread import BaseThread
 
 
 class ThreadFileHandler:

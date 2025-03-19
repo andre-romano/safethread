@@ -1,6 +1,6 @@
 import threading
 
-from .. import BaseEvent
+from safethread.BaseEvent import BaseEvent
 
 
 class ThreadEvent(BaseEvent):

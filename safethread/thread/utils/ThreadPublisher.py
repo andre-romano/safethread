@@ -3,7 +3,7 @@ from threading import RLock
 
 from typing import Any, Iterable, Self
 
-from .ThreadSubscriber import ThreadSubscriber
+from safethread.thread.utils.ThreadSubscriber import ThreadSubscriber
 
 
 class ThreadPublisher:

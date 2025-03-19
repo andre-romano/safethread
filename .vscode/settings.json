@@ -53,11 +53,13 @@
     "python.testing.pytestEnabled": true,
     "cSpell.words": [
         "gaierror",
+        "NBLCK",
         "noconsole",
         "pady",
         "pyautogui",
         "pyinstaller",
         "safethread",
+        "UNLCK",
         "venv"
     ],
 }

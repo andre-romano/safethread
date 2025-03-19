@@ -3,10 +3,11 @@ import logging
 from typing import Any, Iterable
 
 
-from ... import AbstractLock
-from ...datatype import AbstractSafeSet
+from safethread.AbstractLock import AbstractLock
+from safethread.datatype.AbstractSafeSet import AbstractSafeSet
 
-from . import ProcessSafeList, ProcessRLock
+from safethread.process.datatype.ProcessSafeList import ProcessSafeList
+from safethread.process.datatype.ProcessRLock import ProcessRLock
 
 
 class ProcessSafeSet(AbstractSafeSet):

@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Callable, Self
 
-from .. import AbstractLock
+from safethread.AbstractLock import AbstractLock
 
 
 class AbstractSafeBase:

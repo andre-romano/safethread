@@ -12,8 +12,8 @@ This module provides thread-safe data structures to be used in multithreaded (co
 - **ThreadSafeSet**: A thread-safe set implementation.
 """
 
-from .ThreadRLock import ThreadRLock
-from .ThreadSafeDict import ThreadSafeDict
-from .ThreadSafeList import ThreadSafeList
-from .ThreadSafeQueue import ThreadSafeQueue
-from .ThreadSafeSet import ThreadSafeSet
+from safethread.thread.datatype.ThreadRLock import ThreadRLock
+from safethread.thread.datatype.ThreadSafeDict import ThreadSafeDict
+from safethread.thread.datatype.ThreadSafeList import ThreadSafeList
+from safethread.thread.datatype.ThreadSafeQueue import ThreadSafeQueue
+from safethread.thread.datatype.ThreadSafeSet import ThreadSafeSet

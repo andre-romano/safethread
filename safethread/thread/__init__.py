@@ -13,7 +13,7 @@ Classes:
 - **ThreadEvent**: A thread-safe class that manages a thread event safely.
 """
 
-from .BaseThread import BaseThread
-from .SchedulerThread import SchedulerThread
-from .SubprocessThread import SubprocessThread
-from .ThreadEvent import ThreadEvent
+from safethread.thread.BaseThread import BaseThread
+from safethread.thread.SchedulerThread import SchedulerThread
+from safethread.thread.SubprocessThread import SubprocessThread
+from safethread.thread.ThreadEvent import ThreadEvent

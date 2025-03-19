@@ -2,9 +2,7 @@ import time
 
 from typing import Callable, Iterable
 
-from . import AbstractParallel
-
-from .utils import is_callable
+from safethread.AbstractParallel import AbstractParallel
 
 
 def _dummy_callback(*args) -> bool:
@@ -70,10 +68,10 @@ class AbstractScheduler(AbstractParallel):
 
         self.__args = tuple(args or [])
         self.__callback: Callable[..., bool] = _dummy_callback
-        try:
-            self.__callback = is_callable(callback)
-        except Exception as e:
-            exception = e
+        if callable(callback):
+            self.__callback = callback
+        else:
+            exception = TypeError("'callback' is not callable")
 
         super().__init__(
             callback=_run_scheduler,

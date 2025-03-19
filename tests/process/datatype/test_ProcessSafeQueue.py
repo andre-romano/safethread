@@ -28,14 +28,14 @@ class TestProcessSafeQueue(unittest.TestCase):
     def test_initialization_with_none(self):
         queue_1 = ProcessSafeQueue()
         self.assertTrue(queue_1.maxsize == 0)
-        self.assertTrue(queue_1._data.empty())
+        self.assertTrue(queue_1.empty())
 
         self.assertIsInstance(queue_1._lock, ProcessRLock)
 
     def test_initialization_with_int(self):
         queue_1 = ProcessSafeQueue(10)
         self.assertTrue(queue_1.maxsize == 10)
-        self.assertTrue(queue_1._data.empty())
+        self.assertTrue(queue_1.empty())
 
     def test_initialization_with_queue(self):
         initial_queue = multiprocessing.Queue()
@@ -43,10 +43,17 @@ class TestProcessSafeQueue(unittest.TestCase):
         initial_queue.put(2)
 
         queue = ProcessSafeQueue(initial_queue)
+        self.assertTrue(queue.get() == 1)
+        self.assertTrue(queue.qsize() == 1)
+        self.assertFalse(queue.empty())
+        self.assertFalse(queue.full())
         self.assertTrue(queue.maxsize == 0)
-        self.assertFalse(queue._data.empty())
-        self.assertTrue(queue._data.get() == 1)
-        self.assertTrue(queue._data.get() == 2)
+
+        self.assertTrue(queue.get() == 2)
+        self.assertTrue(queue.qsize() == 0)
+        self.assertTrue(queue.empty())
+        self.assertFalse(queue.full())
+        self.assertTrue(queue.maxsize == 0)
 
     def test_equality(self):
         queue_1 = ProcessSafeQueue()
@@ -54,11 +61,11 @@ class TestProcessSafeQueue(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             self.assertTrue(queue_1 == queue_2)
 
-        queue_1._data.put(1)
+        queue_1.put(1)
         with self.assertRaises(NotImplementedError):
             self.assertTrue(queue_1 != queue_2)
 
-        queue_2._data.put(1)
+        queue_2.put(1)
         with self.assertRaises(NotImplementedError):
             self.assertTrue(queue_1 == queue_2)
 

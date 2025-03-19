@@ -3,9 +3,7 @@ import queue
 
 from typing import Any, Callable, Self
 
-from ...utils.utils import try_except_finally_wrap, is_callable
-
-from ..BaseThread import BaseThread
+from safethread.thread.BaseThread import BaseThread
 
 
 class ThreadPipelineStage:
@@ -87,7 +85,10 @@ class ThreadPipelineStage:
         self.__threads: list[BaseThread] = []
 
         self.__callback: Callable[[Any], Any] = lambda input: None
-        self.__callback = is_callable(callback)
+        if callable(callback):
+            self.__callback = callback
+        else:
+            raise TypeError("'callback' is not callable")
 
         if n_threads < 1:
             raise ValueError(
@@ -207,14 +208,19 @@ class ThreadPipelineStage:
         """
         # stops threads' main loops
         for thread in self.__threads:
-            try_except_finally_wrap(lambda: thread.stop())
+            try:
+                thread.stop()
+            except:
+                pass
         # prevent in/out queues from storing data
-        try_except_finally_wrap(
-            lambda: self.__input_queue.shutdown(immediate=True)
-        )
-        try_except_finally_wrap(
-            lambda: self.__output_queue.shutdown(immediate=True)
-        )
+        try:
+            self.__input_queue.shutdown(immediate=True)
+        except:
+            pass
+        try:
+            self.__output_queue.shutdown(immediate=True)
+        except:
+            pass
 
     def join(self, timeout: float | None = None):
         """

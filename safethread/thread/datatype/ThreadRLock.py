@@ -1,10 +1,11 @@
 
 
-from threading import RLock
+import threading
+import _thread
 
 from typing import Self
 
-from ... import AbstractLock
+from safethread.AbstractLock import AbstractLock
 
 
 class ThreadRLock(AbstractLock):
@@ -17,12 +18,18 @@ class ThreadRLock(AbstractLock):
     It is designed to  be used as a context manager with the 'with' statement.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, lock: _thread.RLock | None = None) -> None:
         """
         Initializes the ThreadRLock object.
+
+        :param lock: An existing threading.RLock to use with this object
+        :type lock: threading.RLock, optional
         """
         super().__init__()
-        self.__lock = RLock()
+
+        if not lock:
+            lock = threading.RLock()
+        self.__lock: _thread.RLock = lock
 
     def __enter__(self) -> Self:  # type: ignore
         """
@@ -35,7 +42,7 @@ class ThreadRLock(AbstractLock):
           will return immediately with a value of False.
         - If `blocking` is True and another thread holds the lock, the method
           will wait until the lock is available, acquire it, and then return True.
-          Note that this blocking operation is interruptible.
+          Note that this blocking operation is interruptable.
         - If the current thread already holds the lock, the internal counter is
           incremented, and the method returns True immediately.
         - If no thread holds the lock, the lock is acquired, the internal counter
@@ -78,7 +85,7 @@ class ThreadRLock(AbstractLock):
           will return immediately with a value of False.
         - If `blocking` is True and another thread holds the lock, the method
           will wait until the lock is available, acquire it, and then return True.
-          Note that this blocking operation is interruptible.
+          Note that this blocking operation is interruptable.
         - If the current thread already holds the lock, the internal counter is
           incremented, and the method returns True immediately.
         - If no thread holds the lock, the lock is acquired, the internal counter

@@ -3,9 +3,9 @@ from multiprocessing.managers import DictProxy
 
 from typing import Any, Iterable
 
-from .. import AbstractLock
+from safethread.AbstractLock import AbstractLock
 
-from . import AbstractSafeBase
+from .AbstractSafeBase import AbstractSafeBase
 
 
 class AbstractSafeDict(AbstractSafeBase):

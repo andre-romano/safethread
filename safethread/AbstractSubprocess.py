@@ -2,7 +2,8 @@ import subprocess
 
 from typing import Any, Callable, Iterable, MutableSequence, Self
 
-from . import AbstractPicklable, AbstractParallel
+from safethread.AbstractPicklable import AbstractPicklable
+from safethread.AbstractParallel import AbstractParallel
 
 
 def _run_subprocess(
@@ -16,31 +17,41 @@ def _run_subprocess(
     Runs the command in a subprocess and captures the output.
     """
     cmd = list(command)
-    result: AbstractSubprocess.Finished
+    result = AbstractSubprocess.Finished(
+        [], returncode=254, stderr="", stdout="")
+    # This automatically closes pipes when the block exits
     try:
-        process = subprocess.run(
-            cmd,
-            timeout=timeout,
-            env=env,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-        )
-        result = AbstractSubprocess.Finished(
-            args=cmd,
-            returncode=process.returncode,
-            stderr=process.stderr,
-            stdout=process.stdout
-        )
+        with subprocess.Popen(
+            cmd, cwd=cwd, env=env, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        ) as process:
+            try:
+                stdout, stderr = process.communicate(timeout=timeout)
+
+                result = AbstractSubprocess.Finished(
+                    args=cmd,
+                    returncode=process.returncode,
+                    stderr=stderr.strip(),
+                    stdout=stdout.strip()
+                )
+            except Exception as e:
+                process.kill()
+                stdout, stderr = process.communicate()  # Read remaining output
+                result = AbstractSubprocess.Finished(
+                    args=cmd,
+                    returncode=process.returncode if process.returncode != 0 else 255,
+                    stderr=f"{e}: {stderr.strip()}",
+                    stdout=stdout.strip()
+                )
     except Exception as e:
+        # Handle cases where subprocess creation fails or other errors occur
         result = AbstractSubprocess.Finished(
             args=cmd,
             returncode=255,
-            stderr=str(e),
-            stdout=''
+            stderr=f"{e}",
+            stdout=""
         )
-    finally:
-        on_finish(result)
+    on_finish(result)
     return True
 
 

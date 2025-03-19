@@ -1,7 +1,7 @@
 
 from typing import Any, Iterable
 
-from .ThreadPipelineStage import ThreadPipelineStage
+from safethread.thread.utils.ThreadPipelineStage import ThreadPipelineStage
 
 
 class ThreadPipeline:

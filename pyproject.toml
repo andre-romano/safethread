@@ -24,6 +24,9 @@ indexing = true
 # Use type stubs from libraries for better error detection
 useLibraryCodeForTypes = true
 
+# Report all types of issues including circular imports
+reportImportCycles = true
+
 # Report an error if there are overlapping overloads
 reportOverlappingOverload = "error"
 
@@ -45,11 +48,18 @@ reportPropertyTypeMismatch = "error"
 # Report an error if a required super() call is missing
 reportMissingSuperCall = "error"
 
+# report unused
+reportUnusedClass = "warning"
+reportUnusedFunction = "warning"
+
 # Report a warning if there is a duplicate import
 reportDuplicateImport = "warning"
 
 # Report a warning if deprecated code is used
 reportDeprecated = "warning"
+
+# Exclude files from analysis
+ignore = ["**/*.bak"]
 
 # Exclude directories from analysis
 exclude = [

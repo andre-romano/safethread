@@ -9,12 +9,10 @@ This module provides data structures that are simultaneously thread-safe and mul
 - **AbstractSafeList**: A base list-like data structure to create thread-safe or multiprocess-safe implementations.
 - **AbstractSafeQueue**: A base queue-like data structure to create thread-safe or multiprocess-safe implementations.
 - **AbstractSafeSet**: A base set-like data structure to create thread-safe or multiprocess-safe implementations.
-- **HybridRLock**: A thread and process-safe lock class that supports both inter-process (multiprocessing) and intra-process (threading) synchronization.
 """
 
-from .AbstractSafeBase import AbstractSafeBase
-from .AbstractSafeDict import AbstractSafeDict
-from .AbstractSafeList import AbstractSafeList
-from .AbstractSafeQueue import AbstractSafeQueue
-from .AbstractSafeSet import AbstractSafeSet
-from .HybridRLock import HybridRLock
+from safethread.datatype.AbstractSafeBase import AbstractSafeBase
+from safethread.datatype.AbstractSafeDict import AbstractSafeDict
+from safethread.datatype.AbstractSafeList import AbstractSafeList
+from safethread.datatype.AbstractSafeQueue import AbstractSafeQueue
+from safethread.datatype.AbstractSafeSet import AbstractSafeSet

@@ -1,6 +1,6 @@
 import multiprocessing
 
-from .. import BaseEvent
+from safethread import BaseEvent
 
 
 class ProcessEvent(BaseEvent):

@@ -2,11 +2,14 @@ import threading
 
 from typing import Callable
 
-from .datatype import ThreadRLock
+from safethread.thread.datatype.ThreadRLock import ThreadRLock
 
-from .ThreadEvent import ThreadEvent
+from safethread.thread.ThreadEvent import ThreadEvent
 
-from .. import AbstractParallel, BaseEvent, AbstractProcess, AbstractLock
+from safethread.AbstractParallel import AbstractParallel
+from safethread.BaseEvent import BaseEvent
+from safethread.AbstractProcess import AbstractProcess
+from safethread.AbstractLock import AbstractLock
 
 
 class BaseThread(AbstractParallel):

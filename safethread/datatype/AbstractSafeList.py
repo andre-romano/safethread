@@ -1,11 +1,9 @@
 
 from multiprocessing.managers import ListProxy
 
-from typing import Any, Iterable, MutableSequence
+from typing import Any, Iterable
 
-from .. import AbstractLock
-
-from . import AbstractSafeBase
+from .AbstractSafeBase import AbstractSafeBase
 
 
 class AbstractSafeList(AbstractSafeBase):
